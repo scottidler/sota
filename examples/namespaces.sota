@@ -1,0 +1,21 @@
+
+# namespaces single identifier expressions with indented blocks 
+namespace1
+
+    func1 = ()
+        print 'hello world'
+
+    func2 = ()
+        print 'howdy world'
+
+    # namespaces nest easily
+    namespace2
+        namespace3
+
+            func1 = ()
+                print 'HELLO WORLD'
+
+            func2 = ()
+                print 'HOWDY WORLD'
+        
+    

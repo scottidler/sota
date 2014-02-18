@@ -1,0 +1,11 @@
+
+main = ()
+
+    home = '/home/user'
+    appname = 'some-cool-app'
+
+    # slashes act as path concatenators when applied to strings instead of division with numbers
+    config = home / appname / 'conf.txt'
+
+    if exists(config) # exists comes from some library
+        print 'yep we found it here "/home/user/some-cool-app/conf.txt"'

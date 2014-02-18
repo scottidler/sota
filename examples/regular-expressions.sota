@@ -1,0 +1,29 @@
+
+main = ()
+
+    # regex is built-in like perl and requires no library
+
+    string = 'hello world'
+
+    # simple match example
+    pattern1 = 'hello'
+    substr1, = m/string/pattern1/
+    print substr1
+    # > hello
+    
+    # match with captures example
+    pattern2 = '(hello) (world)'
+    substr2, cap1, cap2 = m/string/pattern2/
+    print substr2
+    print cap1
+    print cap2
+    # > hello world
+    # > hello
+    # > world
+   
+    # substitute example 
+    pattern3 = 'world'
+    substr3, = s/string/pattern3/'universe'/
+
+    print substr3
+    # > hello universe
