@@ -1,4 +1,3 @@
-
 fizzbuzz1 = ()
     for num in 1..101
         msg = ''
@@ -16,6 +15,15 @@ fizzbuzz2 = ()
             | % 5 -> return 'Buzz'
             | _ -> return num
         print msg
+        
+fizzbuzz3 = ()
+    for num in 1..101
+        msg = match num
+            | n % 15 -> return 'FizzBuzz'
+            | n % 3 -> return 'Fizz'
+            | n % 5 -> return 'Buzz'
+            | _ -> return num
+        print mgs
 
 main = ()
     fizzbuzz1()
