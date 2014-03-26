@@ -27,4 +27,5 @@ fizzbuzz3 = ()
 
 main = ()
     fizzbuzz1()
-    fizzbuzz2() 
+    fizzbuzz2()
+    fixxbuzz3()
