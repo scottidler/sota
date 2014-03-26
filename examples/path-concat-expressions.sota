@@ -1,5 +1,10 @@
-
 main = ()
+
+    # concatenation operators
+    # /     slash concatenates two strings and inserts a / between them
+    # .     dot concatenates a period between two strings, often for filename extensions
+    # ~     tilde prepends or concatenates placing a ~
+    # ../   uplevel concatenates ../ in the path
 
     home = '/home/user'
     appname = 'some-cool-app'
