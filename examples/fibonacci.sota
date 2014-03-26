@@ -1,4 +1,3 @@
-
 fib1 = (n)
     if 0 <= n <= 1
         return n
@@ -8,7 +7,12 @@ fib2 = (n)
     return match n
         | 0 | 1 -> return n
         | _ -> return fib2(n - 1) + fib2(n - 2)
+        
+fib3 = (n)
+    | 0 | 1 -> return n
+    | _ -> return fib3(n -1) + fib3(n - 2)
 
 main = (args)
     print fib1(args[0])
     print fib2(args[0])
+    print fib3(args[0])
