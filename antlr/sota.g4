@@ -44,7 +44,8 @@ flow
     ;
 
 inline
-    :   '{' statement (';' statement)* '}'
+    :   expression (NL | ';')
+    |   '{' statement (';' statement)* '}'
     ;
 
 statements
@@ -85,10 +86,10 @@ expression
     |   PRINT '(' expression ')'
     |   DEBUG '(' expression ')'
     |   TRACE '(' expression ')'
-    |   expression '.' Identifier
-    |   expression '[' expression ']'
     |   func
     |   call
+    |   expression '.' Identifier
+    |   expression '[' expression ']'
     |   expression ('++' | '--')
     |   ('+'|'-'|'++'|'--') expression
     |   ('~'|'!') expression
@@ -372,7 +373,6 @@ SingleCharacter
 
 StringLiteral
     :   '"' StringCharacters? '"'
-    |   '\'' StringCharacters? '\''
     ;
 
 fragment
