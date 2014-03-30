@@ -1,5 +1,4 @@
-
-Type1 = type(object) -> { .Type1 = (name) -> .name = name }
+Type1 = Type(object) -> { .new = (name) -> .name = name }
 
 main = ()
 
