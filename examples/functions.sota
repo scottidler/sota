@@ -1,9 +1,9 @@
 # flow-style function decl with one statement body
 func1 = (x, y)
-    return x + y
+    x + y
 
 # inline-style function decl with one statement body
-func2 = (x, y) -> return x * y
+func2 = (x, y) -> x * y
 
 # flow-style function decl with multiple statement body
 func3 = (x, y)
