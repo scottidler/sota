@@ -1,11 +1,11 @@
 grammar sota;
 
-tokens { INDENT, DEDENT }
+tokens { BOF, INDENT, DEDENT }
 @lexer::header {
     import com.yuvalshavit.antlr4.DenterHelper;
 }
 @lexer::members {
-    private final DenterHelper denter = new DenterHelper(NL, sotaParser.INDENT, sotaParser.DEDENT) {
+    private final DenterHelper denter = new DenterHelper(NL, sotaParser.BOF, sotaParser.INDENT, sotaParser.DEDENT) {
         @Override
         public Token pullToken() {
             return sotaLexer.super.nextToken();
@@ -23,29 +23,29 @@ tokens { INDENT, DEDENT }
 }
 
 prog
-    :   global NL* EOF
+    :   global
     ;
 
-global
-    :   (namespace | statements)
-    ;
-
-namespace
-    :   Identifier flow
+global  
+    :   BOF statements EOF
     ;
 
 block
-    :   flow
-    |   inline
+    :   flow_block
+    |   inline_block
     ;
 
-flow
+flow_block
     :   INDENT statements DEDENT
     ;
 
-inline
-    :   expression (NL | ';')
+inline_block
+    :   expression
     |   '{' statement (';' statement)* '}'
+    ;
+
+namespace
+    :   Identifier flow_block
     ;
 
 statements
@@ -54,8 +54,9 @@ statements
 
 statement
     :   namespace
-    |   block
+    |   enum_block
     |   if_block
+    |   foreach_block
     |   while_block
     |   dowhile_block
     |   RETURN expression?
@@ -65,8 +66,24 @@ statement
     |   expression
     ;
 
+enum_block
+    :   Identifier '=' (enum_flow | enum_inline)
+    ;
+
+enum_flow
+    :   INDENT ('|' expression NL)+ DEDENT
+    ;
+
+enum_inline
+    :   '|'? (assign | Identifier) ('|' (assign | Identifier) )*
+    ;
+
 if_block
     :   IF expression block (ELSIF expression block)* (ELSE block)?
+    ;
+
+foreach_block
+    :   FOREACH Identifier IN expression block
     ;
 
 while_block
@@ -123,6 +140,10 @@ expression
         expression
     ;
 
+assign
+    :   Identifier '=' expression
+    ;
+
 primary
     :   '(' expression ')'
     |   literal
@@ -139,8 +160,8 @@ literal
     ;
 
 func
-    :   '(' params ')' flow
-    |   '(' params ')' '->' inline
+    :   '(' params ')' flow_block
+    |   '(' params ')' '->' inline_block
     ;
 
 call
@@ -175,6 +196,7 @@ ELSE    :   'else';
 ELSIF   :   'elsif';
 FOREACH :   'foreach';
 IF      :   'if';
+IN      :   'in';
 IS      :   'is';
 LOG     :   'log';
 MATCH   :   'match';
