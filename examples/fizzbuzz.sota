@@ -10,19 +10,19 @@ fizzbuzz1 = ()
 fizzbuzz2 = ()
     for num in 1..101
         msg = match num
-            | % 15 -> return 'FizzBuzz'
-            | % 3 -> return 'Fizz'
-            | % 5 -> return 'Buzz'
-            | _ -> return num
+            | % 15 -> 'FizzBuzz'
+            | % 3 -> 'Fizz'
+            | % 5 -> 'Buzz'
+            | _ -> num
         print msg
         
 fizzbuzz3 = ()
     for num in 1..101
         msg = match num
-            | n % 15 -> return 'FizzBuzz'
-            | n % 3 -> return 'Fizz'
-            | n % 5 -> return 'Buzz'
-            | _ -> return num
+            | n % 15 -> 'FizzBuzz'
+            | n % 3 -> 'Fizz'
+            | n % 5 -> 'Buzz'
+            | _ -> num
         print mgs
 
 main = ()

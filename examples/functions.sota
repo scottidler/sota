@@ -1,10 +1,9 @@
-
 # flow-style function decl with one statement body
 func1 = (x, y)
-    return x + y
+    x + y
 
 # inline-style function decl with one statement body
-func2 = (x, y) -> return x * y
+func2 = (x, y) -> x * y
 
 # flow-style function decl with multiple statement body
 func3 = (x, y)
@@ -28,7 +27,7 @@ main = ()
     r4 = func4(1, 2)
 
     # pass inline-style, lambda-like function as an argument to another function
-    r5 = func5(1, 2, (x, y) -> return x * y)
+    r5 = func5(1, 2, (x, y) -> x * y)
 
     # pass inline-style, lambda-like function with multiple statement body as an argument to another function
     r6 = func5(1, 2, (x, y) -> { print 'hello'; return (x + 2) * y })

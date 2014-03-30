@@ -1,16 +1,15 @@
-
 # flow-style type decl
-Type1 = type(object)
-    .Type1 = (arg1, arg2)
+Type1 = Type(object)
+    .new = (arg1, arg2)
         .arg1 = arg1
         .arg2 = arg2
 
 # inline-style type decl
-Type2 = type(object) -> { .Type2 = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } }
+Type2 = Type(object) -> { .new = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } }
 
-Color = type(object)
+Color = Type(object)
     # constructor, assigning to properties
-    .Color = (red, green, blue, alpha)
+    .new = (red, green, blue, alpha)
         .Red = red
         .Green = green
         .Blue = blue
@@ -31,8 +30,8 @@ Color = type(object)
     .Alpha -> { .get; .set }
 
 # user-defined types must be capitalized
-Point = type(object)
-    .Point(x, y, z)
+Point = Type(object)
+    .new = (x, y, z)
         .x = x
         .y = y
         .z = z
@@ -60,8 +59,8 @@ Point = type(object)
 
 main = ()
 
-    type1 = Type('ray', 'ann') 
-    type2 = Type('bob', 'sue')
+    type1 = Type1('sue', 37)
+    type2 = Type2('sam', 42)
 
     red = Color(255, 0, 0, 0)
     green = Color(0, 255, 0, 0)
