@@ -11,13 +11,15 @@ public abstract class DenterHelper {
   private final Queue<Token> dentsBuffer = new ArrayDeque<>();
   private final Deque<Integer> indentations = new ArrayDeque<>();
   private final int nlToken;
+  private final int bofToken;
   private final int indentToken;
   private final int dedentToken;
   private boolean reachedEof;
   private EofHandler eofHandler = new StandardEofHandler();
 
-  protected DenterHelper(int nlToken, int indentToken, int dedentToken) {
+  protected DenterHelper(int nlToken, int bofToken, int indentToken, int dedentToken) {
     this.nlToken = nlToken;
+    this.bofToken = bofToken;
     this.indentToken = indentToken;
     this.dedentToken = dedentToken;
   }
@@ -53,6 +55,7 @@ public abstract class DenterHelper {
       indentations.push(0);
       // First invocation. Look for the first non-NL. Enqueue it, and possibly an indentation if that non-NL
       // token doesn't start at char 0.
+      dentsBuffer.add(new CommonToken(bofToken, "<BOF>") ); // <-- I added this... -sai
       Token firstRealToken;
       do {
         firstRealToken = pullToken();
