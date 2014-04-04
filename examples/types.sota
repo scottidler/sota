@@ -23,11 +23,11 @@ Color = Type(object)
             .red = value
 
     # inline-style explicit property definition
-    .Green -> { .get = () -> return .green; .set = (value) -> .green = value }
+    .Green { .get = () -> return .green; .set = (value) -> .green = value }
 
     # shorthand, implicit definitions
-    .Blue -> { .get; .set }
-    .Alpha -> { .get; .set }
+    .Blue { .get; .set }
+    .Alpha { .get; .set }
 
 # user-defined types must be capitalized
 Point = Type(object)
