@@ -1,6 +1,6 @@
 open cli
 
-divine = (branch, component, cfg)
+divine = (component, branch, cfg)
     for k,v in cfg
         if m/branch/k/
             return v
@@ -8,7 +8,7 @@ divine = (branch, component, cfg)
 
 comprev = (config, branch, components)
     cfg = load(config)
-    print '\n'.join( components | wrap(divine(config,,cfg) ) )
+    print '\n'.join( components | wrap(divine(,branch,cfg) ) )
 
 main = (args)
     cli = Cli()
