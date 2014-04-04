@@ -1,6 +1,5 @@
 func1 = (arg)
-
-    match arg1
+    return match arg1
         | 1..10 -> print 'is {arg1} your favorite number?'
         | 'hello' -> print 'hello back at ya!'
         | 'shut up' -> print 'oh that was not nice!'
