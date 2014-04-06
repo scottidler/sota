@@ -39,9 +39,32 @@ flow_block
     :   INDENT statements DEDENT
     ;
 
+match
+    :   MATCH expression match_block
+    ;
+
+match_block
+    :   INDENT match_options DEDENT
+    ;
+
+match_options
+    :   PIPE match_option (NL PIPE match_option)* NL*
+    ;
+
+match_option
+    :   match_expression block
+    ;
+
+match_expression
+    :   literal
+    |   match_expression (PIPE match_expression)+
+    ;
+
 inline_block
-    :   expression
-    |   '{' statement (';' statement)* '}'
+    :   ARROW 
+        (   expression
+        |   LBRACE statement (SEMI statement)* RBRACE
+        )
     ;
 
 namespace
@@ -49,12 +72,12 @@ namespace
     ;
 
 statements
-    :   statement ( (NL | ';') statement)* NL*
+    :   statement ( (NL | SEMI) statement)* NL*
     ;
 
 statement
     :   namespace
-    |   enum_block
+    |   enumeration
     |   if_block
     |   foreach_block
     |   while_block
@@ -66,16 +89,19 @@ statement
     |   expression
     ;
 
-enum_block
-    :   Identifier '=' (enum_flow | enum_inline)
+enumeration
+    :   Identifier ASSIGN 
+        (   elements
+        |   INDENT elements DEDENT
+        )
     ;
 
-enum_flow
-    :   INDENT ('|' expression NL)+ DEDENT
+elements
+    :   PIPE element (NL? PIPE element)* NL*
     ;
 
-enum_inline
-    :   '|'? (assign | Identifier) ('|' (assign | Identifier) )*
+element
+    :   Identifier (ASSIGN expression)?
     ;
 
 if_block
@@ -95,7 +121,7 @@ dowhile_block
     ;
 
 expressions
-    :   expression ( (NL | ',') expression)*
+    :   expression ( (NL | COMMA) expression)*
     ;
 
 expression
@@ -103,6 +129,7 @@ expression
     |   PRINT '(' expression ')'
     |   DEBUG '(' expression ')'
     |   TRACE '(' expression ')'
+    |   match
     |   func
     |   call
     |   expression '.' Identifier
@@ -116,7 +143,7 @@ expression
     |   expression ('<=' | '>=' | '>' | '<') expression
     |   expression 'is' type
     |   expression ('==' | '!=') expression
-    |   expression '..' expression
+    |   expression ELIPSES expression
     |   expression '&' expression
     |   expression '^' expression
     |   expression '|' expression
@@ -160,8 +187,10 @@ literal
     ;
 
 func
-    :   '(' params ')' flow_block
-    |   '(' params ')' '->' inline_block
+    :   '(' params ')'
+        (   match_block
+        |   block
+        )
     ;
 
 call
@@ -193,7 +222,7 @@ CHAR    :   'char';
 DEBUG   :   'debug';
 DO      :   'do';
 ELSE    :   'else';
-ELSIF   :   'elsif';
+ELIF    :   'elif';
 FOREACH :   'foreach';
 IF      :   'if';
 IN      :   'in';
@@ -205,6 +234,7 @@ PRINT   :   'print';
 RETURN  :   'return';
 THIS    :   'this';
 TRACE   :   'trace';
+TRY     :   'try';
 TYPE    :   'Type' | 'type';
 WITH    :   'with';
 WHILE   :   'while';
@@ -437,53 +467,56 @@ NullLiteral
 
 // §3.11 Separators
 
-LPAREN          : '(';
-RPAREN          : ')';
-LBRACE          : '{';
-RBRACE          : '}';
-LBRACK          : '[';
-RBRACK          : ']';
-SEMI            : ';';
-COMMA           : ',';
-DOT             : '.';
+LPAREN          :   '(';
+RPAREN          :   ')';
+LBRACE          :   '{';
+RBRACE          :   '}';
+LBRACK          :   '[';
+RBRACK          :   ']';
+SEMI            :   ';';
+COMMA           :   ',';
+DOT             :   '.';
 
 // §3.12 Operators
 
-ASSIGN          : '=';
-GT              : '>';
-LT              : '<';
-BANG            : '!';
-TILDE           : '~';
-QUESTION        : '?';
-COLON           : ':';
-EQUAL           : '==';
-LE              : '<=';
-GE              : '>=';
-NOTEQUAL        : '!=';
-AND             : '&&';
-OR              : '||';
-INC             : '++';
-DEC             : '--';
-ADD             : '+';
-SUB             : '-';
-MUL             : '*';
-DIV             : '/';
-BITAND          : '&';
-BITOR           : '|';
-CARET           : '^';
-MOD             : '%';
+ARROW           :   '->';
+ELIPSES         :   '..';
 
-ADD_ASSIGN      : '+=';
-SUB_ASSIGN      : '-=';
-MUL_ASSIGN      : '*=';
-DIV_ASSIGN      : '/=';
-AND_ASSIGN      : '&=';
-OR_ASSIGN       : '|=';
-XOR_ASSIGN      : '^=';
-MOD_ASSIGN      : '%=';
-LSHIFT_ASSIGN   : '<<=';
-RSHIFT_ASSIGN   : '>>=';
-URSHIFT_ASSIGN  : '>>>=';
+ASSIGN          :   '=';
+GT              :   '>';
+LT              :   '<';
+BANG            :   '!';
+TILDE           :   '~';
+QUESTION        :   '?';
+COLON           :   ':';
+EQUAL           :   '==';
+LE              :   '<=';
+GE              :   '>=';
+NOTEQUAL        :   '!=';
+AND             :   '&&';
+OR              :   '||';
+INC             :   '++';
+DEC             :   '--';
+ADD             :   '+';
+SUB             :   '-';
+MUL             :   '*';
+SLASH           :   '/';
+BITAND          :   '&';
+PIPE            :   '|';
+CARET           :   '^';
+MOD             :   '%';
+
+ADD_ASSIGN      :   '+=';
+SUB_ASSIGN      :   '-=';
+MUL_ASSIGN      :   '*=';
+DIV_ASSIGN      :   '/=';
+AND_ASSIGN      :   '&=';
+OR_ASSIGN       :   '|=';
+XOR_ASSIGN      :   '^=';
+MOD_ASSIGN      :   '%=';
+LSHIFT_ASSIGN   :   '<<=';
+RSHIFT_ASSIGN   :   '>>=';
+URSHIFT_ASSIGN  :   '>>>=';
 
 // §3.8 Identifiers (must appear after all keywords in the grammar)
 
