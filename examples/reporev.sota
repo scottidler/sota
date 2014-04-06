@@ -8,7 +8,7 @@ divine = (component, branch, cfg)
 
 comprev = (config, branch, components)
     cfg = load(config)
-    print '\n'.join( components | wrap(divine(,branch,cfg) ) )
+    print '\n'.join( components | (component) -> divine(component, branch, cfg) )
 
 main = (args)
     cli = Cli()
