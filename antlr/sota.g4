@@ -30,15 +30,6 @@ global
     :   BOF statements EOF
     ;
 
-block
-    :   flow_block
-    |   inline_block
-    ;
-
-flow_block
-    :   INDENT statements DEDENT
-    ;
-
 match
     :   MATCH expression match_block
     ;
@@ -52,7 +43,10 @@ match_options
     ;
 
 match_option
-    :   match_expression block
+    :   match_expression
+        (   flow_block
+        |   ARROW (expression | inline_block)
+        )
     ;
 
 match_expression
@@ -60,11 +54,17 @@ match_expression
     |   match_expression (PIPE match_expression)+
     ;
 
+block
+    :   flow_block
+    |   inline_block
+    ;
+
+flow_block
+    :   INDENT statements DEDENT
+    ;
+
 inline_block
-    :   ARROW 
-        (   expression
-        |   LBRACE statement (SEMI statement)* RBRACE
-        )
+    :   LBRACE statement (SEMI statement)* RBRACE
     ;
 
 namespace
@@ -105,7 +105,7 @@ element
     ;
 
 if_block
-    :   IF expression block (ELSIF expression block)* (ELSE block)?
+    :   IF expression block (ELIF expression block)* (ELSE block)?
     ;
 
 foreach_block
@@ -143,7 +143,7 @@ expression
     |   expression ('<=' | '>=' | '>' | '<') expression
     |   expression 'is' type
     |   expression ('==' | '!=') expression
-    |   expression ELIPSES expression
+    |   expression DOTS expression
     |   expression '&' expression
     |   expression '^' expression
     |   expression '|' expression
@@ -179,22 +179,26 @@ primary
 
 literal
     :   IntegerLiteral
+    |   RangeLiteral
     |   FloatingPointLiteral
     |   CharacterLiteral
     |   StringLiteral
     |   BooleanLiteral
-    |   'null'
+    |   NullLiteral
     ;
 
 func
     :   '(' params ')'
         (   match_block
-        |   block
+        |   flow_block
+        |   ARROW (expression | inline_block)
         )
     ;
 
 call
-    :   Identifier '(' params ')'
+    :   (   Identifier
+        |   '(' func ')'
+        ) '(' params ')'
     ;
 
 params
@@ -238,7 +242,6 @@ TRY     :   'try';
 TYPE    :   'Type' | 'type';
 WITH    :   'with';
 WHILE   :   'while';
-
 
 // §3.10.1 Integer Literals
 
@@ -339,6 +342,11 @@ BinaryDigits
 fragment
 BinaryDigit
     :   [01]
+    ;
+
+// Range Literal
+RangeLiteral
+    :   IntegerLiteral '..' IntegerLiteral
     ;
 
 // §3.10.2 Floating-Point Literals
@@ -480,7 +488,7 @@ DOT             :   '.';
 // §3.12 Operators
 
 ARROW           :   '->';
-ELIPSES         :   '..';
+DOTS            :   '..';
 
 ASSIGN          :   '=';
 GT              :   '>';
