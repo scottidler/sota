@@ -120,16 +120,13 @@ dowhile_stmt
     :   DO block WHILE expression
     ;
 
+params
+    :   (   INDENT expressions (NL expressions)* NL* DEDENT
+        |   expressions
+        )?
+    ;
+
 expressions
-    :   expressions_flow
-    |   expressions_inline
-    ;
-
-expressions_flow
-    :   INDENT expressions_inline (NL expressions_inline)* NL* DEDENT
-    ;
-
-expressions_inline
     :   expression (COMMA expression)*
     ;
 
@@ -194,19 +191,19 @@ assign
     ;
 
 tuple
-    :   '(' expressions? ')'
+    :   '(' params ')'
     ;
 
 list
-    :   '[' expressions? ']'
+    :   '[' params ']'
     ;
 
 seq
-    :   '<' expressions? '>'
+    :   '<' params '>'
     ;
 
 dict
-    :   '{' expressions? '}'
+    :   '{' params '}'
     ;
 
 primary
@@ -238,10 +235,6 @@ call
         |   '(' func ')'
         )
         '(' params ')'
-    ;
-
-params
-    :   expressions?
     ;
 
 type
