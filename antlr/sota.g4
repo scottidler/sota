@@ -78,10 +78,10 @@ statements
 statement
     :   namespace
     |   enumeration
-    |   if_block
-    |   foreach_block
-    |   while_block
-    |   dowhile_block
+    |   if_stmt
+    |   foreach_stmt
+    |   while_stmt
+    |   dowhile_stmt
     |   RETURN expression?
     |   PRINT expression?
     |   DEBUG expression?
@@ -104,24 +104,33 @@ element
     :   Identifier (ASSIGN expression)?
     ;
 
-if_block
+if_stmt
     :   IF expression block (ELIF expression block)* (ELSE block)?
     ;
 
-foreach_block
+foreach_stmt
     :   FOREACH Identifier IN expression block
     ;
 
-while_block
+while_stmt
     :   WHILE expression block
     ;
 
-dowhile_block
+dowhile_stmt
     :   DO block WHILE expression
     ;
 
 expressions
-    :   expression ( (NL | COMMA) expression)*
+    :   expressions_flow
+    |   expressions_inline
+    ;
+
+expressions_flow
+    :   INDENT expressions_inline (NL expressions_inline)* NL* DEDENT
+    ;
+
+expressions_inline
+    :   expression (COMMA expression)*
     ;
 
 expression
@@ -129,9 +138,15 @@ expression
     |   PRINT '(' expression ')'
     |   DEBUG '(' expression ')'
     |   TRACE '(' expression ')'
+    |   m
+    |   s
     |   match
     |   func
     |   call
+    |   tuple
+    |   list
+    |   seq
+    |   dict
     |   expression '.' Identifier
     |   expression '[' expression ']'
     |   expression ('++' | '--')
@@ -141,15 +156,15 @@ expression
     |   expression ('+'|'-') expression
     |   expression ('<' '<' | '>' '>' '>' | '>' '>') expression
     |   expression ('<=' | '>=' | '>' | '<') expression
-    |   expression 'is' type
-    |   expression ('==' | '!=') expression
-    |   expression DOTS expression
-    |   expression '&' expression
-    |   expression '^' expression
-    |   expression '|' expression
-    |   expression '&&' expression
-    |   expression '||' expression
-    |   expression '?' expression ':' expression
+    |   expression IS type
+    |   expression (EQ | NE) expression
+    |   expression RANGE expression
+    |   expression BITAND expression
+    |   expression CARET expression
+    |   expression PIPE expression
+    |   expression AND expression
+    |   expression OR expression
+    |   expression QUESTION expression ':' expression
     |   expression
         (   '='<assoc=right>
         |   '+='<assoc=right>
@@ -167,8 +182,31 @@ expression
         expression
     ;
 
+m
+    :   M expression SLASH expression SLASH params
+    ;
+
+s   :   S expression SLASH expression SLASH expression SLASH params
+    ;
+
 assign
     :   Identifier '=' expression
+    ;
+
+tuple
+    :   '(' expressions? ')'
+    ;
+
+list
+    :   '[' expressions? ']'
+    ;
+
+seq
+    :   '<' expressions? '>'
+    ;
+
+dict
+    :   '{' expressions? '}'
     ;
 
 primary
@@ -198,7 +236,8 @@ func
 call
     :   (   Identifier
         |   '(' func ')'
-        ) '(' params ')'
+        )
+        '(' params ')'
     ;
 
 params
@@ -242,6 +281,9 @@ TRY     :   'try';
 TYPE    :   'Type' | 'type';
 WITH    :   'with';
 WHILE   :   'while';
+
+M       :   'm/';
+S       :   's/';
 
 // §3.10.1 Integer Literals
 
@@ -488,7 +530,8 @@ DOT             :   '.';
 // §3.12 Operators
 
 ARROW           :   '->';
-DOTS            :   '..';
+RANGE           :   '..';
+UPDIR           :   '../';
 
 ASSIGN          :   '=';
 GT              :   '>';
@@ -497,10 +540,10 @@ BANG            :   '!';
 TILDE           :   '~';
 QUESTION        :   '?';
 COLON           :   ':';
-EQUAL           :   '==';
 LE              :   '<=';
 GE              :   '>=';
-NOTEQUAL        :   '!=';
+EQ              :   '==';
+NE              :   '!=';
 AND             :   '&&';
 OR              :   '||';
 INC             :   '++';
