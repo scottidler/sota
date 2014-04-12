@@ -77,7 +77,6 @@ statements
 
 statement
     :   namespace
-    |   enumeration
     |   if_stmt
     |   foreach_stmt
     |   while_stmt
@@ -90,8 +89,7 @@ statement
     ;
 
 enumeration
-    :   Identifier ASSIGN 
-        (   elements
+    :   (   elements
         |   INDENT elements DEDENT
         )
     ;
@@ -120,13 +118,36 @@ dowhile_stmt
     :   DO block WHILE expression
     ;
 
-params
-    :   (   INDENT expressions (NL expressions)* NL* DEDENT
-        |   expressions
-        )?
+primary
+    :   '(' expression ')'
+    |   literal
+    |   identifiers
+    ;
+
+identifiers
+    :   COMMA* Identifier (COMMA+ Identifier*)*
+    ;
+
+literal
+    :   IntegerLiteral
+    |   RangeLiteral
+    |   FloatingPointLiteral
+    |   CharacterLiteral
+    |   StringLiteral
+    |   BooleanLiteral
+    |   NullLiteral
     ;
 
 expressions
+    :   expressions_flow
+    |   expressions_inline
+    ;
+
+expressions_flow
+    :   INDENT expressions_inline (NL expressions_inline)* NL* DEDENT
+    ;
+
+expressions_inline
     :   expression (COMMA expression)*
     ;
 
@@ -135,9 +156,9 @@ expression
     |   PRINT '(' expression ')'
     |   DEBUG '(' expression ')'
     |   TRACE '(' expression ')'
-    |   m
-    |   s
+    |   regex
     |   match
+    |   enumeration
     |   func
     |   call
     |   tuple
@@ -179,11 +200,9 @@ expression
         expression
     ;
 
-m
-    :   M expression SLASH expression SLASH params
-    ;
-
-s   :   S expression SLASH expression SLASH expression SLASH params
+regex
+    :   M expression SLASH expression SLASH params #m
+    |   S expression SLASH expression SLASH expression SLASH params #s
     ;
 
 assign
@@ -191,35 +210,19 @@ assign
     ;
 
 tuple
-    :   '(' params ')'
+    :   '(' expressions? ')'
     ;
 
 list
-    :   '[' params ']'
+    :   '[' expressions? ']'
     ;
 
 seq
-    :   '<' params '>'
+    :   '<' expressions? '>'
     ;
 
 dict
-    :   '{' params '}'
-    ;
-
-primary
-    :   '(' expression ')'
-    |   literal
-    |   Identifier
-    ;
-
-literal
-    :   IntegerLiteral
-    |   RangeLiteral
-    |   FloatingPointLiteral
-    |   CharacterLiteral
-    |   StringLiteral
-    |   BooleanLiteral
-    |   NullLiteral
+    :   '{' expressions? '}'
     ;
 
 func
@@ -231,10 +234,11 @@ func
     ;
 
 call
-    :   (   Identifier
-        |   '(' func ')'
-        )
-        '(' params ')'
+    :   ( Identifier | '(' func ')' ) '(' params ')'
+    ;
+
+params
+    :   expressions?
     ;
 
 type
