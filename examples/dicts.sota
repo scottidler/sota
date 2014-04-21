@@ -14,7 +14,7 @@ main = ()
 
 
     # inverse on dict with unique values; just works
-    { 1: 'a', s: 'b' } == { 'a': 1, 'b': 2 }.inverse()
+    { 1: 'a', 2: 'b' } == { 'a': 1, 'b': 2 }.inverse()
 
     # inverse on dict with repeated values requires an option otherwise an error
     { 1: ['a', 'b'] } == { 'a': 1, 'b': 1 }.inverse(allow_duplicates=true)
