@@ -5,7 +5,7 @@ func_flow = ()
 	   # ^eos
 	print x
 
-list_flow = [1, 2, 3]
+list_inline = [1, 2, 3]
 	       # ^eoe
 list_flow = [
 	1
