@@ -15,4 +15,4 @@ list_flow = [
 ]
 
 # The examples above show eos(end of statement) and eoe (end of expression) as it pertains to inline and flow examples.
-# Note that eoe examples must be nested inside of () <>, or [] whereas eos is in blocks: inline or flow.
+# Note that eoe examples must be nested inside of () <>, or [] whereas eos occurs within blocks: inline or flow.
