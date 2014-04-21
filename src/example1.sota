@@ -1,0 +1,4 @@
+main = ()
+    b = true
+    print 'hello world'
+    x = 1

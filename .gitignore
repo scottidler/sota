@@ -11,3 +11,14 @@
 *.lai
 *.la
 *.a
+
+# Visual Studio
+*.suo
+*.ncb
+*.user
+*sdf
+
+*/bin/
+*/obj/
+*/Obj/
+*/Generated_Code/
