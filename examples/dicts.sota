@@ -1,4 +1,3 @@
-
 main = ()
 
     dict1 = { 'a': 1, 'b': 2, 'c': 3 }
@@ -21,4 +20,4 @@ main = ()
     { 1: ['a', 'b'] } == { 'a': 1, 'b': 1 }.inverse(allow_duplicates=true)
 
     # the opposite is also possible with the same flag
-    { 'a': 1, 'b': 1 } == { 1: ['a', 'b'] }.inverse(allow_duplicates)
+    { 'a': 1, 'b': 1 } == { 1: ['a', 'b'] }.inverse(allow_duplicates=true)
