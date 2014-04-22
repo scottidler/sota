@@ -1,0 +1,18 @@
+func_inline = () -> { x = 1; print x }
+                         # ^eos
+func_flow = ()
+	x = 1
+	   # ^eos
+	print x
+
+list_inline = [1, 2, 3]
+	       # ^eoe
+list_flow = [
+	1
+       # ^eoe
+	2
+	3
+]
+
+# The examples above show eos(end of statement) and eoe (end of expression) as it pertains to inline and flow examples.
+# Note that eoe examples must be nested inside of () <>, or [] whereas eos occurs within blocks: inline or flow.
