@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "lexer.h"
+#include "stream.hpp"
 
 #include <regex>
 
@@ -11,7 +12,15 @@ using namespace sota;
 
 int main(int argc, char* argv[])
 {
-    char c = EOF;
+    auto l = strlen("scott");
+    auto stream = stream::SotaStream<char>("scott");
+
+    auto s = stream.Size();
+    for (int i = 0; i < 5; ++i) {
+        auto item = stream.Next();
+        int x = i;
+    }
+
     string result;
     string text1 = "scott";
     string text2 = "m0rdred13";

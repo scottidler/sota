@@ -82,6 +82,7 @@
     <ClInclude Include="..\src\lexer.h" />
     <ClInclude Include="..\src\parser.h" />
     <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\stream.hpp" />
     <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\token.h" />
     <ClInclude Include="..\src\utils.h" />
