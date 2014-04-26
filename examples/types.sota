@@ -1,37 +1,37 @@
 # flow-style type decl
 Type1 = Type(object)
-    .new = (arg1, arg2)
+    .Type1 = (arg1, arg2)
         .arg1 = arg1
         .arg2 = arg2
 
 # inline-style type decl
-Type2 = Type(object) -> { .new = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } }
+Type2 = Type(object) -> { .Type2 = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } }
 
 Color = Type(object)
     # constructor, assigning to properties
-    .new = (red, green, blue, alpha)
+    .Color = (red, green, blue, alpha)
         .Red = red
         .Green = green
         .Blue = blue
         .Alpha = alpha
 
     # flow-style explicit property definition
-    .Red
+    .Red =
         .get = ()
             return .red
         .set = (value)
             .red = value
 
     # inline-style explicit property definition
-    .Green { .get = () -> return .green; .set = (value) -> .green = value }
+    .Green = { .get = () -> return .green; .set = (value) -> .green = value }
 
     # shorthand, implicit definitions
-    .Blue { .get; .set }
-    .Alpha { .get; .set }
+    .Blue = { .get; .set }
+    .Alpha = { .get; .set }
 
 # user-defined types must be capitalized
 Point = Type(object)
-    .new = (x, y, z)
+    .Point = (x, y, z)
         .x = x
         .y = y
         .z = z
