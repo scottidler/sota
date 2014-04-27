@@ -7,7 +7,7 @@ Fruits.Apple == 0
 Fruits.Grape == 1
 Fruits.Plum == 6
 
-States = AZ | CO = 13 | OR
+States = | AZ | CO = 13 | OR
 
 States.AZ == 0
 States.CO == 13
