@@ -1,42 +1,32 @@
 // sota.cpp : Defines the entry point for the console application.
 //
-
+#include <regex>
 #include "stdafx.h"
 #include "lexer.h"
+#include "token.h"
 #include "stream.hpp"
-
-#include <regex>
+#include <array>
 
 using namespace std;
 using namespace sota;
+using namespace sota::lexer;
 
 int main(int argc, char* argv[])
 {
-    auto l = strlen("scott");
-    auto stream = stream::SotaStream<char>("scott");
+    auto t = Token();
+    TokenType tt = *(TokenType*)&t;
+    string filename = "example1.sota";
+    auto lexer = SotaLexer(filename);
 
-    auto s = stream.Size();
-    for (int i = 0; i < 5; ++i) {
-        auto item = stream.Next();
-        int x = i;
-    }
+    auto token = lexer.Scan();
+    do {
+        cout << token;
+        token.type == TokenType::EndOfLine ? cout << endl : cout << " ";
 
-    string result;
-    string text1 = "scott";
-    string text2 = "m0rdred13";
-    string text3 = "3times";
-    smatch m;
-    regex re("([0-9]+)?[A-Za-z_]\\w*");
+        token = lexer.Scan();
+    } while (token.type);
+    cout << token << endl;
 
-    while (regex_search(text1, m, re)) {
-        for (auto x : m)
-            cout << x << " ";
-        cout << endl;
-        result = m.suffix().str();
-    }
-
-    auto token = lexer::Token();
-    auto lexer = lexer::SotaLexer("example1.sota");
     return 0;
 }
 

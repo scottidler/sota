@@ -1,33 +1,55 @@
 #ifndef __SOTA_LEXER__
 #define __SOTA_LEXER__ = 1
 
-#include <string>
-#include <vector>
+#include <stack>
 #include "token.h"
+#include "stream.hpp"
+
 
 namespace sota {
-    namespace lexer {
-        class SotaLexer {
-            vector<Token> _tokens;
-            string _code;
-            int _index;
-            int _line;
-            int _col;
+    using namespace stream;
 
-            char prevchar(int lookback = 1);
-            char peekchar(int lookahead = 1);
-            char nextchar();
-            bool ischar(char c, bool advance = false);
-            bool inrange(char c1, char c2, bool advance = false);
-            bool isempty(bool advance = false);
+    namespace lexer {
+
+        inline bool isoneof(char c, string values) {
+            for (auto value : values) {
+                if (value == c)
+                    return true;
+            }
+            return false;
+        }
+
+        inline bool startswith(string s, vector<string> values) {
+            for (auto value : values) {
+                if (value.find(s) == 0)
+                    return true;
+            }
+            return false;
+        }
+
+        class SotaLexer {
+            SotaStream<char> _charstream;
+            stack<unsigned int> _idents;
+            stack<Token> _tokens;
+            Token pop();
+            Token dots(char &c);
+            Token regex(char &c);
+            Token symbol(char &c);
+            Token numeral(char &c);
+            Token newline(char &c);
+            Token identifier(char &c);
+            Token whitespace(char &c);
         public:
+            unsigned int Line;
+            unsigned int Col;
+            SotaLexer();
             SotaLexer(string filename);
-            ~SotaLexer();
+            SotaLexer(vector<char> chars);
             void Load(string filename);
-            Token Prev(int lookback = 1);
-            Token Peek(int lookahead = 1);
-            Token Next();
+            void Load(vector<char> chars);
+            Token Scan();
         };
     }
 }
+
 #endif /*__SOTA_LEXER__*/

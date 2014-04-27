@@ -95,7 +95,7 @@
     <ClCompile Include="..\src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\sota.tokens" />
+    <None Include="..\src\example1.sota" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

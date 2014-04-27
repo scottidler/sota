@@ -1,123 +1,196 @@
 #include "lexer.h"
-#include "utils.h"
 
 namespace sota {
-    using namespace utils;
+    using namespace stream;
     namespace lexer {
-        char SotaLexer::prevchar(int lookback) {
-            if (_index - lookback >= 0)
-                return _code[_index - lookback];
-            return '\0';
+
+        SotaLexer::SotaLexer() {
+
         }
-        char SotaLexer::peekchar(int lookahead) {
-            if (_index + lookahead <= (int)_code.length())
-                return _code[_index + lookahead];
-            return EOF;
-        }
-        char SotaLexer::nextchar() {
-            char c = peekchar();
-            ++_col;
-            if (prevchar() == '\n') {
-                ++_line;
-                _col = -1;
-            }
-            ++_index;
-            return c;
-        }
-        bool SotaLexer::ischar(char c, bool advance) {
-            bool match = prevchar() == c;
-            if (match && advance)
-                nextchar();
-            return match;
-        }
-        bool SotaLexer::inrange(char c1, char c2, bool advance) {
-            char c = prevchar();
-            bool match = (c1 <= c && c <= c2);
-            if (match && advance)
-                nextchar();
-            return match;
-        }
-        SotaLexer::SotaLexer(string filename) {
+        SotaLexer::SotaLexer(string filename) : Line(1), Col(1) {
             Load(filename);
         }
-        SotaLexer::~SotaLexer() {
+        SotaLexer::SotaLexer(vector<char> chars) : Line(1), Col(1) {
+            Load(chars);
         }
+
         void SotaLexer::Load(string filename) {
-            std::ifstream in(filename);
-            _code = string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-            _col = -1;
-            _line = 0;
-            _index = -1;
-            _tokens = vector<lexer::Token>();
-            
-            char c;
-            while (c = nextchar()) {
+            ostringstream oss;
+            ifstream fs(filename);
+            oss << fs.rdbuf();
+            const std::string str(oss.str());
+            Load(vector<char>(str.begin(), str.end()));
+        }
 
-                if (_col == 0) {
-                    _tokens.push_back(Token(_line, _col, TokenType::META_BOL));
-                }
+        void SotaLexer::Load(vector<char> chars) {
+            chars.push_back('\0');
+            _charstream = SotaStream<char>(chars);
+        }
 
-                while (c != '\n' && isspace(c))
-                    c = nextchar();
+        Token SotaLexer::pop() {
+            Token token = _tokens.top();
+            _tokens.pop();
+            return token;
+        }
 
-                
-                if (isalpha(c)) {
-                    string id;
-                    id += c;
-                    while (isalnum(c = nextchar())) {
-                        id += c;
-                    }
+        Token SotaLexer::dots(char &c) {
+            auto token = Token();
+            if (c == '.') {
+                if (_charstream.Peek('.')) {
+                    token.value = "..";
 
-                    if (TokenTypes.count(id)) {
-                        _tokens.push_back(Token(_line, _col, TokenTypes[id], id));
-                        continue;
-                    }
-                    else
-                        _tokens.push_back(Token(_line, _col, TokenType::META_ID, id));
-                }
-
-                if (isdigit(c) || c == '.') {
-                    string num;
-                    do {
-                        num += c;
-                        c = nextchar();
-                    } while (isdigit(c) || c == '.');
-                    _tokens.push_back(Token(_line, _col, TokenType::META_NUM, num));
-                }
-
-                if (c == '#') {
-                    do c = nextchar();
-                    while (c != 0 && c != '\n' && c != '\r');
-                }
-
-                if (c == '\n') {
-                    _tokens.push_back(Token(_line, _col, TokenType::META_EOL));
-                    _col = 0;
-                    ++_line;
-                    continue;
-                }
-
-                if (c == EOF) {
-                    _tokens.push_back(Token(_line, _col, TokenType::META_EOL));
-                    _tokens.push_back(Token(_line, _col, TokenType::META_EOS));
-                    _tokens.push_back(Token(_line, _col, TokenType::META_EOF));
-                }
-                string s;
-                s += c;
-                if (TokenTypes.count(s)) {
-                    _tokens.push_back(Token(_line, _col, TokenTypes[s]));
                 }
             }
+            return token;
+        }
 
+        Token SotaLexer::regex(char &c) {
+            auto token = Token();
+            if (isoneof(c, "ms")) {
+                if (isspace(_charstream.Prev()) && _charstream.Peek('/'))
+                {
+                    token.value += c;
+                    token.value += _charstream.Next();
+                    token.type = Value2Type[token.value];
+                    c = _charstream.Next();
+                }
+            }
+            return token;
         }
-        Token SotaLexer::Prev(int lookback) {
-            return Token();
+
+        Token SotaLexer::symbol(char &c) {
+            auto index = _charstream.Index;
+            auto token = Token();
+            string s;
+            if (startswith(s + c, TokenValues)) {
+                s += c;
+                while (startswith(s + _charstream.Peek(), TokenValues)) {
+                    s += (c = _charstream.Next());
+                }
+            }
+            else
+                return token;
+  
+            if (Value2Type.count(s)) {
+                do {
+                    token.type = Value2Type[s];
+                    token.value = s;
+                    c = _charstream.Next();
+                } while (Value2Type.count(s += c));
+            }
+            else
+                c = _charstream.Curr(index);
+
+            return token;
         }
-        Token SotaLexer::Peek(int lookahead) {
-            return Token();
+
+        Token SotaLexer::numeral(char &c) {
+            auto token = Token();
+            return token;
         }
-        Token SotaLexer::Next() {
-            return Token();
+
+        Token SotaLexer::newline(char &c) {
+            auto token = Token();
+            if (isoneof(c,"\r\n")) {
+                do {
+                    ++Line;
+                    c = _charstream.Next();
+                } while (isoneof(c, "\r\n"));
+                if (!c) {
+                    token.type = TokenType::EndOfFile;
+                    token.value = Type2Value[token.type];
+                    _tokens.push(token);
+                }
+                token.type = TokenType::EndOfLine;
+                token.value = Type2Value[token.type];
+                return token;
+            }
+            return token;
+        }
+
+        Token SotaLexer::identifier(char &c) {
+            auto token = Token();
+            if (isalpha(c) || c == '_') {
+                token.type = TokenType::Id;
+                do {
+                    ++Col;
+                    token.value += c;
+                    c = _charstream.Next();
+                } while (isalnum(c) || c == '_');
+            }
+            return token;
+        }
+
+        Token SotaLexer::whitespace(char &c) {
+            auto token = Token();
+            if (isspace(c)) {
+                while (isspace(c = _charstream.Next())) {
+                    ++Col;
+                }
+            }
+            return token;
+        }
+
+        Token SotaLexer::Scan() {
+            Token token = Token();
+            char c = _charstream.Curr();
+
+            if (_tokens.size()) {
+                return pop();
+            }
+
+            /* consume multiple newlines, emit only one token*/
+            if (token = newline(c))
+                return token;
+
+            /* consume ws and return denting */
+            if (token = whitespace(c))
+                return token;
+
+            /* match symbols and keywords */
+            if (token = symbol(c))
+                return token;
+
+            /* regex operators m/ and s/ */
+            if (token = regex(c))
+                return token;
+
+            /* match updir or range operators */
+            if (token = dots(c))
+                return token;
+
+            /* id */
+            if (token = identifier(c))
+                return token;
+
+            /* num */
+            if (isdigit(c) || c == '.') {
+                do {
+                    ++Col;
+                    token.value += c;
+                } while (isdigit(c = _charstream.Next()));
+                token.type = TokenType::Num;
+                return token;
+            }
+
+            if (c == '#') {
+                do {
+                    ++Col;
+                    token.value += c;
+                    c = _charstream.Next();
+                } while (c && c != '\n' && c != '\r');
+                token.type = TokenType::Comment;
+                token.value = Type2Value[token.type];
+                return token;
+            }
+
+            if (!c) {
+                token.type = TokenType::EndOfFile;
+                token.value = Type2Value[token.type];
+                return token;
+            }
+
+            return token;
         }
     }
 }

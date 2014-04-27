@@ -30,13 +30,13 @@
     <ClInclude Include="..\src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\stream.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,15 +50,15 @@
     <ClCompile Include="..\src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\lexer.cpp">
+    <ClCompile Include="..\src\parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\parser.cpp">
+    <ClCompile Include="..\src\lexer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\sota.tokens">
+    <None Include="..\src\example1.sota">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
