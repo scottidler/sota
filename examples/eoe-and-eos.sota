@@ -6,7 +6,7 @@ func_flow = ()
 	print x
 
 list_inline = [1, 2, 3]
-	       # ^eoe
+	      # ^eoe
 list_flow = [
 	1
        # ^eoe
