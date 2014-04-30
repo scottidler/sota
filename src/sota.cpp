@@ -13,8 +13,10 @@ using namespace sota::lexer;
 
 int main(int argc, char* argv[])
 {
-    auto t = Token();
-    TokenType tt = *(TokenType*)&t;
+
+    string str = "token1 token2 token3";
+    string sub(str.substr(7, 6));
+
     string filename = "example1.sota";
     auto lexer = SotaLexer(filename);
 

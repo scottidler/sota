@@ -27,27 +27,35 @@ namespace sota {
             return false;
         }
 
-        class SotaLexer {
-            SotaStream<char> _charstream;
+        class SotaLexer : public SotaStream<char> {
             stack<unsigned int> _idents;
             stack<Token> _tokens;
             Token pop();
             Token dots(char &c);
             Token regex(char &c);
-            Token symbol(char &c);
-            Token numeral(char &c);
+            Token comment(char &c);
             Token newline(char &c);
-            Token identifier(char &c);
             Token whitespace(char &c);
+            Token identifier_numeral_or_symbol(char &c);
         public:
             unsigned int Line;
             unsigned int Col;
+
             SotaLexer();
             SotaLexer(string filename);
             SotaLexer(vector<char> chars);
-            void Load(string filename);
-            void Load(vector<char> chars);
-            Token Scan();
+
+            const char&
+            Next(unsigned int lookahead = 1);
+
+            void 
+            Load(string filename);
+
+            void 
+            Load(vector<char> chars);
+
+            Token 
+            Scan();
         };
     }
 }

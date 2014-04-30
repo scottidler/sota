@@ -1,4 +1,32 @@
-main = ()
-    b = true
-    print 'hello world'
-    x = 1
+print 'n'
+open cli
+
+divine = (component, branch, cfg)
+    for k,v in cfg
+        if m/branch/k/
+            return v
+    return branch
+
+comprev = (config, branch, components)
+    cfg = load(config)
+    print 'n'.join( components | (component) -> divine(component, branch, cfg) )
+
+main = (args)
+    cli = Cli()
+
+    cli.add(
+        '--config'
+        default='knlsb.cfg'
+        help='override the default config of {default}')
+
+    cli.add(
+        '--branch'
+        default=run('git rev-parse --abbrev-ref HEAD')
+        help='override the default branch of {default})
+
+    cli.add(
+        'components'
+        nargs='+'
+        help='list of one or more components to check the revision for')
+
+    comprev(cli.parse(args) )

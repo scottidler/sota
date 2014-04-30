@@ -1,5 +1,5 @@
-#ifndef __SOTA_TOKENS__
-#define __SOTA_TOKENS__ = 1
+#ifndef __SOTA_TOKEN__
+#define __SOTA_TOKEN__ = 1
 
 #include <map>
 #include <string>
@@ -13,18 +13,18 @@ using namespace std;
 namespace sota {
     namespace lexer {
         #define TOKEN_TABLE                     \
-        T(EndOfFile         ,   "<EOF>")        \
-        T(BegOfFile         ,   "<BOF>")        \
-        T(BegOfZone         ,   "<BOS>")        \
-        T(EndOfZone         ,   "<EOS>")        \
-        T(BegOfLine         ,   "<BOL>")        \
-        T(EndOfLine         ,   "<EOL>")        \
-        T(Indent            ,   "<INDENT>")     \
-        T(Dedent            ,   "<DEDENT>")     \
-        T(WhiteSpace        ,   "<WS>")         \
-        T(Comment           ,   "<COMMENT>")    \
-        T(Id                ,   "<ID>")         \
-        T(Num               ,   "<NUM>")        \
+        T(EndOfFile         ,   "EOF")          \
+        T(BegOfFile         ,   "BOF")          \
+        T(BegOfZone         ,   "BOS")          \
+        T(EndOfZone         ,   "EOS")          \
+        T(BegOfLine         ,   "BOL")          \
+        T(EndOfLine         ,   "EOL")          \
+        T(Indent            ,   "INDENT")       \
+        T(Dedent            ,   "DEDENT")       \
+        T(WhiteSpace        ,   "WS")           \
+        T(Comment           ,   "COMMENT")      \
+        T(Id                ,   "ID")           \
+        T(Num               ,   "NUM")          \
                                                 \
         T(As                ,   "as")           \
         T(In                ,   "in")           \
@@ -106,7 +106,8 @@ namespace sota {
         T(RangeExclusive    ,   "...")          \
                                                 \
         T(RightArrow        ,   "->")           \
-        T(LeftArrow         ,   "<-")
+        T(LeftArrow         ,   "<-")           \
+        T(RAW               ,   "RAW")
 
         #define T(k,v) k,
         enum TokenType {
@@ -149,7 +150,7 @@ namespace sota {
             }
 
             friend ostream& operator<< (ostream &o, Token_t token) {
-                o << "[ " << token.type << (token.type == TokenType::Id || token.type == TokenType::Num ? "(" + Type2Name[token.type] + ")" : "") << " " << token.value << " ]";
+                o << (token.type == TokenType::Id || token.type == TokenType::Num ? "[" + token.value + "]" : token.value); 
                 return o;
             }
 
@@ -157,4 +158,4 @@ namespace sota {
     }
 }
 
-#endif /*__SOTA_TOKENS__*/
+#endif /*__SOTA_TOKEN__*/

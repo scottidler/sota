@@ -10,43 +10,44 @@ namespace sota {
     namespace stream {
         template <class Item>
         class SotaStream {
+        protected:
             vector<Item> _items;
+            static const Item default = Item();
+
+            const Item&
+            access(unsigned int index) {
+                if (index >= _items.size())
+                    return default;
+                return _items[index];
+            }
         public:
             unsigned int Index;
-            ~SotaStream() {
-            }
-            SotaStream() : Index(0) {
+            Item Curr;
 
-            }
-            SotaStream(vector<Item> items) : _items(items), Index(0) {
-            }
+            ~SotaStream() { }
+            SotaStream() : Index(0), Curr(default) { }
+            SotaStream(vector<Item> items) : _items(items), Index(0), Curr(items[0]) { }
 
-            const Item&
-            Prev(unsigned int lookback = 1) { return _items[Index - lookback]; }
+            virtual const Item&
+            Prev(unsigned int lookback = 1) { return Curr = access(Index - lookback); }
 
-            bool
-            Prev(Item item, unsigned int lookback = 1) { return item == Prev(lookback); }
+            virtual const Item&
+            Peek(unsigned int lookahead = 1) { return Curr = access(Index + lookahead); }
 
-            const Item&
-            Peek(unsigned int lookahead = 1) { return _items[Index + lookahead]; }
+            virtual const Item&
+            Next(unsigned int lookahead = 1) { return Curr = access(Index += lookahead); }
 
-            bool
-            Peek(Item item, unsigned int lookahead = 1) { return item == Peek(lookahead); }
+            virtual bool
+            IsPrev(Item item, unsigned int lookback = 1) { return item == Prev(lookback); }
 
-            const Item&
-            Next(unsigned int lookahead = 1) { return _items[Index += lookahead]; }
+            virtual bool
+            IsPeek(Item item, unsigned int lookahead = 1) { return item == Peek(lookahead); }
 
-            bool
-            Next(Item item, unsigned int lookahead = 1) { return item == Next(lookahead); }
+            virtual bool
+            IsNext(Item item, unsigned int lookahead = 1) { return item == Next(lookahead); }
 
-            const Item&
-            Curr() { return _items[Index]; }
-
-            bool
-            Curr(Item item) { return item == Curr(); }
-
-            const Item&
-            Curr(unsigned int index) { return _items[Index = index]; }
+            virtual bool
+            IsCurr(Item item) { return item == Curr; }
         };
     }
 }
