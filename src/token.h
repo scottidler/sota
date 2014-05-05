@@ -2,9 +2,11 @@
 #define __SOTA_TOKEN__ = 1
 
 #include <map>
+#include <regex>
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <xutility>
 
 #include "utils.h"
 
@@ -25,6 +27,8 @@ namespace sota {
         T(Comment           ,   "COMMENT")      \
         T(Id                ,   "ID")           \
         T(Num               ,   "NUM")          \
+        T(RAW               ,   "RAW")          \
+        T(Str               ,   "STR")          \
                                                 \
         T(As                ,   "as")           \
         T(In                ,   "in")           \
@@ -106,8 +110,7 @@ namespace sota {
         T(RangeExclusive    ,   "...")          \
                                                 \
         T(RightArrow        ,   "->")           \
-        T(LeftArrow         ,   "<-")           \
-        T(RAW               ,   "RAW")
+        T(LeftArrow         ,   "<-")
 
         #define T(k,v) k,
         enum TokenType {
@@ -139,19 +142,47 @@ namespace sota {
         };
         #undef T
 
-        typedef struct Token_t {
-            TokenType type;
-            string value;
-            Token_t() : type(TokenType::EndOfFile), value("") {}
-            Token_t(TokenType token, string value = "") : type(token), value(value) {}
+        typedef struct Token {
+            TokenType Type;
+            unsigned int Index;
+            unsigned int Count;
+            const vector<char> *pChars;
 
-            operator bool() { 
-                return type != TokenType::EndOfFile;
+            unsigned int 
+            Line() {
+                regex const pattern("\r?\n");
+                string head = string(pChars->begin(), pChars->begin() + Index);
+                ptrdiff_t const count(distance(
+                    sregex_iterator(head.begin(), head.end(), pattern),
+                    sregex_iterator()));
+                return count + 1;
             }
 
-            friend ostream& operator<< (ostream &o, Token_t token) {
-                o << (token.type == TokenType::Id || token.type == TokenType::Num ? "[" + token.value + "]" : token.value); 
-                return o;
+            unsigned int
+            Column() {
+                unsigned int count = Index;
+                for (count; count > 0; --count) {
+                    char c = (*pChars)[count];
+                    if ('\n' == c || '\r' == c) {
+                        break;
+                    }
+                }
+                return Index - count;
+            }
+
+            const string
+            Value() {
+                return string(pChars->begin() + Index, pChars->begin() + Index + Count);
+            }
+
+            operator bool() {
+                return Type != TokenType::EndOfFile;
+            }
+            bool operator==(const Token &rhs) {
+                return Type == rhs.Type && Index == rhs.Index && Count == rhs.Count && pChars == rhs.pChars;
+            }
+            bool operator!=(const Token &rhs) {
+                return Type != rhs.Type || Index != rhs.Index || Count != rhs.Count || pChars != rhs.pChars;
             }
 
         } Token;

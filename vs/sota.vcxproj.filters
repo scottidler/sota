@@ -33,10 +33,10 @@
     <ClInclude Include="..\src\parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\stream.hpp">
+    <ClInclude Include="..\src\lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lexer.h">
+    <ClInclude Include="..\src\stream.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

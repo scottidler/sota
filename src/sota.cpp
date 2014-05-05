@@ -11,23 +11,27 @@ using namespace std;
 using namespace sota;
 using namespace sota::lexer;
 
+using namespace sota::stream;
+
 int main(int argc, char* argv[])
 {
 
-    string str = "token1 token2 token3";
-    string sub(str.substr(7, 6));
+    vector<char> chars = { 'a', 'b', 'c' };
+    auto charstream = SotaStream<char>(chars);
+    bool b = charstream.IsCurrSeqOf({ 'a', 'b' });
 
-    string filename = "example1.sota";
+    string filename("example1.sota");
     auto lexer = SotaLexer(filename);
 
-    auto token = lexer.Scan();
-    do {
-        cout << token;
-        token.type == TokenType::EndOfLine ? cout << endl : cout << " ";
+    auto tokens = lexer.Pass1();
 
-        token = lexer.Scan();
-    } while (token.type);
-    cout << token << endl;
+    auto t2 = tokens[2].Value();
+
+    vector<string> values;
+    for (auto token : tokens) {
+        auto value = Type2Value[token.Type];
+        values.push_back(value == "RAW" || value == "STR" ? token.Value() : value);
+    }
 
     return 0;
 }

@@ -79,8 +79,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\lexer.h" />
     <ClInclude Include="..\src\parser.h" />
+    <ClInclude Include="..\src\lexer.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\stream.hpp" />
     <ClInclude Include="..\src\targetver.h" />
@@ -88,9 +88,9 @@
     <ClInclude Include="..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\lexer.cpp" />
     <ClCompile Include="..\src\parser.cpp" />
     <ClCompile Include="..\src\sota.cpp" />
+    <ClCompile Include="..\src\lexer.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
   </ItemGroup>

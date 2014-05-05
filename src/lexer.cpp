@@ -1,234 +1,172 @@
 #include "lexer.h"
 
 namespace sota {
-    using namespace stream;
     namespace lexer {
 
-        SotaLexer::SotaLexer() {
-
+        Token SotaLexer::eol() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            if (_charstream.IsCurrAnyOf({ '\r', '\n' })) {
+                token.Type = TokenType::EndOfLine;
+                if (_charstream.IsCurrSeqOf({ '\r', '\n' }))
+                    ++token.Count;
+                _charstream.Next(token.Count);
+            }
+            return token;
         }
-        SotaLexer::SotaLexer(string filename) : Line(1), Col(1) {
+
+        Token SotaLexer::dent() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+
+            if (_charstream.IsPrevSeqOf({ '\r', '\n' }, 2) || _charstream.IsPrevAnyOf({ '\r', '\n' })) {
+                auto t = ws();
+                auto indent = t ? t.Count : 0;
+
+                if (!_stride)
+                    _stride = indent;
+
+                if (indent > _indents.top()) {
+                    if (indent == _indents.top() + _stride) {
+                        _indents.push(indent);
+                        token.Type = TokenType::Indent;
+                        token.Count = _stride;
+                    }
+                    else
+                        throw exception("indent didnt meet previously established stride of %d", _stride);
+                }
+                else if (indent < _indents.top()) {
+                    _indents.pop();
+                    token.Type = TokenType::Dedent;
+                    token.Count = 0;
+                }
+            }
+            return token;
+        }
+
+        Token SotaLexer::ws() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            if (_charstream.IsCurrAnyOf({ ' ', '\t' })) {
+                token.Type = TokenType::WhiteSpace;
+                while (_charstream.IsNextAnyOf({ ' ', '\t' }))
+                    ++token.Count;
+            }
+            return token;
+        }
+
+        Token SotaLexer::str() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            char c = _charstream.Curr;
+            if ('\'' == c || '\"' == c) {
+                if (_charstream.IsPeekSeqOf({ '-', '-', 'b', 'r' })) {
+                    int x = 1;
+                }
+                token.Type = TokenType::Str;
+                while (!_charstream.IsNextAnyOf({ c, '\r', '\n', '\0' }))
+                    ++token.Count;
+
+                if (_charstream.IsCurr(c)) {
+                    ++token.Count;
+                    _charstream.Next();
+                }
+                else
+                    throw exception("missing end quote on string literal");
+            }
+            return token;
+        }
+
+        Token SotaLexer::raw() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            if (!_charstream.IsCurrAnyOf({ ' ', '\t', '\r', '\n', '\0' })) {
+                token.Type = TokenType::RAW;
+                while (!_charstream.IsNextAnyOf({ ' ', '\t', '\r', '\n', '\0' })) {
+                    ++token.Count;
+                }
+            }
+            return token;
+        }
+
+        Token SotaLexer::eof() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            if (_charstream.IsCurr('\0')) {
+                if (_tokens.back().Type != TokenType::EndOfLine)
+                    _tokens.push_back({ TokenType::EndOfLine, _charstream.Index, 0, &_charstream.Items });
+                while (_indents.top()) {
+                    _tokens.push_back({ TokenType::Dedent, _charstream.Index, 0, &_charstream.Items });
+                    _indents.pop();
+                }
+            }
+            return token;
+        }
+
+        /* public */
+        SotaLexer::~SotaLexer() { 
+        
+        }
+
+        SotaLexer::SotaLexer(string filename) {
             Load(filename);
         }
-        SotaLexer::SotaLexer(vector<char> chars) : Line(1), Col(1) {
-            Load(chars);
-        }
 
-        const char&
-        SotaLexer::Next(unsigned int lookahead) {
-            if ('\r' == Curr || '\n' == Curr) {
-                ++Line;
-                Col = 1;
-            }
-            else
-                ++Col;
-            return SotaStream::Next(lookahead);
-        }
-
-        void 
+        void
         SotaLexer::Load(string filename) {
-            ostringstream oss;
-            ifstream fs(filename);
-            oss << fs.rdbuf();
-            const std::string str(oss.str());
-            Load(vector<char>(str.begin(), str.end()));
+            _stride = 0;
+            _indents = stack<unsigned int>();
+            _indents.push(0);
+            ifstream file(_filename = filename, ios::in | ios::binary | ios::ate);
+            if (!file.eof() && !file.fail()) {
+                file.seekg(0, ios_base::end);
+                unsigned int size = (unsigned int)file.tellg();
+                _chars = vector<char>();
+                _chars.resize(size);
+                file.seekg(0, ios_base::beg);
+                file.read(&_chars[0], size);
+            }
+            _charstream = SotaStream<char>(_chars);
+
+            string s;
+            for (int i = 460; i <= 470; ++i)
+                s += _chars[i];
+            cout << s << endl << endl;
+            _tokens = vector<Token>();
+            _tokenstream = SotaStream<Token>(_tokens);
         }
 
-        void 
-        SotaLexer::Load(vector<char> chars) {
-            _items = chars;
-            Curr = _items[0];
-        }
+        vector<Token> SotaLexer::Pass1() {
+            while (_charstream.Curr) {
 
-        Token 
-        SotaLexer::pop() {
-            Token token = _tokens.top();
-            _tokens.pop();
-            return token;
-        }
-
-        Token 
-        SotaLexer::dots(char &c) {
-            auto token = Token();
-            if (c == '.') {
-                if (Peek('.')) {
-                    token.value = "..";
+                if (auto token = eol()) {
+                    _tokens.push_back(token);
+                    while (auto token = dent())
+                        _tokens.push_back(token);
+                    continue;
+                }
+                if (auto token = ws()) {
+                    _tokens.push_back(token);
+                    continue;
+                }
+                if (auto token = str()) {
+                    _tokens.push_back(token);
+                    continue;
+                }
+                if (auto token = raw()) {
+                    _tokens.push_back(token);
+                    continue;
                 }
             }
-            return token;
+            auto token = eof();
+            _tokens.push_back(token);
+            return _tokens;
         }
 
-        Token 
-        SotaLexer::regex(char &c) {
-            auto token = Token();
-            if (isoneof(c, "ms")) {
-                if (isspace(Prev()) && Peek('/'))
-                {
-                    token.value += c;
-                    token.value += Next();
-                    token.type = Value2Type[token.value];
-                    c = Next();
-                }
-            }
-            return token;
+        vector<Token>
+        SotaLexer::Pass2() {
+            vector<Token> tokens;
+            return tokens;
         }
 
-        Token 
-        SotaLexer::comment(char &c) {
-            auto token = Token();
-            if (c == '#') {
-                do {
-                    ++Col;
-                    token.value += c;
-                    c = Next();
-                } while (c && c != '\n' && c != '\r');
-            }
-            return token;
-        }
-
-        Token 
-        SotaLexer::newline(char &c) {
-            auto token = Token();
-            if (isoneof(c,"\r\n")) {
-                do {
-                    ++Line;
-                    c = Next();
-                } while (isoneof(c, "\r\n"));
-                if (!c) {
-                    token.type = TokenType::EndOfFile;
-                    token.value = Type2Value[token.type];
-                    _tokens.push(token);
-                }
-                token.type = TokenType::EndOfLine;
-                token.value = Type2Value[token.type];
-                return token;
-            }
-            return token;
-        }
-
-        Token 
-        SotaLexer::whitespace(char &c) {
-            auto token = Token();
-            if (isspace(c)) {
-                while (isspace(c = Next())) {
-                    ++Col;
-                }
-            }
-            return token;
-        }
-
-        Token 
-        SotaLexer::identifier_numeral_or_symbol(char &c) {
-            auto token = Token();
-            do {
-                switch(c) {
-                case 'a':   case 'A':
-                case 'b':   case 'B':
-                case 'c':   case 'C':
-                case 'd':   case 'D':
-                case 'e':   case 'E':
-                case 'f':   case 'F':
-                case 'g':   case 'G':
-                case 'h':   case 'H':
-                case 'i':   case 'I':
-                case 'j':   case 'J':
-                case 'k':   case 'K':
-                case 'l':   case 'L':
-                case 'm':   case 'M':
-                case 'n':   case 'N':
-                case 'o':   case 'O':
-                case 'p':   case 'P':
-                case 'q':   case 'Q':
-                case 'r':   case 'R':
-                case 's':   case 'S':
-                case 't':   case 'T':
-                case 'u':   case 'U':
-                case 'v':   case 'V':
-                case 'w':   case 'W':
-                case 'x':   case 'X':
-                case 'y':   case 'Y':
-                case 'z':   case 'Z':
-                case '_':   
-                    token.type = TokenType::Id;
-                    token.value += c;
-                    c = Next();
-                    break;
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                    if (token.type != TokenType::Id)
-                        token.type = TokenType::Num;
-                    token.value += c;
-                    c = Next();
-                    break;
-                default:
-                    if (c && !token) {
-                        while (startswith(token.value + c, TokenValues)) {
-                            token.value += c;
-                            c = Next();
-                        }
-                        if (Value2Type.count(token.value)) {
-                            token.type = Value2Type[token.value];
-                            return token;
-                        }
-                        else
-                            throw exception("match failure in identifier_numeral_or_symbol");
-                    }
-                    break;
-                }
-            } while (c && isalnum(c) || c == '_');
-            if (Value2Type.count(token.value))
-                token.type = Value2Type[token.value];
-            return token;
-        }
-
-        Token 
-        SotaLexer::Scan() {
-            Token token = Token();
-            char c = Curr;
-
-            if (_tokens.size()) {
-                return pop();
-            }
-
-            /* consume multiple newlines, emit only one token*/
-            if (token = newline(c))
-                return token;
-
-            /* consume ws and return denting */
-            if (token = whitespace(c))
-                return token;
-
-            /* remove comments */
-            if (token = comment(c))
-                return token;
-
-            /* regex operators m/ and s/ */
-            if (token = regex(c))
-                return token;
-
-            /* match updir or range operators */
-            if (token = dots(c))
-                return token;
-
-            /* divine id, num or keyword */
-            if (token = identifier_numeral_or_symbol(c))
-                return token;
-            
-            if (!c) {
-                token.type = TokenType::EndOfFile;
-                token.value = Type2Value[token.type];
-                return token;
-            }
-
-            return token;
+        vector<Token>
+        Tokenize() {
+            vector<Token> tokens;
+            return tokens;
         }
     }
 }
