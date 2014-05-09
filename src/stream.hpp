@@ -100,7 +100,8 @@ namespace sota {
                 return true;
             }
 
-            virtual bool IsPeekSeqOf(initializer_list<Item> items, unsigned int lookahead = 1) {
+            virtual bool 
+            IsPeekSeqOf(initializer_list<Item> items, unsigned int lookahead = 1) {
                 unsigned int i = 0;
                 for (auto item : items) {
                     if (item != (Item)Peek(lookahead + i++))

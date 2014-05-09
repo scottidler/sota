@@ -19,11 +19,10 @@ namespace sota {
             vector<char> _chars;
             SotaStream<char> _charstream;
 
-            vector<Token> _tokens;
-            SotaStream<Token> _tokenstream;
-
             unsigned int _stride;
             stack<unsigned int> _indents;
+
+            deque<Token> _tokens;
 
             inline Token eol();
             inline Token dent();

@@ -13,6 +13,8 @@ namespace sota {
                     ++token.Count;
                 _charstream.Next(token.Count);
             }
+            while (auto token = dent())
+                _tokens.push_back(token);
             return token;
         }
 
@@ -157,15 +159,12 @@ namespace sota {
 
         Token 
         SotaLexer::eof() {
-            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
-            if (_charstream.IsCurr('\0')) {
-                if (_tokens.back().Type != TokenType::EndOfLine)
-                    _tokens.push_back({ TokenType::EndOfLine, _charstream.Index, 0, &_charstream.Items });
-                while (_indents.top()) {
-                    _tokens.push_back({ TokenType::Dedent, _charstream.Index, 0, &_charstream.Items });
-                    _indents.pop();
-                }
+            Token token = { TokenType::EndOfLine, _charstream.Index, 0, &_charstream.Items };
+            while (_indents.top()) {
+                _tokens.push_back({ TokenType::Dedent, _charstream.Index, 0, &_charstream.Items });
+                _indents.pop();
             }
+            _tokens.push_back({});
             return token;
         }
 
@@ -193,27 +192,20 @@ namespace sota {
                 file.read(&_chars[0], size);
             }
             _charstream = SotaStream<char>(_chars);
-
-            _tokens = vector<Token>();
-            _tokenstream = SotaStream<Token>(_tokens);
+            _tokens = deque<Token>();
         }
 
         Token 
         SotaLexer::Scan() {
 
-            static queue<Token> tokens;
-
-            if (tokens.size()) {
-                auto token = tokens.back();
-                tokens.pop();
+            if (_tokens.size()) {
+                auto token = _tokens.front();
+                _tokens.pop_front();
                 return token;
             }
 
-            if (auto token = eol()) {
-                while (auto token = dent())
-                    tokens.push(token);
+            if (auto token = eol())
                 return token;
-            }
 
             if (auto token = ws())
                 return token;
@@ -230,14 +222,17 @@ namespace sota {
             if (auto token = id_num_kw())
                 return token;
 
-            return Token();
+            return eof();
         }
 
         vector<Token>
         SotaLexer::Tokenize() {
             vector<Token> tokens;
-            while (auto token = Scan())
+            Token token;
+            do {
+                token = Scan();
                 tokens.push_back(token);
+            } while (token);
             return tokens;
         }
     }

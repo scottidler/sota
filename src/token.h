@@ -204,7 +204,7 @@ namespace sota {
 
             const string
             Value() {
-                return string(pChars->begin() + Index, pChars->begin() + Index + Count);
+                return pChars ? string(pChars->begin() + Index, pChars->begin() + Index + Count) : "";
             }
 
             const string
