@@ -2,6 +2,7 @@
 //
 #include <regex>
 #include "stdafx.h"
+#include "utils.h"
 #include "lexer.h"
 #include "token.h"
 #include "stream.hpp"
@@ -10,27 +11,38 @@
 using namespace std;
 using namespace sota;
 using namespace sota::lexer;
-
 using namespace sota::stream;
+using namespace sota::utils;
 
 int main(int argc, char* argv[])
 {
+    vector<string> values1 = {
+        "sue",
+        "sam",
+        "sal",
+        "ann",
+    };
 
-    vector<char> chars = { 'a', 'b', 'c' };
-    auto charstream = SotaStream<char>(chars);
-    bool b = charstream.IsCurrSeqOf({ 'a', 'b' });
+    string s1 = "bobby";
+    auto b1 = startofany("su", values1);
+
+    auto ks = keys(Value2Type);
+
+    auto s = "12"[0];
+
+    auto b = SymbolStart['n'];
+
+    auto t = SymbolValue2Type["..."];
 
     string filename("example1.sota");
     auto lexer = SotaLexer(filename);
 
-    auto tokens = lexer.Pass1();
-
-    auto t2 = tokens[2].Value();
-
     vector<string> values;
-    for (auto token : tokens) {
-        auto value = Type2Value[token.Type];
-        values.push_back(value == "RAW" || value == "STR" ? token.Value() : value);
+    while (auto token = lexer.Scan()) {
+        values.push_back(token.Pretty());
+        cout << token.Pretty() << " ";
+        if (token.Type == TokenType::EndOfLine)
+            cout << endl;
     }
 
     return 0;

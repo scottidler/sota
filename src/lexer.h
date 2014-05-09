@@ -1,13 +1,16 @@
 #ifndef __SOTA_LEXER__
 #define __SOTA_LEXER__ = 1
 
+#include <queue>
 #include <stack>
 #include <string>
 #include <vector>
+#include "utils.h"
 #include "token.h"
 #include "stream.hpp"
 
 namespace sota {
+    using namespace utils;
     using namespace stream;
     namespace lexer {
         class SotaLexer {
@@ -25,22 +28,17 @@ namespace sota {
             inline Token eol();
             inline Token dent();
             inline Token ws();
-            inline Token raw();
-            inline Token str();
+            inline Token comment();
+            inline Token lit();
+            inline Token sym();
+            inline Token id_num_kw();
             inline Token eof();
-    
-            //inline bool nl();
-            ////inline bool lit();
-            //inline bool ws();
-            //inline bool raw();
-            //inline bool str();
 
         public:
             ~SotaLexer();
             SotaLexer(string filename);
             void Load(string filename);
-            vector<Token> Pass1();
-            vector<Token> Pass2();
+            Token Scan();
             vector<Token> Tokenize();
         };
     }

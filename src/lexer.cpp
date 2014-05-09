@@ -1,9 +1,11 @@
 #include "lexer.h"
+#include "utils.h"
 
 namespace sota {
     namespace lexer {
 
-        Token SotaLexer::eol() {
+        Token 
+        SotaLexer::eol() {
             Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
             if (_charstream.IsCurrAnyOf({ '\r', '\n' })) {
                 token.Type = TokenType::EndOfLine;
@@ -14,7 +16,8 @@ namespace sota {
             return token;
         }
 
-        Token SotaLexer::dent() {
+        Token 
+        SotaLexer::dent() {
             Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
 
             if (_charstream.IsPrevSeqOf({ '\r', '\n' }, 2) || _charstream.IsPrevAnyOf({ '\r', '\n' })) {
@@ -42,7 +45,8 @@ namespace sota {
             return token;
         }
 
-        Token SotaLexer::ws() {
+        Token 
+        SotaLexer::ws() {
             Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
             if (_charstream.IsCurrAnyOf({ ' ', '\t' })) {
                 token.Type = TokenType::WhiteSpace;
@@ -52,13 +56,22 @@ namespace sota {
             return token;
         }
 
-        Token SotaLexer::str() {
+        Token 
+        SotaLexer::comment() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
+            if (_charstream.IsCurr('#')) {
+                token.Type = TokenType::Comment;
+                while (!_charstream.IsNextAnyOf({ '\r', '\n' }))
+                    ++token.Count;
+            }
+            return token;
+        }
+
+        Token 
+        SotaLexer::lit() {
             Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
             char c = _charstream.Curr;
             if ('\'' == c || '\"' == c) {
-                if (_charstream.IsPeekSeqOf({ '-', '-', 'b', 'r' })) {
-                    int x = 1;
-                }
                 token.Type = TokenType::Str;
                 while (!_charstream.IsNextAnyOf({ c, '\r', '\n', '\0' }))
                     ++token.Count;
@@ -70,21 +83,80 @@ namespace sota {
                 else
                     throw exception("missing end quote on string literal");
             }
+
             return token;
         }
 
-        Token SotaLexer::raw() {
-            Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
-            if (!_charstream.IsCurrAnyOf({ ' ', '\t', '\r', '\n', '\0' })) {
-                token.Type = TokenType::RAW;
-                while (!_charstream.IsNextAnyOf({ ' ', '\t', '\r', '\n', '\0' })) {
-                    ++token.Count;
-                }
+        Token 
+        SotaLexer::sym() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 0, &_charstream.Items };
+
+            string sym = "";
+            auto symkeys = keys(SymbolValue2Type);
+
+            while (startofany(sym + _charstream.Curr, symkeys)) {
+                sym += _charstream.Curr;
+                ++token.Count;
+                _charstream.Next();
             }
+
+            token.Type = SymbolValue2Type[sym];
+
+            if (!token)
+                _charstream.Index = token.Index; //backtrack
+
             return token;
         }
 
-        Token SotaLexer::eof() {
+        Token 
+        SotaLexer::id_num_kw() {
+            Token token = { TokenType::EndOfFile, _charstream.Index, 0, &_charstream.Items };
+
+            bool loop = true;
+            while (loop) {
+                switch (_charstream.Curr) {
+                case 'a':   case 'n':   case 'A':   case 'N':
+                case 'b':   case 'o':   case 'B':   case 'O':
+                case 'c':   case 'p':   case 'C':   case 'P':
+                case 'd':   case 'q':   case 'D':   case 'Q':
+                case 'e':   case 'r':   case 'E':   case 'R':
+                case 'f':   case 's':   case 'F':   case 'S':
+                case 'g':   case 't':   case 'G':   case 'T':
+                case 'h':   case 'u':   case 'H':   case 'U':
+                case 'i':   case 'v':   case 'I':   case 'V':
+                case 'j':   case 'w':   case 'J':   case 'W':
+                case 'k':   case 'x':   case 'K':   case 'X':
+                case 'l':   case 'y':   case 'L':   case 'Y':
+                case 'm':   case 'z':   case 'M':   case 'Z':
+                case '_':
+                    token.Type = TokenType::Id;
+                    break;
+
+                case '0':   case '5':
+                case '1':   case '6':
+                case '2':   case '7':
+                case '3':   case '8':
+                case '4':   case '9':
+                    if (token.Type != TokenType::Id)
+                        token.Type = TokenType::Num;
+                    break;
+
+                default:
+                    loop = false;
+                    continue;
+                }
+                ++token.Count;
+                _charstream.Next();
+
+            }
+            if (KeywordValue2Type.count(token.Value()))
+                token.Type = KeywordValue2Type[token.Value()];
+
+            return token;
+        }
+
+        Token 
+        SotaLexer::eof() {
             Token token = { TokenType::EndOfFile, _charstream.Index, 1, &_charstream.Items };
             if (_charstream.IsCurr('\0')) {
                 if (_tokens.back().Type != TokenType::EndOfLine)
@@ -122,50 +194,50 @@ namespace sota {
             }
             _charstream = SotaStream<char>(_chars);
 
-            string s;
-            for (int i = 460; i <= 470; ++i)
-                s += _chars[i];
-            cout << s << endl << endl;
             _tokens = vector<Token>();
             _tokenstream = SotaStream<Token>(_tokens);
         }
 
-        vector<Token> SotaLexer::Pass1() {
-            while (_charstream.Curr) {
+        Token 
+        SotaLexer::Scan() {
 
-                if (auto token = eol()) {
-                    _tokens.push_back(token);
-                    while (auto token = dent())
-                        _tokens.push_back(token);
-                    continue;
-                }
-                if (auto token = ws()) {
-                    _tokens.push_back(token);
-                    continue;
-                }
-                if (auto token = str()) {
-                    _tokens.push_back(token);
-                    continue;
-                }
-                if (auto token = raw()) {
-                    _tokens.push_back(token);
-                    continue;
-                }
+            static queue<Token> tokens;
+
+            if (tokens.size()) {
+                auto token = tokens.back();
+                tokens.pop();
+                return token;
             }
-            auto token = eof();
-            _tokens.push_back(token);
-            return _tokens;
+
+            if (auto token = eol()) {
+                while (auto token = dent())
+                    tokens.push(token);
+                return token;
+            }
+
+            if (auto token = ws())
+                return token;
+
+            if (auto token = comment())
+                return token;
+
+            if (auto token = lit())
+                return token;
+
+            if (auto token = sym())
+                return token;
+
+            if (auto token = id_num_kw())
+                return token;
+
+            return Token();
         }
 
         vector<Token>
-        SotaLexer::Pass2() {
+        SotaLexer::Tokenize() {
             vector<Token> tokens;
-            return tokens;
-        }
-
-        vector<Token>
-        Tokenize() {
-            vector<Token> tokens;
+            while (auto token = Scan())
+                tokens.push_back(token);
             return tokens;
         }
     }

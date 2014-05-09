@@ -1,7 +1,18 @@
+
+Fruits =
+    | Apple
+    | Grape
+    | Cherry
+
+text =
+    string literals are
+    allowed like this.
+
+# comments look like this
 open cli
 
 divine = (component, branch, cfg)
-    for k,v in cfg
+    foreach k,v in cfg
         if m/branch/k/
             return v
     return branch
@@ -21,7 +32,7 @@ main = (args)
     cli.add(
         '--branch'
         default=run('git rev-parse --abbrev-ref HEAD')
-        help='override the default branch of {default})
+        help='override the default branch of {default}')
 
     cli.add(
         'components'
