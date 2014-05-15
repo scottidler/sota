@@ -223,6 +223,10 @@ namespace sota {
                 }
             }
 
+            operator const TokenType() {
+                return Type;
+            }
+
             operator bool() {
                 return Type != TokenType::EndOfFile;
             }

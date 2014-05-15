@@ -19,6 +19,12 @@ int main(int argc, char* argv[])
     string filename("example1.sota");
     auto lexer = SotaLexer(filename);
 
+    Token t = { TokenType::Add, 1, 1 };
+    TokenType tt = t;
+
+    if (t == TokenType::Add)
+        cout << "works" << endl;
+
     vector<string> values;
     Token token;
     do {
