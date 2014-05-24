@@ -7,36 +7,34 @@
 #include <fstream>
 #include <sstream>
 
-using namespace std;
-
 namespace sota {
 
     typedef unsigned int uint;
 
-    vector<string> get_lines(string filename);
-    vector<string> split(const string &s, char delim, bool empties);
-    vector<string> &split(const string &s, char delim, vector<string> &elems, bool empties);
+    std::vector<std::string> get_lines(std::string filename);
+    std::vector<std::string> split(const std::string &s, char delim, bool empties);
+    std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems, bool empties);
 
     template<class Key, class Value>
-    vector<Key> keys(map<Key, Value> m) {
-        vector<Key> keys = {};
-        map<Key, Value>::iterator iter;
+    std::vector<Key> keys(std::map<Key, Value> m) {
+        std::vector<Key> keys = {};
+        typename std::map<Key, Value>::iterator iter;
         for (iter = m.begin(); iter != m.end(); ++iter)
             keys.push_back(iter->first);
         return keys;
     }
 
     template<class Key, class Value>
-    vector<Value> values(map<Key, Value> m) {
-        vector<Value> values = {};
-        map<Key, Value>::iterator iter;
+    std::vector<Value> values(std::map<Key, Value> m) {
+        std::vector<Value> values = {};
+        typename std::map<Key, Value>::iterator iter;
         for (iter = m.begin(); iter != m.end(); ++iter)
-            keys.push_back(iter->second);
-        return keys;
+            values.push_back(iter->second);
+        return values;
     }
 
-    bool startof(const string &prefix, const string &str);
-    bool startofany(const string &prefix, const vector<string> &strs);
+    bool startof(const std::string &prefix, const std::string &str);
+    bool startofany(const std::string &prefix, const std::vector<std::string> &strs);
 
 }
 

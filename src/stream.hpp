@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <initializer_list>
 
 namespace sota {
     template <class Item>
@@ -21,11 +22,11 @@ namespace sota {
 
         unsigned int Index;
         Item Curr;
-        vector<Item> Items;
+        std::vector<Item> Items;
 
-        ~SotaStream() { }
+        virtual ~SotaStream() { }
         SotaStream() : Index(0), Curr(Default) { }
-        SotaStream(vector<Item> &items) : Items(items), Index(0), Curr(items.size() ? items[0] : Default) {
+        SotaStream(std::vector<Item> &items) : Items(items), Index(0), Curr(items.size() ? items[0] : Default) {
 
         }
             
@@ -51,7 +52,7 @@ namespace sota {
         IsCurr(Item item) { return item == Curr; }
 
         virtual bool
-        IsPrevAnyOf(initializer_list<Item> items, unsigned int lookback = 1) {
+        IsPrevAnyOf(std::initializer_list<Item> items, unsigned int lookback = 1) {
             auto prev = Prev(lookback);
             for (auto item : items) {
                 if (item == prev)
@@ -61,7 +62,7 @@ namespace sota {
         }
 
         virtual bool
-        IsPeekAnyOf(initializer_list<Item> items, unsigned int lookahead = 1) {
+        IsPeekAnyOf(std::initializer_list<Item> items, unsigned int lookahead = 1) {
             auto peek = Peek(lookahead);
             for (auto item : items) {
                 if (item == peek)
@@ -71,7 +72,7 @@ namespace sota {
         }
 
         virtual bool
-        IsNextAnyOf(initializer_list<Item> items, unsigned int lookahead = 1) {
+        IsNextAnyOf(std::initializer_list<Item> items, unsigned int lookahead = 1) {
             auto next = Next(lookahead);
             for (auto item : items) {
                 if (item == next)
@@ -81,7 +82,7 @@ namespace sota {
         }
 
         virtual bool 
-        IsCurrAnyOf(initializer_list<Item> items) {
+        IsCurrAnyOf(std::initializer_list<Item> items) {
             for (auto item : items) {
                 if (item == Curr)
                     return true;
@@ -90,7 +91,7 @@ namespace sota {
         }
 
         virtual bool 
-        IsPrevSeqOf(initializer_list<Item> items, unsigned int lookback = 1) {
+        IsPrevSeqOf(std::initializer_list<Item> items, unsigned int lookback = 1) {
             unsigned int i = 0;
             for (auto item : items) {
                 if (item != (Item)Peek(i++ - lookback))
@@ -100,7 +101,7 @@ namespace sota {
         }
 
         virtual bool 
-        IsPeekSeqOf(initializer_list<Item> items, unsigned int lookahead = 1) {
+        IsPeekSeqOf(std::initializer_list<Item> items, unsigned int lookahead = 1) {
             unsigned int i = 0;
             for (auto item : items) {
                 if (item != (Item)Peek(lookahead + i++))
@@ -110,7 +111,7 @@ namespace sota {
         }
 
         virtual bool 
-        IsNextASeqOf(initializer_list<Item> items, unsigned int lookahead = 1) {
+        IsNextASeqOf(std::initializer_list<Item> items, unsigned int lookahead = 1) {
             bool result = true;
             for (auto item : items) {
                 if (item != (Item)Next() && result)
@@ -120,7 +121,7 @@ namespace sota {
         }
 
         virtual bool 
-        IsCurrSeqOf(initializer_list<Item> items) {
+        IsCurrSeqOf(std::initializer_list<Item> items) {
             unsigned int i = 0;
             for (auto item : items) {
                 if (item != Peek(i++))

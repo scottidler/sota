@@ -13,8 +13,8 @@ namespace sota {
     class SotaLexer : SotaStream<char> {
 
         unsigned int _stride;
-        stack<unsigned int> _indents;
-        deque<Token> _cache;
+        std::stack<unsigned int> _indents;
+        std::deque<Token> _cache;
 
         Token eol();
         Token dent();
@@ -27,15 +27,15 @@ namespace sota {
 
     public:
         ~SotaLexer();
-        SotaLexer(vector<char> chars);
+        SotaLexer(std::vector<char> chars);
 
         unsigned int Line(const Token &token);
         unsigned int Column(const Token &token);
-        string Value(const Token &token);
-        string Pretty(const Token &token);
+        std::string Value(const Token &token);
+        std::string Pretty(const Token &token);
 
         Token Scan();
-        vector<Token> Tokenize();
+        std::vector<Token> Tokenize();
     };
 }
 

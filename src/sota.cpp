@@ -8,7 +8,7 @@
 #include "stream.hpp"
 #include <array>
 
-using namespace std;
+//using namespace std;
 using namespace sota;
 using namespace sota::lexer;
 using namespace sota::stream;
@@ -18,12 +18,6 @@ int main(int argc, char* argv[])
 {
     string filename("example1.sota");
     auto lexer = SotaLexer(filename);
-
-    Token t = { TokenType::Add, 1, 1 };
-    TokenType tt = t;
-
-    if (t == TokenType::Add)
-        cout << "works" << endl;
 
     vector<string> values;
     Token token;

@@ -1,4 +1,6 @@
 #include "lexer.h"
+#include "token.h"
+#include "utils.h"
 
 namespace sota {
 
@@ -81,7 +83,7 @@ namespace sota {
     }
     Token SotaLexer::sym() {
         Token token = { TokenType::EndOfFile, Index, 0 };
-        string sym = "";
+        std::string sym = "";
         auto symkeys = keys(SymbolValue2Type);
 
         while (startofany(sym + Curr, symkeys)) {
@@ -93,7 +95,7 @@ namespace sota {
         token.Type = SymbolValue2Type[sym];
 
         if (!token.Type) {
-            Index = Index; //backtrack
+            token.Index = Index; //backtrack
             token.Length = 0;
         }
         return token;
@@ -152,18 +154,21 @@ namespace sota {
     SotaLexer::~SotaLexer() {
 
     }
-    SotaLexer::SotaLexer(vector<char> chars) : SotaStream(chars) {
+    SotaLexer::SotaLexer(std::vector<char> chars) : SotaStream(chars) {
         _stride = 0;
         _indents.push(0);
     }
 
     unsigned int SotaLexer::Line(const Token &token) {
+        /*
         regex const pattern("\r?\n");
         string head = string(Items.begin(), Items.begin() + token.Index);
         ptrdiff_t const count(distance(
             sregex_iterator(head.begin(), head.end(), pattern),
             sregex_iterator()));
         return count + 1;
+        */
+        return 0;
     }
 
     unsigned int SotaLexer::Column(const Token &token) {
@@ -177,12 +182,12 @@ namespace sota {
         return token.Index - count;
     }
 
-    string SotaLexer::Value(const Token &token) {
-        return string(Items.begin() + token.Index, Items.begin() + token.Index + token.Length);
+    std::string SotaLexer::Value(const Token &token) {
+        return std::string(Items.begin() + token.Index, Items.begin() + token.Index + token.Length);
     }
 
-    string SotaLexer::Pretty(const Token &token) {
-        string result;
+    std::string SotaLexer::Pretty(const Token &token) {
+        std::string result;
         auto value = Value(token);
         auto tokenvalue = Type2Value[token.Type];
         switch (token.Type) {
@@ -230,8 +235,8 @@ namespace sota {
 
         return eof();
     }
-    vector<Token> SotaLexer::Tokenize() {
-        auto tokens = vector<Token>();
+    std::vector<Token> SotaLexer::Tokenize() {
+        auto tokens = std::vector<Token>();
         return tokens;
     }
 }

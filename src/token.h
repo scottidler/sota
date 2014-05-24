@@ -6,11 +6,11 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <xutility>
+#include <utility>
 
 #include "utils.h"
 
-using namespace std;
+//using namespace std;
 
 namespace sota {
 
@@ -117,48 +117,48 @@ namespace sota {
     };
     #undef T
 
-    #define T(k,v) make_pair(v, TokenType::k),
-    static map<string, TokenType> Value2Type {
+    #define T(k,v) std::make_pair(v, TokenType::k),
+    static std::map<std::string, TokenType> Value2Type {
         META_TOKENS
         KEYWORD_TOKENS
         SYMBOL_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(v, TokenType::k),
-    static map<string, TokenType> MetaValue2Type{
+    #define T(k,v) std::make_pair(v, TokenType::k),
+    static std::map<std::string, TokenType> MetaValue2Type{
         META_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(v, TokenType::k),
-    static map<string, TokenType> KeywordValue2Type {
+    #define T(k,v) std::make_pair(v, TokenType::k),
+    static std::map<std::string, TokenType> KeywordValue2Type {
         KEYWORD_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(v, TokenType::k),
-    static map<string, TokenType> SymbolValue2Type {
+    #define T(k,v) std::make_pair(v, TokenType::k),
+    static std::map<std::string, TokenType> SymbolValue2Type {
         SYMBOL_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(v[0], 1),
-    static map<char, int> SymbolStart {
+    #define T(k,v) std::make_pair(v[0], 1),
+    static std::map<char, int> SymbolStart {
         SYMBOL_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(TokenType::k, #k),
-    static map<TokenType, string> Type2Name {
+    #define T(k,v) std::make_pair(TokenType::k, #k),
+    static std::map<TokenType, std::string> Type2Name {
         META_TOKENS
         KEYWORD_TOKENS
         SYMBOL_TOKENS
     };
     #undef T
 
-    #define T(k,v) make_pair(TokenType::k, v),
-    static map<TokenType, string> Type2Value {
+    #define T(k,v) std::make_pair(TokenType::k, v),
+    static std::map<TokenType, std::string> Type2Value {
         META_TOKENS
         KEYWORD_TOKENS
         SYMBOL_TOKENS
@@ -166,7 +166,7 @@ namespace sota {
     #undef T
 
     #define T(k,v) v,
-    static vector<string> TokenValues {
+    static std::vector<std::string> TokenValues {
         META_TOKENS
         KEYWORD_TOKENS
         SYMBOL_TOKENS
