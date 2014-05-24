@@ -10,37 +10,33 @@
 #include "stream.hpp"
 
 namespace sota {
-    using namespace utils;
-    using namespace stream;
-    namespace lexer {
-        class SotaLexer {
-            string _filename;
+    class SotaLexer : SotaStream<char> {
 
-            vector<char> _chars;
-            SotaStream<char> _charstream;
+        unsigned int _stride;
+        stack<unsigned int> _indents;
+        deque<Token> _cache;
 
-            unsigned int _stride;
-            stack<unsigned int> _indents;
+        Token eol();
+        Token dent();
+        Token ws();
+        Token comment();
+        Token lit();
+        Token sym();
+        Token id_num_kw();
+        Token eof();
 
-            deque<Token> _tokens;
+    public:
+        ~SotaLexer();
+        SotaLexer(vector<char> chars);
 
-            inline Token eol();
-            inline Token dent();
-            inline Token ws();
-            inline Token comment();
-            inline Token lit();
-            inline Token sym();
-            inline Token id_num_kw();
-            inline Token eof();
+        unsigned int Line(const Token &token);
+        unsigned int Column(const Token &token);
+        string Value(const Token &token);
+        string Pretty(const Token &token);
 
-        public:
-            ~SotaLexer();
-            SotaLexer(string filename);
-            void Load(string filename);
-            Token Scan();
-            vector<Token> Tokenize();
-        };
-    }
+        Token Scan();
+        vector<Token> Tokenize();
+    };
 }
 
 #endif /* __SOTA_LEXER__ */

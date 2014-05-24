@@ -6,35 +6,40 @@
 #include "lexer.h"
 #include "token.h"
 #include "stream.hpp"
+#include "ast.h"
 #include <array>
 
-using namespace std;
 using namespace sota;
-using namespace sota::lexer;
-using namespace sota::stream;
-using namespace sota::utils;
+
+vector<char> load(string filename) {
+    vector<char> chars;
+    ifstream file(filename, ios::in | ios::binary | ios::ate);
+    if (!file.eof() && !file.fail()) {
+        file.seekg(0, ios_base::end);
+        auto size = (unsigned int)file.tellg();
+        chars.resize(size);
+        file.seekg(0, ios_base::beg);
+        file.read(&chars[0], size);
+    }
+    return chars;
+}
 
 int main(int argc, char* argv[])
 {
-    string filename("example1.sota");
-    auto lexer = SotaLexer(filename);
-
-    Token t = { TokenType::Add, 1, 1 };
-    TokenType tt = t;
-
-    if (t == TokenType::Add)
-        cout << "works" << endl;
+    auto chars = load("example1.sota");
+    auto lexer = SotaLexer(chars);
 
     vector<string> values;
-    Token token;
-    do {
-        token = lexer.Scan();
-        values.push_back(token.Pretty());
-        cout << token.Pretty() << " ";
-        if (token.Type == TokenType::EndOfLine)
-            cout << endl;
-    } while (token);
+    vector<string> pretties;
+    vector<Token> tokens;
+    while (auto token = lexer.Scan()) {
 
+        cout << lexer.Pretty(token);
+        if (TokenType::EndOfLine == token.Type)
+            cout << endl;
+        else
+            cout << " ";
+    }
     return 0;
 }
 
