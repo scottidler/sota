@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "token.h"
 #include "utils.h"
+#include "exceptions.h"
 
 namespace sota {
 
@@ -33,7 +34,7 @@ namespace sota {
                     token.Type = TokenType::Indent;
                 }
                 else
-                    throw exception("indent didnt meet previously established stride of %d", _stride);
+                    throw SotaException("indent didnt meet previously established stride of");
             }
             else if (indent < _indents.top()) {
                 _indents.pop();
@@ -77,7 +78,7 @@ namespace sota {
                 Next();
             }
             else
-                throw exception("missing end quote on string literal");
+                throw SotaException("missing end quote on string literal");
         }
         return token;
     }

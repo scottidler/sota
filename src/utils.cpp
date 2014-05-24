@@ -2,44 +2,42 @@
 #include <algorithm>
 
 namespace sota {
-    namespace utils {
-        vector<string> get_lines(string filename) {
-            vector<string> lines;
-            ifstream file(filename);
-            string line;
-            while (getline(file, line) ) {
-                lines.push_back(line);
-            }
-            return lines;
+    std::vector<std::string> get_lines(std::string filename) {
+    	std::vector<std::string> lines;
+    	std::ifstream file(filename);
+    	std::string line;
+        while (getline(file, line) ) {
+            lines.push_back(line);
         }
+        return lines;
+    }
 
-        vector<string> split(const string &s, char delim, bool empties) {
-            vector<string> elems;
-            split(s, delim, elems, empties);
-            return elems;
-        }
+    std::vector<std::string> split(const std::string &s, char delim, bool empties) {
+    	std::vector<std::string> elems;
+        split(s, delim, elems, empties);
+        return elems;
+    }
 
-        vector<string> &split(const string &s, char delim, vector<string> &elems, bool empties) {
-            stringstream ss(s);
-            string item;
-            while (getline(ss, item, delim)) {
-                if (!empties && item == "")
-                    continue;
-                elems.push_back(item);
-            }
-            return elems;
+    std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems, bool empties) {
+    	std::stringstream ss(s);
+    	std::string item;
+        while (getline(ss, item, delim)) {
+            if (!empties && item == "")
+                continue;
+            elems.push_back(item);
         }
+        return elems;
+    }
 
-        bool startof(const string &prefix, const string &str) {
-            return prefix.size() <= str.size() && str.compare(0, prefix.size(), prefix) == 0;
-        }
+    bool startof(const std::string &prefix, const std::string &str) {
+        return prefix.size() <= str.size() && str.compare((std::string::size_type)0, prefix.size(), prefix) == 0;
+    }
 
-        bool startofany(const string &prefix, const vector<string> &strs) {
-            for (auto const &str : strs) {
-                if (startof(prefix, str))
-                    return true;
-            }
-            return false;
+    bool startofany(const std::string &prefix, const std::vector<std::string> &strs) {
+        for (auto const &str : strs) {
+            if (startof(prefix, (std::string)str))
+                return true;
         }
+        return false;
     }
 }

@@ -17,8 +17,8 @@ namespace sota {
 
     template<class Key, class Value>
     std::vector<Key> keys(std::map<Key, Value> m) {
-        std::vector<Key> keys = {};
-        typename std::map<Key, Value>::iterator iter;
+    	std::vector<Key> keys = {};
+    	typename std::map<Key, Value>::iterator iter;
         for (iter = m.begin(); iter != m.end(); ++iter)
             keys.push_back(iter->first);
         return keys;
@@ -26,8 +26,8 @@ namespace sota {
 
     template<class Key, class Value>
     std::vector<Value> values(std::map<Key, Value> m) {
-        std::vector<Value> values = {};
-        typename std::map<Key, Value>::iterator iter;
+    	std::vector<Value> values = {};
+    	typename std::map<Key, Value>::iterator iter;
         for (iter = m.begin(); iter != m.end(); ++iter)
             values.push_back(iter->second);
         return values;
