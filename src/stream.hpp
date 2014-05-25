@@ -20,9 +20,9 @@ namespace sota {
     public:
         static const Item Default;
 
+        std::vector<Item> Items;
         unsigned int Index;
         Item Curr;
-        std::vector<Item> Items;
 
         virtual ~SotaStream() { }
         SotaStream() : Index(0), Curr(Default) { }

@@ -174,7 +174,7 @@ namespace sota {
 
     unsigned int SotaLexer::Column(const Token &token) {
         unsigned int count = token.Index;
-        for (count; count > 0; --count) {
+        for (; count > 0; --count) {
             char c = Items[count];
             if ('\n' == c || '\r' == c) {
                 break;
