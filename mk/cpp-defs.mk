@@ -3,4 +3,4 @@
 SRCS_CXX=$(wildcard *.cpp)
 OBJS_CXX=$(SRCS_CXX:.cpp=.o)
 CXX=g++
-CXXFLAGS=
+CXXFLAGS=-std=c++11

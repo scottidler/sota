@@ -2,14 +2,24 @@
 #
 
 include ../mk/cpp-defs.mk
+include ../mk/common-defs.mk
 
-all: $(OBJS_CXX)
-	# link the objects here, when known
+EXEC=sota
 
-# (re)compile objects when sources change
+all: $(EXEC)
+
+$(EXEC): $(OBJS_CXX)
+	$(CXX) $^ $(LD_FLAGS) -o $@
+
+# (re)compile objects
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $<
 
-#install:
+install: $(DESTDIR)$(bindir)
+	$(INSTALL_x) $(EXEC) $(DESTDIR)$(bindir)
+
+clean:
+	-rm *.o
+	-rm $(EXEC)
 
 include ../mk/common-rules.mk
