@@ -11,9 +11,9 @@ MAKE_DIRS=src
 
 default: all
 
-all install clean: $(MAKE_DIRS)-$$@
+all install clean: $(addsuffix -$$@, $(MAKE_DIRS))
 
 %-all %-install %-clean:
-	cd $* && make $(subst $*-,,$@) 
+	cd $* && $(MAKE) $(subst $*-,,$@)
 
 include mk/common-rules.mk
