@@ -20,16 +20,23 @@ all install clean: $(addsuffix -$$@, $(MAKE_DIRS))
 %-all %-install %-clean:
 	cd $* && $(MAKE) $(subst $*-,,$@)
 
-setup: $(GITSUBMODS)
+setup: $(addsuffix -$$@, $(GITSUBMODS))
 
-$(GITSUBMODS):
-	@echo "--Setting up submodule: $@"
-	@git submodule update --quiet --init $@
-	cd $@ && $(MAKE)
+$(addsuffix -setup, $(GITSUBMODS)): $(addsuffix -git, $$@)
+$(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
 
-$(MAKE_CONFIGS): $(addprefix $$@, /config.log)
+%-setup:
+	cd $* && $(MAKE)
+
+%-setup-git:
+	@echo "--Setting up submodule: $*"
+	@git submodule update --quiet --init $*
+
+%-setup-config: $(addprefix $$*, /config.log)
 
 %/config.log:
 	cd $* && ./configure
+
+llvm-setup-config: llvm-setup-git
 
 include mk/common-rules.mk
