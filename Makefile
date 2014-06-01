@@ -23,6 +23,7 @@ all install clean: $(addsuffix -$$@, $(MAKE_DIRS))
 setup: $(addsuffix -$$@, $(GITSUBMODS))
 
 $(addsuffix -setup, $(GITSUBMODS)): $(addsuffix -git, $$@)
+#TODO: check if this actually works for generalizing rule below
 $(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
 
 %-setup:
@@ -32,11 +33,10 @@ $(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
 	@echo "--Setting up submodule: $*"
 	@git submodule update --quiet --init $*
 
-%-setup-config: $(addprefix $$*, /config.log)
+#TODO: not a general rule
+llvm-setup-config: llvm/config.log
 
-%/config.log:
+%/config.log: $$*-setup-git
 	cd $* && ./configure
-
-llvm-setup-config: llvm-setup-git
 
 include mk/common-rules.mk
