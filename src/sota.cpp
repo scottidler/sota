@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
     if (argc < 2)
         return 1;
     const char *filename = argv[1];
+    std::cout << "sota parsing: " << filename << std::endl << std::endl;
+
     auto chars = load(filename);
     auto lexer = SotaLexer(chars);
 
