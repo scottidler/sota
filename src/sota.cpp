@@ -11,29 +11,39 @@
 using namespace sota;
 
 std::vector<char> load(std::string filename) {
-	std::vector<char> chars;
-	std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
-	if (!file.eof() && !file.fail() ) {
-		file.seekg(0, std::ios_base::end);
-		auto size = (unsigned int)file.tellg();
-		chars.resize(size);
-		file.seekg(0, std::ios_base::beg);
-		file.read(&chars[0], (long int)size);
-	}
-	return chars;
+    std::vector<char> chars;
+    std::ifstream file(filename, std::ios::in | std::ios::binary | std::ios::ate);
+    if (!file.eof() && !file.fail() ) {
+        file.seekg(0, std::ios_base::end);
+        auto size = (unsigned int)file.tellg();
+        chars.resize(size);
+        file.seekg(0, std::ios_base::beg);
+        file.read(&chars[0], (long int)size);
+    }
+    return chars;
 }
 
 int main(int argc, char* argv[])
 {
-	auto chars = load("example1.sota");
-	auto lexer = SotaLexer(chars);
+    if (argc < 2)
+        return 1;
+    const char *filename = argv[1];
+    auto chars = load(filename);
+    auto lexer = SotaLexer(chars);
 
     while(auto token = lexer.Scan()) {
-    	std::cout << lexer.Pretty(token);
-    	if (TokenType::EndOfLine == token.Type)
-    		std::cout << std::endl;
-    	else
-    		std::cout << " ";
+
+        switch (token.Type) {
+        case TokenType::EndOfLine:
+            std::cout << lexer.Pretty(token) << std::endl;
+            break;
+        case TokenType::WhiteSpace:
+            break;
+        default:
+            std::cout << lexer.Pretty(token) << " ";
+            break;
+        }
+
     }
     return 0;
 }
