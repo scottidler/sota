@@ -10,7 +10,7 @@
 #include "stream.hpp"
 
 namespace sota {
-    class SotaLexer : SotaStream<char> {
+    class SotaLexer : public SotaStream<char> {
 
         unsigned int _stride;
         std::stack<unsigned int> _indents;
