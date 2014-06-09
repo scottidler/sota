@@ -89,14 +89,14 @@ namespace sota {
 
         while (startofany(sym + Curr, symkeys)) {
             sym += Curr;
-            ++token.Length;
             Next();
         }
 
         token.Type = SymbolValue2Type[sym];
+        token.Length = Index - token.Index;
 
         if (!token.Type) {
-            token.Index = Index; //backtrack
+            Index = token.Index; //backtrack
             token.Length = 0;
         }
         return token;
