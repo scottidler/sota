@@ -35,6 +35,9 @@ int main(int argc, char* argv[])
 
     while(auto token = lexer.Scan()) {
 
+        auto index = lexer.Index;
+        auto curr = lexer.Curr;
+
         switch (token.Type) {
         case TokenType::EndOfLine:
             std::cout << lexer.Pretty(token) << std::endl;
