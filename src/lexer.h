@@ -16,14 +16,16 @@ namespace sota {
         std::stack<unsigned int> _indents;
         std::deque<Token> _cache;
 
-        Token eol();
+        Token endofline();
         Token dent();
-        Token ws();
+        Token whitespace();
         Token comment();
-        Token lit();
-        Token sym();
+        Token quoted_literal();
+        Token flow_literal();
+        Token literal();
+        Token symbol();
         Token id_num_kw();
-        Token eof();
+        Token endoffile();
 
     public:
         ~SotaLexer();
