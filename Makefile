@@ -22,9 +22,13 @@ all install clean: $(addsuffix -$$@, $(MAKE_DIRS))
 
 setup: $(addsuffix -$$@, $(GITSUBMODS))
 
+# git submodule config gets processed before setup
 $(addsuffix -setup, $(GITSUBMODS)): $(addsuffix -git, $$@)
-#TODO: check if this actually works for generalizing rule below
+# ./configure gets processed before setup
 $(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
+# git submodule gets processed before ./configure
+$(addsuffix -setup-config, $(GITSUBMODS)): $(addsuffix -setup-git,\
+						$(GITSUBMODS))
 
 %-setup:
 	cd $* && $(MAKE)
@@ -33,10 +37,13 @@ $(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
 	@echo "--Setting up submodule: $*"
 	@git submodule update --quiet --init $*
 
-#TODO: not a general rule
-llvm-setup-config: llvm/config.log
+%-setup-config: $$*/config.log
 
-%/config.log: $$*-setup-git
-	cd $* && ./configure
+%/config.log:
+	cd $* && ./configure $(CONFIGVARS)
+
+# llvm specifics
+llvm-setup-config: llvm/config.log
+llvm-setup-config: CONFIGVARS+=--enable-jit
 
 include mk/common-rules.mk
