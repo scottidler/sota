@@ -23,8 +23,7 @@ std::vector<char> load(std::string filename) {
     return chars;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     if (argc < 2)
         return 1;
     const char *filename = argv[1];
@@ -34,9 +33,6 @@ int main(int argc, char* argv[])
     auto lexer = SotaLexer(chars);
 
     while(auto token = lexer.Scan()) {
-
-        auto index = lexer.Index;
-        auto curr = lexer.Curr;
 
         switch (token.Type) {
         case TokenType::EndOfLine:
