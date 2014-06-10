@@ -3,7 +3,7 @@
 dict1 = { 'name': 'scott', 'age': 40, 'pets': ['bill', 'penny'] }
 
 # of course the keys can be accessed in the normal fashion
-# however you can access it like data member
+# however you can access it like a data member
 
 'scott'             == dict1['name']    == dict1.name   # true
 40                  == dict1['age']     == dict1.age    # true
