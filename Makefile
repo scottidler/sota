@@ -2,6 +2,7 @@ ROOTDIR:=$(realpath $(PWD))
 export ROOTDIR
 
 include mk/common-defs.mk
+-include mk/tweaks.mk
 
 # project own sources
 MAKE_DIRS=src
@@ -10,12 +11,20 @@ GITSUBMODS:=llvm
 # if it's a configurable module
 MAKE_CONFIGS=llvm
 
+ifdef JOBS
+MAKEFLAGS += -j $(JOBS) -l $(JOBS)
+endif
+
 .SECONDEXPANSION:
 .PHONY: $(MAKE_DIRS) $(GITSUBMODS)
 
 default: all
 
 all install clean: $(addsuffix -$$@, $(MAKE_DIRS))
+
+ifeq ($(LLVM_SUBMOD), 1)
+src-all: llvm-setup
+endif
 
 %-all %-install %-clean:
 	cd $* && $(MAKE) $(subst $*-,,$@)
