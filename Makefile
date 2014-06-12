@@ -35,9 +35,6 @@ setup: $(addsuffix -$$@, $(GITSUBMODS))
 $(addsuffix -setup, $(GITSUBMODS)): $(addsuffix -git, $$@)
 # ./configure gets processed before setup
 $(addsuffix -setup, $(MAKE_CONFIGS)): $(addsuffix -config, $$@)
-# git submodule gets processed before ./configure
-$(addsuffix -setup-config, $(GITSUBMODS)): $(addsuffix -setup-git,\
-						$(GITSUBMODS))
 
 %-setup:
 	cd $* && $(MAKE)
@@ -48,7 +45,7 @@ $(addsuffix -setup-config, $(GITSUBMODS)): $(addsuffix -setup-git,\
 
 %-setup-config: $$*/config.log
 
-%/config.log:
+%/config.log: $$*-setup-git
 	cd $* && ./configure $(CONFIGVARS)
 
 # llvm specifics
