@@ -26,7 +26,8 @@ ifeq ($(LLVM_SUBMOD), 1)
 src-all: llvm-setup
 endif
 
-%-all %-install %-clean:
+%-all:
+%-install %-clean:
 	cd $* && $(MAKE) $(subst $*-,,$@)
 
 setup: $(addsuffix -$$@, $(GITSUBMODS))
