@@ -2,4 +2,4 @@
 # LLVM_SUBMOD=1
 #
 # uncomment for setting jobs to processor count
-# JOBS:=`grep -c '^processor' /proc/cpuinfo`
+# JOBS:=$(shell grep -c '^processor' /proc/cpuinfo)
