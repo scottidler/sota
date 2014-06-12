@@ -14,18 +14,21 @@ namespace sota {
 
         unsigned int _stride;
         std::stack<unsigned int> _indents;
-        std::deque<Token> _cache;
+        std::deque<Token> _tokens;
 
-        Token endofline();
-        Token dent();
-        Token whitespace();
-        Token comment();
-        Token quoted_literal();
-        Token flow_literal();
-        Token literal();
-        Token symbol();
-        Token id_num_kw();
-        Token endoffile();
+        Token Take(Token token);
+        Token Emit();
+
+        Token EndOfLine();
+        Token Dent();
+        Token WhiteSpace();
+        Token Comment();
+        Token QuotedLiteral();
+        Token FlowLiteral();
+        Token Literal();
+        Token Symbol();
+        Token IdentifierNumberOrKeyword();
+        Token EndOfFile();
 
     public:
         ~SotaLexer();

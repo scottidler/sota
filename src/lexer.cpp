@@ -5,7 +5,22 @@
 
 namespace sota {
 
-    Token SotaLexer::endofline() {
+    Token SotaLexer::Take(Token token) {
+        if (token)
+            _tokens.push_back(token);
+        return token;
+    }
+
+    Token SotaLexer::Emit() {
+        Token token = { TokenType::EndOfFile, Index, 0 };
+        if (_tokens.size()) {
+        token = _tokens.front();
+        _tokens.pop_front();
+        }
+        return token;
+    }
+
+    Token SotaLexer::EndOfLine() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsCurrAnyOf({ '\r', '\n' })) {
             ++token.Length;
@@ -14,15 +29,14 @@ namespace sota {
                 ++token.Length;
             Next(token.Length);
         }
-        while (auto type = dent())
-            _cache.push_back(type);
-        return token;
+        while (Dent());
+        return Take(token);
     }
 
-    Token SotaLexer::dent() {
+    Token SotaLexer::Dent() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsPrevSeqOf({ '\r', '\n' }, 2) || IsPrevAnyOf({ '\r', '\n' })) {
-            auto t = whitespace();
+            auto t = WhiteSpace();
             auto indent = t ? t.Length : 0;
 
             if (!_stride)
@@ -42,10 +56,10 @@ namespace sota {
                 token.Length = 0;
             }
         }
-        return token;
+        return Take(token);
     }
 
-    Token SotaLexer::whitespace() {
+    Token SotaLexer::WhiteSpace() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsCurrAnyOf({ ' ', '\t' })) {
             ++token.Length;
@@ -53,10 +67,10 @@ namespace sota {
             while (IsNextAnyOf({ ' ', '\t' }))
                 ++token.Length;
         }
-        return token;
+        return Take(token);
     }
 
-    Token SotaLexer::comment() {
+    Token SotaLexer::Comment() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsCurr('#')) {
             ++token.Length;
@@ -64,10 +78,10 @@ namespace sota {
             while (!IsNextAnyOf({ '\r', '\n' }))
                 ++token.Length;
         }
-        return token;
+        return Take(token);
     }
 
-    Token SotaLexer::quoted_literal() {
+    Token SotaLexer::QuotedLiteral() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         char c = Curr;
         if ('\'' == c || '\"' == c) {
@@ -83,22 +97,22 @@ namespace sota {
             else
                 throw SotaException("missing end quote on string literal");
         }
+        return Take(token);
+    }
+
+    Token SotaLexer::FlowLiteral() {
+    	Token token = { TokenType::EndOfFile, Index, 0 };
+        return Take(token);
+    }
+
+    Token SotaLexer::Literal() {
+        Token token = QuotedLiteral();
+        if (!token)
+            token = FlowLiteral();
         return token;
     }
 
-    Token SotaLexer::flow_literal() {
-    	Token token = { TokenType::EndOfFile, Index, 0 };
-    	return token;
-    }
-
-    Token SotaLexer::literal() {
-    	Token token = quoted_literal();
-    	if (!token)
-    		token = flow_literal();
-    	return token;
-    }
-
-    Token SotaLexer::symbol() {
+    Token SotaLexer::Symbol() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         std::string sym = "";
         auto symkeys = keys(SymbolValue2Type);
@@ -115,10 +129,10 @@ namespace sota {
             Index = token.Index; //backtrack
             token.Length = 0;
         }
-        return token;
+        return Take(token);
     }
 
-    Token SotaLexer::id_num_kw() {
+    Token SotaLexer::IdentifierNumberOrKeyword() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         bool loop = true;
         while (loop) {
@@ -160,10 +174,10 @@ namespace sota {
         auto value = Value(token);
         if (KeywordValue2Type.count(value))
             token.Type = KeywordValue2Type[value];
-        return token;
+        return Take(token);
     }
 
-    Token SotaLexer::endoffile() {
+    Token SotaLexer::EndOfFile() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         return token;
     }
@@ -229,31 +243,33 @@ namespace sota {
 
         //Length = 0;
 
-        if (_cache.size()) {
-            auto token = _cache.front();
-            _cache.pop_front();
+        if (_tokens.size()) {
+            auto token = _tokens.front();
+            _tokens.pop_front();
             return token;
         }
-
-        if (auto token = endofline())
+        if (auto token = Emit())
             return token;
 
-        if (auto token = whitespace())
+        if (auto token = EndOfLine())
             return token;
 
-        if (auto token = comment())
+        if (auto token = WhiteSpace())
             return token;
 
-        if (auto token = literal())
+        if (auto token = Comment())
             return token;
 
-        if (auto token = symbol())
+        if (auto token = Literal())
             return token;
 
-        if (auto token = id_num_kw())
+        if (auto token = Symbol())
             return token;
 
-        return endoffile();
+        if (auto token = IdentifierNumberOrKeyword())
+            return token;
+
+        return EndOfFile();
     }
 
     std::vector<Token> SotaLexer::Tokenize() {
