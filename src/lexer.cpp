@@ -14,8 +14,8 @@ namespace sota {
     Token SotaLexer::Emit() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (_tokens.size()) {
-        token = _tokens.front();
-        _tokens.pop_front();
+            token = _tokens.front();
+            _tokens.pop_front();
         }
         return token;
     }
