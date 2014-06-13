@@ -36,8 +36,8 @@ namespace sota {
     Token SotaLexer::Dent() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsPrevSeqOf({ '\r', '\n' }, 2) || IsPrevAnyOf({ '\r', '\n' })) {
-            auto t = WhiteSpace();
-            auto indent = t ? t.Length : 0;
+            auto ws = WhiteSpace();
+            auto indent = ws ? ws.Length : 0;
 
             if (!_stride)
                 _stride = indent;
@@ -81,7 +81,7 @@ namespace sota {
         return Take(token);
     }
 
-    Token SotaLexer::QuotedLiteral() {
+    Token SotaLexer::Literal() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         char c = Curr;
         if ('\'' == c || '\"' == c) {
@@ -98,18 +98,6 @@ namespace sota {
                 throw SotaException("missing end quote on string literal");
         }
         return Take(token);
-    }
-
-    Token SotaLexer::FlowLiteral() {
-    	Token token = { TokenType::EndOfFile, Index, 0 };
-        return Take(token);
-    }
-
-    Token SotaLexer::Literal() {
-        Token token = QuotedLiteral();
-        if (!token)
-            token = FlowLiteral();
-        return token;
     }
 
     Token SotaLexer::Symbol() {
@@ -243,31 +231,26 @@ namespace sota {
 
         //Length = 0;
 
-        if (_tokens.size()) {
-            auto token = _tokens.front();
-            _tokens.pop_front();
-            return token;
-        }
         if (auto token = Emit())
             return token;
 
-        if (auto token = EndOfLine())
-            return token;
+        if (EndOfLine())
+            return Emit();
 
-        if (auto token = WhiteSpace())
-            return token;
+        if (WhiteSpace())
+            return Emit();
 
-        if (auto token = Comment())
-            return token;
+        if (Comment())
+            return Emit();
 
-        if (auto token = Literal())
-            return token;
+        if (Literal())
+            return Emit();
 
-        if (auto token = Symbol())
-            return token;
+        if (Symbol())
+            return Emit();
 
-        if (auto token = IdentifierNumberOrKeyword())
-            return token;
+        if (IdentifierNumberOrKeyword())
+            return Emit();
 
         return EndOfFile();
     }

@@ -23,8 +23,6 @@ namespace sota {
         Token Dent();
         Token WhiteSpace();
         Token Comment();
-        Token QuotedLiteral();
-        Token FlowLiteral();
         Token Literal();
         Token Symbol();
         Token IdentifierNumberOrKeyword();
