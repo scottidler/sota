@@ -21,7 +21,7 @@ main = (args)
     cli.add(
         '--branch'
         default=run('git rev-parse --abbrev-ref HEAD')
-        help='override the default branch of {default})
+        help='override the default branch of {default}')
 
     cli.add(
         'components'
