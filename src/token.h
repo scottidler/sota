@@ -21,10 +21,12 @@ namespace sota {
     T(EndOfZone         ,   "EOZ")      \
     T(BegOfLine         ,   "BOL")      \
     T(EndOfLine         ,   "EOL")      \
+    T(BegOfMeta         ,   "BOM")      \
+    T(EndOfMeta         ,   "EOM")      \
     T(Indent            ,   "INDENT")   \
     T(Dedent            ,   "DEDENT")   \
     T(WhiteSpace        ,   "WS")       \
-    T(Comment           ,   "COMMENT")  \
+    T(Comment           ,   "CMT")      \
     T(Id                ,   "ID")       \
     T(Num               ,   "NUM")      \
     T(Str               ,   "STR")
@@ -84,6 +86,7 @@ namespace sota {
     T(Sub               ,   "-")        \
     T(Mul               ,   "*")        \
     T(Div               ,   "/")        \
+    T(Modulo            ,   "%")        \
     T(BitOr             ,   "|")        \
     T(BitAnd            ,   "&")        \
     T(GreaterThan       ,   ">")        \
