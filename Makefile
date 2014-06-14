@@ -27,7 +27,10 @@ src-all: llvm-setup
 endif
 
 %-all:
-%-install %-clean:
+	cd $* && $(MAKE) $(subst $*-,,$@)
+%-install:
+	cd $* && $(MAKE) $(subst $*-,,$@)
+%-clean:
 	cd $* && $(MAKE) $(subst $*-,,$@)
 
 setup: $(addsuffix -$$@, $(GITSUBMODS))
