@@ -29,15 +29,20 @@ namespace sota {
                 ++token.Length;
             Next(token.Length);
         }
-        while (Dent());
-        return Take(token);
+        while (auto dent = Dent())
+            Take(dent);
+        return token;
     }
 
     Token SotaLexer::Dent() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsPrevSeqOf({ '\r', '\n' }, 2) || IsPrevAnyOf({ '\r', '\n' })) {
-            auto ws = WhiteSpace();
-            auto indent = ws ? ws.Length : 0;
+
+            auto indent = 0;
+            if (auto ws = WhiteSpace()) {
+                Take(ws);
+                indent = ws.Length;
+            }
 
             if (!_stride)
                 _stride = indent;
@@ -56,7 +61,7 @@ namespace sota {
                 token.Length = 0;
             }
         }
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::WhiteSpace() {
@@ -67,7 +72,7 @@ namespace sota {
             while (IsNextAnyOf({ ' ', '\t' }))
                 ++token.Length;
         }
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::Comment() {
@@ -78,7 +83,7 @@ namespace sota {
             while (!IsNextAnyOf({ '\r', '\n' }))
                 ++token.Length;
         }
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::Literal() {
@@ -97,7 +102,7 @@ namespace sota {
             else
                 throw SotaException("missing end quote on string literal");
         }
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::Symbol() {
@@ -117,7 +122,7 @@ namespace sota {
             Index = token.Index; //backtrack
             token.Length = 0;
         }
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::IdentifierNumberOrKeyword() {
@@ -162,7 +167,7 @@ namespace sota {
         auto value = Value(token);
         if (KeywordValue2Type.count(value))
             token.Type = KeywordValue2Type[value];
-        return Take(token);
+        return token;
     }
 
     Token SotaLexer::EndOfFile() {
@@ -234,23 +239,23 @@ namespace sota {
         if (auto token = Emit())
             return token;
 
-        if (EndOfLine())
-            return Emit();
+        if (auto token = EndOfLine())
+            return token;
 
-        if (WhiteSpace())
-            return Emit();
+        if (auto token = WhiteSpace())
+            return token;
 
-        if (Comment())
-            return Emit();
+        if (auto token = Comment())
+            return token;
 
-        if (Literal())
-            return Emit();
+        if (auto token = Literal())
+            return token;
 
-        if (Symbol())
-            return Emit();
+        if (auto token = Symbol())
+            return token;
 
-        if (IdentifierNumberOrKeyword())
-            return Emit();
+        if (auto token = IdentifierNumberOrKeyword())
+            return token;
 
         return EndOfFile();
     }
