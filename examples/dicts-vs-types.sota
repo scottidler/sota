@@ -12,7 +12,7 @@ dict1 = { 'name': 'scott', 'age': 40, 'pets': ['bill', 'penny'] }
 # you can do the same for types; consider:
 
 person = Type(object)
-    .call = (name, age, pets)
+    .new = (name, age, pets)
         .name = name
         .age = age
         .pets = pets
