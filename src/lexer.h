@@ -22,7 +22,10 @@ namespace sota {
         Token EndOfLine();
         Token Dent();
         Token WhiteSpace();
-        Token Comment();
+        Token RangedMeta(Token token);
+        Token RangedComment(Token token);
+        Token LineComment(Token token);
+        Token Hash();
         Token Literal();
         Token Symbol();
         Token IdentifierNumberOrKeyword();

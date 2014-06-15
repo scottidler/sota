@@ -75,13 +75,44 @@ namespace sota {
         return token;
     }
 
-    Token SotaLexer::Comment() {
+    Token SotaLexer::RangedMeta(Token token) {
+        if (IsPeek('{')) {
+            token.Type = TokenType::Meta;
+            while (!IsNext('}'))
+                ++token.Length;
+            ++token.Length;
+            Next();
+        }
+        return token;
+    }
+
+    Token SotaLexer::RangedComment(Token token) {
+        if (IsPeek('(')) {
+            token.Type = TokenType::Comment;
+            while (!IsNext(')'))
+                ++token.Length;
+            ++token.Length;
+            Next();
+        }
+        return token;
+    }
+
+    Token SotaLexer::LineComment(Token token) {
+        token.Type = TokenType::Comment;
+        while (!IsNextAnyOf({ '\r', '\n' }))
+            ++token.Length;
+        return token;
+    }
+
+    Token SotaLexer::Hash() {
         Token token = { TokenType::EndOfFile, Index, 0 };
         if (IsCurr('#')) {
             ++token.Length;
-            token.Type = TokenType::Comment;
-            while (!IsNextAnyOf({ '\r', '\n' }))
-                ++token.Length;
+            if (token = RangedMeta(token))
+                return token;
+            if (token = RangedComment(token))
+                return token;
+            return LineComment(token);
         }
         return token;
     }
@@ -245,7 +276,7 @@ namespace sota {
         if (auto token = WhiteSpace())
             return token;
 
-        if (auto token = Comment())
+        if (auto token = Hash())
             return token;
 
         if (auto token = Literal())
