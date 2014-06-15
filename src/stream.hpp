@@ -129,6 +129,22 @@ namespace sota {
             }
             return true;
         }
+
+        virtual unsigned int
+        WhileCurrNot(Item item) {
+            auto index = Index;
+            while(!IsCurr(item))
+                Next();
+            return Index - index;
+        }
+
+        virtual unsigned int
+        WhileNextNot(Item item) {
+            auto index = Index;
+            while(!IsPeek(item))
+                Next();
+            return Index - index;
+        }
     };
 
     template<class Item>
