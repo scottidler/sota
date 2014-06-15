@@ -1,12 +1,12 @@
 func1 = (arg)
-    return match arg1
+    match arg1
         | 1..10 -> print 'is {arg1} your favorite number?'
         | 'hello' -> print 'hello back at ya!'
         | 'shut up' -> print 'oh that was not nice!'
         | _ -> error('bad input')
 
 func2 = (name)
-    return match name
+    match name
         | 'ann' | 'sue' -> 'female'
         | 'bob' | 'dan' -> 'male'
         | _ -> error('bad input')

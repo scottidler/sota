@@ -8,16 +8,17 @@ func2 = (x, y) -> x * y
 # flow-style function decl with multiple statement body
 func3 = (x, y)
     print 'func3: x={x} y={y}'
-    return x - y
+    x - y
 
 # inline-style function decl with multiple statement body, separated by ;
-func4 = (x, y) -> { print 'func4: x={x} y={y}'; return x / y }
+func4 = (x, y) -> { print 'func4: x={x} y={y}'; x / y }
 
 # pass function as a parameter
 func5 = (x, y, func = null)
+    result = 7
     if func
-        return func(x, y)
-    return 7
+        result = func(x, y)
+    result
 
 main = ()
 
@@ -30,5 +31,5 @@ main = ()
     r5 = func5(1, 2, (x, y) -> x * y)
 
     # pass inline-style, lambda-like function with multiple statement body as an argument to another function
-    r6 = func5(1, 2, (x, y) -> { print 'hello'; return (x + 2) * y })
+    r6 = func5(1, 2, (x, y) -> { print 'hello'; (x + 2) * y })
     

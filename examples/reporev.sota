@@ -1,10 +1,12 @@
 open cli
 
 divine = (component, branch, cfg)
+    result = branch
     for k,v in cfg
         if m/branch/k/
-            return v
-    return branch
+            result v
+            break
+    result
 
 comprev = (config, branch, components)
     cfg = load(config)
