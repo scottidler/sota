@@ -28,7 +28,7 @@ Person3 = Type(object)
     props = ['name', 'age', 'sex']
 
     # we can do the same thing using some of the inline
-    # abilities of sota. brackets aren't need because
+    # abilities of sota. brackets aren't needed because
     # these are single expressions
     props | (prop) -> .set_#{prop} = (#{prop}) -> .#{prop} = #{prop}
 
