@@ -32,7 +32,8 @@ int main(int argc, char* argv[]) {
     auto chars = load(filename);
     auto lexer = SotaLexer(chars);
 
-    while(auto token = lexer.Scan()) {
+    Token token;
+    while(token = lexer.Scan()) {
 
         switch (token.Type) {
         case TokenType::EndOfLine:
@@ -44,8 +45,8 @@ int main(int argc, char* argv[]) {
             std::cout << lexer.Pretty(token) << " ";
             break;
         }
-
     }
+    std::cout << lexer.Pretty(token) << std::endl;
     return 0;
 }
 
