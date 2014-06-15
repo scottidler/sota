@@ -32,6 +32,11 @@ Person3 = Type(object)
     # these are single expressions
     props | (prop) -> .set_#{prop} = (#{prop}) -> .#{prop} = #{prop}
 
+    # note: both examples Person2 and Person3 are closures
+    # how|why? the leading . in .set_ is the this operator
+    # means define this function and assign to the instance
+    # of this type via the this operator(shortened to period)
+
 main = ()
 
     person1 = Person1()
