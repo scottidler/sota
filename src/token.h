@@ -21,15 +21,14 @@ namespace sota {
     T(EndOfZone         ,   "EOZ")      \
     T(BegOfLine         ,   "BOL")      \
     T(EndOfLine         ,   "EOL")      \
-    T(BegOfMeta         ,   "BOM")      \
-    T(EndOfMeta         ,   "EOM")      \
     T(Indent            ,   "INDENT")   \
     T(Dedent            ,   "DEDENT")   \
     T(WhiteSpace        ,   "WS")       \
     T(Comment           ,   "CMT")      \
     T(Id                ,   "ID")       \
     T(Num               ,   "NUM")      \
-    T(Str               ,   "STR")
+    T(Str               ,   "STR")      \
+    T(Meta              ,   "META")
 
     #define KEYWORD_TOKENS              \
     T(As                ,   "as")       \
