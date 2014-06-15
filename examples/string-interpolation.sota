@@ -30,7 +30,7 @@ Person3 = Type(object)
     # we can do the same thing using some of the inline
     # abilities of sota. brackets aren't need because
     # these are single expressions
-    props | (prop) -> .set-#{prop} = (#{prop}) -> .#{prop} = #{prop}
+    props | (prop) -> .set_#{prop} = (#{prop}) -> .#{prop} = #{prop}
 
 main = ()
 
@@ -52,3 +52,9 @@ main = ()
     person1.set_sex(Sex.Male)
     person2.set_sex(Sex.Male)
     person3.set_sex(Sex.Male)
+
+    # it is also possible to #ifdef style conditionals
+    code =
+        print 'hello world'
+
+    #{code if true}
