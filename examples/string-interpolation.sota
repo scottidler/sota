@@ -36,27 +36,38 @@ Person3 = Type(object)
     # how|why? the leading . in .set_ is the this operator
     # means define this function and assign to the instance
     # of this type via the this operator(shortened to period)
+    
+Person4 = Type(object)
+
+    # note: Person3 can be further simplified and use a flow-style
+    ['name', 'age', 'sex'] | (prop)
+        .set_#{prop} = (#{prop})
+            .#{prop} = #{prop}
 
 main = ()
 
     person1 = Person1()
     person2 = Person2()
     person3 = Person2()
+    person4 = Person4()
 
     # all three types are identical
     person1.set_name('bob')
     person2.set_name('bob')
     person3.set_name('bob')
+    person4.set_name('bob')
 
     # they have the same three set methods
     person1.set_age(47)
     person2.set_age(47)
     person3.set_age(47)
+    person4.set_age(47)
 
     # defined in 3 different ways
     person1.set_sex(Sex.Male)
     person2.set_sex(Sex.Male)
     person3.set_sex(Sex.Male)
+    person4.set_sex(Sex.Male)
 
     # it is also possible to #ifdef style conditionals
     code =
