@@ -29,8 +29,8 @@ The requisite hello world:
 main = ()
     print 'hello world!'
 ````
-After I get the core language implemented I plan to tackle meta-
-programming, concurrency | threading and asynchronous support.  I
+After I get the core language implemented I plan to tackle
+meta-programming, concurrency | threading and asynchronous support.  I
 could use help implementing the language, and later libraries as
 well as design what next features will make it truly the State of the
 Art.  If you're interested, please contact me.
