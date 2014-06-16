@@ -55,13 +55,13 @@ lifted =
     | namespaces: from c++ without the keyword or the braces
     | string interpolation: mix of python, c# and ruby
 
-invented:
+invented =
     | path concat: too lazy to write os.path.join (Python)
     | definition via assignment: done before? maybe I get some credit
     | public vs private capitalization: laziness and removing keywords
     | inverting dicts: I have wanted this forever!
     | accessing dicts via expressions other than keys: just makes sense
-    | this operator simplified to single, leading dot: all keywords must die!
+    | this keyword simplified to a single, leading dot: all keywords must die!
     
 ````
 Capitalization
