@@ -3,12 +3,11 @@ sota
 ````
 sota = (State of the Art)
     inspired by =
-        | python
-        | c#|c|c++
-        | perl|ruby
-        | f#|haskel
-        | bash|Javascript
-        | yaml
+        | python | yaml
+        | c# | c | c++
+        | perl | ruby
+        | f# | haskel
+        | bash | Javascript
 ````
 
 Sota aims to satisfy all of the annoyances in various programming
