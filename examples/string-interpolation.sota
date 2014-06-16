@@ -63,14 +63,17 @@ main = ()
     person3.set_age(47)
     person4.set_age(47)
 
-    # defined in 4 different ways
-    person1.set_sex(Sex.Male)
-    person2.set_sex(Sex.Male)
-    person3.set_sex(Sex.Male)
-    person4.set_sex(Sex.Male)
+    # lets take it up a notch here:
+    [ person1, person2, person3, person4 ] | (personObj)
+        personObj.set_sex(Sex.Male)
 
     # it is also possible to #ifdef style conditionals
+    
+    # the following is a string literal in block format
+    # similar to Python's ''' syntax but again, less verbose
     code =
         print 'hello world'
 
-    #{code if true}
+    # here is where the print hello world code is inserted
+    # if the condition is met; ie the function detects linux
+    #{code if if_on_linux()}
