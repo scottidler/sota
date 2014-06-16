@@ -22,6 +22,13 @@ lambdas, etc.  In short I hope this to be the sum of everything I
 think works well while minimizing the annoyances and overly verbose
 syntax.
 
+the requisite hello world
+````
+#!/usr/bin/sota
+
+main = ()
+    print 'hello world!'
+````
 After I get the core language implemented I plan to tackle meta-
 programming, concurrency | threading and asynchronous support.  I
 could use help implementing the language, and later libraries as
