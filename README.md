@@ -16,7 +16,7 @@ to beg, borrow and steal the best ideas I have seen implemented in
 other languages.  There is no shame in using what works and new
 languages are most successful when their core is recognizable to
 would be users.  Sota's syntax borrows heavily from python and yaml.
-It doubles down the context of newlines and indentations.  It also
+It doubles down on the context of newlines and indentations.  It also
 borrows heavily from functional programming concepts; closures,
 lambdas, etc.  In short I hope this to be the sum of everything I
 think works well while minimizing the annoyances and overly verbose
