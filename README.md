@@ -133,7 +133,13 @@ Sota is going to steal as much as possible the f#|ocaml style of
 match expressions (not regex).  These are much more powerful version
 of the switch statements.  These add a lot of expressive power
 for the programmer to do conditionals.
-
+````
+# here is an example of the fibonacci algorithm taken from the examples
+fib5 = (n)
+    match n
+        | 0 | 1 -> n                     # this matches|returns 0 or 1
+        | _ -> fib5(n - 1) + fib5(n - 2) # this matches everything else
+````
 Similar and related are enumerations.  Here again Sota will steal
 from f#|ocaml.  In the simple case these behave like simple int
 enums.  However, they can also be a union of different types.
