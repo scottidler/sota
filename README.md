@@ -113,8 +113,13 @@ Although Sota is primarily written in the flow style (like
 Python) it also has support for inlining which uses braces and
 semi-colons (like c|c++|c#|java) when necessary.
 ````
-# here is an inlined funtion
+# here is an inlined funtion utilizing braces and semi-colons
+# because of the more than one statement
 add = (x, y) -> { z = x + y; print '{x} + {y} = {z}' }
+
+# note: if we reduce the statements in the body to 1 we don't
+# need the braces and semi-colons
+add = (x, y) -> print '{x} + {y} = {x + y}'
 ````
 
 Finally, Sota style will never dictate line lengths at 80 or some
