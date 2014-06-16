@@ -1,7 +1,14 @@
 #include "utils.h"
 #include <algorithm>
+#include <sys/stat.h>
 
 namespace sota {
+
+    bool exists(const char *filename) {
+        struct stat buffer;
+        return (stat (filename, &buffer) == 0);
+    }
+
     std::vector<std::string> get_lines(std::string filename) {
     	std::vector<std::string> lines;
     	std::ifstream file(filename);
