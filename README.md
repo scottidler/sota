@@ -133,7 +133,7 @@ match expressions (not regex).  These are much more powerful version
 of the switch statements.  These add a lot of expressive power
 for the programmer to do conditionals.
 ````
-# here is an example of the fibonacci algorithm taken from the examples
+# here is a fibonacci algorithm taken from the examples/fibonacci.sota file
 fib5 = (n)
     match n
         | 0 | 1 -> n                     # this matches|returns 0 or 1
