@@ -35,6 +35,35 @@ could use help implementing the language, and later libraries as
 well as design what next features will make it truly the State of the
 Art.  If you're interested, please contact me.
 
+Features & Origins
+==================
+
+Most if not all of Sota's feature set is lifted from other programming
+languages.  Here is a list of those features and where they were taken
+from.
+````
+lifted =
+    | regex: modified but from Perl
+    | piping: from f# and bash
+    | match: from f#
+    | enums: from f#
+    | list, dicts, sets oh my: from python
+    | comprehensions: python
+    | lambda syntax: mix of c# and python
+    | return the last expression in a function: f#
+    | inline syntax: mix of c-like langs and yaml
+    | namespaces: from c++ without the keyword or the braces
+    | string interpolation: mix of python, c# and ruby
+
+invented:
+    | path concat: too lazy to write os.path.join (Python)
+    | definition via assignment: done before? maybe I get some credit
+    | public vs private capitalization: laziness and removing keywords
+    | inverting dicts: I have wanted this forever!
+    | accessing dicts via expressions other than keys: just makes sense
+    | this operator simplified to single, leading dot: all keywords must die!
+    
+````
 Capitalization
 ==============
 
