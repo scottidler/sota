@@ -1,3 +1,5 @@
+#!/usr/bin/sota
+
 main = ()
 
     dict1 = { 'a': 1, 'b': 2, 'c': 3 }
