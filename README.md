@@ -1,6 +1,6 @@
 sota
 ====
-''''
+````
 sota = (State of the Art)
     inspired by =
         | python
@@ -9,7 +9,7 @@ sota = (State of the Art)
         | f#|haskel
         | bash|Javascript
         | yaml
-''''
+````
 
 Sota aims to satisfy all of the annoyances in various programming
 languages I have experienced over the last 10 years.  I also plan
