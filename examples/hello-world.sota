@@ -1,4 +1,4 @@
-#!/usr/bin sota
+#!/usr/bin/sota
 
 main = ()
     print 'hello world!'
