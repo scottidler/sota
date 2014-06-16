@@ -26,15 +26,15 @@ syntax.
 After I get the core language implemented I plan to tackle meta-
 programming, concurrency | threading and asynchronous support.  I
 could use help implementing the language, and later libraries as
-well design what next features will make it truly the State of the
+well as design what next features will make it truly the State of the
 Art.  If you're interested, please contact me.
 
 Capitalization
 ==============
 
-Sota is primarily written and intended for use in Linux.  As such
-lowercase is preferred if at all possible.  Capitalization is allowed
-and used in Sota, but sparingly.
+Sota is primarily written and intended for use in Linux (Windows
+later if I have to).  As such lowercase is preferred if at all possible.
+Capitalization is allowed and used in Sota, but sparingly.
 
 Keywords
 ========
@@ -80,8 +80,8 @@ Sota's syntax is inspired by my many years working with python and
 yaml.  The use of newlines and indents provide good markers for the
 parser and make it easy for the human eye to follow, thereby ideal
 for a programming language.  Whatever could be removed to distill
-the language just to the bare essentials.  For example python re-
-quires a colon : just before an indent (ie if-then-else and function
+the language just to the bare essentials.  For example python
+requires a colon : just before an indent (ie if-then-else and function
 def).  Sota removes this and similar unneeded syntax.
 
 Lambda expressions and other functional ideas are becoming essential
@@ -89,10 +89,33 @@ for the programmers toolkit.  Therefore why not make the named
 function definition as much like the syntax of the lambda function?
 Sota does this by making all definitions of function, types, and
 enums as assignment expressions.
+````
+# a lambda expression
+(name) -> print name
+
+# a function definition
+print_name = (name) -> print name
+
+# enumerations are defined via assignment as well
+Fruit =
+    | Apple
+    | Banana
+    
+# the same goes for types
+Person = Type(object)
+    .new = (name, age, sex)
+        .name = name
+        .age = age
+        .set = sex
+````
 
 Although Sota is primarily written in the flow style (like
-Python) it also has support for inlining which uses braces and semi-
-colons (like c|c++|c#|java) when necessary.
+Python) it also has support for inlining which uses braces and
+semi-colons (like c|c++|c#|java) when necessary.
+````
+# here is an inlined funtion
+add = (x, y) -> { z = x + y; print '{x} + {y} = {z}' }
+````
 
 Finally, Sota style will never dictate line lengths at 80 or some
 other ridiculous number.  We are all adults and don't care about
