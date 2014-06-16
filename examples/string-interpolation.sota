@@ -51,7 +51,7 @@ main = ()
     person3 = Person2()
     person4 = Person4()
 
-    # all three types are identical
+    # all four types are identical
     person1.set_name('bob')
     person2.set_name('bob')
     person3.set_name('bob')
