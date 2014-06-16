@@ -41,7 +41,7 @@ Keywords
 
 It annoys me that languages consume a lot of good identifier names
 with keywords.  Sota aims to reduce the list of reserved words.
-
+````
 removed =
     | return
     | class | struct (type is used instead for both)
@@ -62,7 +62,7 @@ kept =
     | foreach
     | continue | break
     | print | debug | trace
-
+````
 
 Regular Expressions
 ===================
@@ -117,7 +117,7 @@ Sota is going to be a handwritten recursive descent parser written in
 c++11 taking advantage of the powerful llvm backend.  Compiled, jitted
 and interpreted options will be explored with possible support for
 all three.
-
+````
 milestones =
     | v0.1 implement basic language with llvm backend working
     | v0.5 add meta-programming support
@@ -125,7 +125,7 @@ milestones =
     | v1.0 stable workable version
     | v1.1 add concurrency programming support
     | v1.2 add asynchronous programming support
-
+````
 Of course this rough outline could change, but I could use your help.
 
 Thanks,
