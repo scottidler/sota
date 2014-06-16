@@ -22,7 +22,7 @@ lambdas, etc.  In short I hope this to be the sum of everything I
 think works well while minimizing the annoyances and overly verbose
 syntax.
 
-the requisite hello world
+The requisite hello world:
 ````
 #!/usr/bin/sota
 
