@@ -63,7 +63,7 @@ main = ()
     person3.set_age(47)
     person4.set_age(47)
 
-    # defined in 3 different ways
+    # defined in 4 different ways
     person1.set_sex(Sex.Male)
     person2.set_sex(Sex.Male)
     person3.set_sex(Sex.Male)
