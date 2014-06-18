@@ -9,7 +9,7 @@ Type2 = Type(object) -> { .new = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } 
 
 Color = Type(object)
     # constructor, assigning to properties
-    .Color = (red, green, blue, alpha)
+    .new = (red, green, blue, alpha)
         .Red = red
         .Green = green
         .Blue = blue
