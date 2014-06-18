@@ -57,7 +57,7 @@ lifted =
 
 invented =
     | path concat: too lazy to write os.path.join (Python)
-    | definition via assignment: done before? maybe I get some credit
+    | definition via assignment: done before? maybe I get some credit; nope js!
     | public vs private capitalization: laziness and removing keywords
     | inverting dicts: I have wanted this forever!
     | accessing dicts via expressions other than keys: just makes sense
