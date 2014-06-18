@@ -54,6 +54,7 @@ lifted =
     | inline syntax: mix of c-like langs and yaml
     | namespaces: from c++ without the keyword or the braces
     | string interpolation: mix of python, c# and ruby
+    | ranges: lifted straight from ruby
 
 invented =
     | path concat: too lazy to write os.path.join (Python)
