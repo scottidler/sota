@@ -123,7 +123,7 @@ namespace sota {
 
         void Print(std::ostream &out) const {
             out << "{ ";
-            std::copy(Statements.begin(), Statements.end(), std::ostream_iterator<std::unique_ptr<AstNode>>(out));
+            //std::copy(Statements.begin(), Statements.end(), std::ostream_iterator<std::unique_ptr<AstNode>>(out));
             out << " }";
         }
 
@@ -133,9 +133,10 @@ namespace sota {
 
         ~BlockNode() {}
         BlockNode(std::initializer_list<AstNode *> statements) {
-//            for (auto const &s : statements) {
-//                Statements.push_back(std::make_shared<AstNode>(s));
-//            }
+            for (auto const &s : statements) {
+                std::cout << s << std::endl;
+                Statements.push_back(AstNodePtr(s));
+            }
         }
         void CodeGen() {}
     };
