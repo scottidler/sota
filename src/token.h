@@ -179,6 +179,7 @@ namespace sota {
         TokenType Type;
         unsigned int Index;
         unsigned int Length;
+        std::vector<char> Chars;
 
         operator const TokenType() {
             return Type;
@@ -192,6 +193,29 @@ namespace sota {
         }
         bool operator!=(const Token &rhs) {
             return Type != rhs.Type || Index != rhs.Index || Length != rhs.Length;
+        }
+
+        std::string Value() const {
+            return std::string(Chars.begin() + Index, Chars.begin() + Index + Length);
+        }
+        friend std::ostream & operator<<(std::ostream &out, const Token &token) {
+
+            std::string result;
+            auto value = token.Value();
+            auto tokenValue = Type2Value[token.Type];
+            switch (token.Type) {
+            case TokenType::WhiteSpace:
+            case TokenType::EndOfFile:
+            case TokenType::EndOfLine:
+            case TokenType::Indent:
+            case TokenType::Dedent:
+                result = tokenValue;
+                break;
+            default:
+                result = value != tokenValue ? tokenValue + ":" + value : value;
+                break;
+            }
+            return out << result;
         }
 
     } Token;

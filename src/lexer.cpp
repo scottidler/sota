@@ -5,6 +5,21 @@
 
 namespace sota {
 
+//    Token SotaLexer::CreateToken(TokenType type = TokenType::EndOfFile, unsigned int length = 0) {
+//        return CreateToken(type, length, Index);
+//    }
+//    Token SotaLexer::CreateToken(TokenType type = TokenType::EndOfFile, unsigned int length = 0, unsigned int index = 0) {
+//        return { type, index, length, Items };
+//    }
+//
+    Token SotaLexer::CreateToken(unsigned int index) {
+        return CreateToken(TokenType::EndOfFile, index, 0);
+    }
+
+    Token SotaLexer::CreateToken(TokenType type, unsigned int index, unsigned int length) {
+        return { type, index, length, Items };
+    }
+
     Token SotaLexer::Take(Token token) {
         if (token)
             _tokens.push_back(token);
@@ -12,7 +27,8 @@ namespace sota {
     }
 
     Token SotaLexer::Emit() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         if (_tokens.size()) {
             token = _tokens.front();
             _tokens.pop_front();
@@ -21,7 +37,8 @@ namespace sota {
     }
 
     Token SotaLexer::EndOfLine() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         if (IsCurrAnyOf({ '\r', '\n' })) {
             ++token.Length;
             token.Type = TokenType::EndOfLine;
@@ -35,10 +52,11 @@ namespace sota {
     }
 
     Token SotaLexer::Dent() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         if (IsPrevSeqOf({ '\r', '\n' }, 2) || IsPrevAnyOf({ '\r', '\n' })) {
 
-            auto indent = 0;
+            unsigned int indent = 0;
             if (auto ws = WhiteSpace()) {
                 Take(ws);
                 indent = ws.Length;
@@ -65,7 +83,8 @@ namespace sota {
     }
 
     Token SotaLexer::WhiteSpace() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         if (IsCurrAnyOf({ ' ', '\t' })) {
             ++token.Length;
             token.Type = TokenType::WhiteSpace;
@@ -105,7 +124,8 @@ namespace sota {
     }
 
     Token SotaLexer::Hash() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         if (IsCurr('#')) {
             ++token.Length;
             if (token = RangedMeta(token))
@@ -118,7 +138,8 @@ namespace sota {
     }
 
     Token SotaLexer::Literal() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         char c = Curr;
         if ('\'' == c || '\"' == c) {
             ++token.Length;
@@ -137,7 +158,8 @@ namespace sota {
     }
 
     Token SotaLexer::Symbol() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         std::string sym = "";
         auto symkeys = keys(SymbolValue2Type);
 
@@ -157,7 +179,8 @@ namespace sota {
     }
 
     Token SotaLexer::IdentifierNumberOrKeyword() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         bool loop = true;
         while (loop) {
             switch (Curr) {
@@ -195,14 +218,15 @@ namespace sota {
             Next();
 
         }
-        auto value = Value(token);
+        auto value = token.Value();
         if (KeywordValue2Type.count(value))
             token.Type = KeywordValue2Type[value];
         return token;
     }
 
     Token SotaLexer::EndOfFile() {
-        Token token = { TokenType::EndOfFile, Index, 0 };
+        //Token token = { TokenType::EndOfFile, Index, 0 };
+        auto token = CreateToken(Index);
         return token;
     }
 
@@ -240,24 +264,24 @@ namespace sota {
         return token.Index - count;
     }
 
-    std::string SotaLexer::Value(const Token &token) {
-        return std::string(Items.begin() + token.Index, Items.begin() + token.Index + token.Length);
-    }
+//    std::string SotaLexer::Value(const Token &token) const {
+//        return std::string(Items.begin() + token.Index, Items.begin() + token.Index + token.Length);
+//    }
 
     std::string SotaLexer::Pretty(const Token &token) {
         std::string result;
-        auto value = Value(token);
-        auto tokenvalue = Type2Value[token.Type];
+        auto value = token.Value();
+        auto tokenValue = Type2Value[token.Type];
         switch (token.Type) {
         case TokenType::WhiteSpace:
         case TokenType::EndOfFile:
         case TokenType::EndOfLine:
         case TokenType::Indent:
         case TokenType::Dedent:
-            result = tokenvalue;
+            result = tokenValue;
             break;
         default:
-            result = value != tokenvalue ? tokenvalue + ":" + value : value;
+            result = value != tokenValue ? tokenValue + ":" + value : value;
             break;
         }
         return result;

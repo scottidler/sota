@@ -16,6 +16,11 @@ namespace sota {
         std::stack<unsigned int> _indents;
         std::deque<Token> _tokens;
 
+        Token CreateToken(unsigned int index);
+        //Token CreateToken(TokenType type);
+        //Token CreateToken(TokenType type, unsigned int length);
+        Token CreateToken(TokenType type, unsigned int length, unsigned int index);
+
         Token Take(Token token);
         Token Emit();
 
@@ -37,7 +42,7 @@ namespace sota {
 
         unsigned int Line(const Token &token);
         unsigned int Column(const Token &token);
-        std::string Value(const Token &token);
+        //std::string Value(const Token &token) const;
         std::string Pretty(const Token &token);
 
         Token Scan();
