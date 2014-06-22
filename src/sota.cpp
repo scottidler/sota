@@ -15,10 +15,14 @@ int main(int argc, char* argv[]) {
     std::string source = "1 + 2";
     auto parser = Parser();
     Ast *ast = parser.Parse(source);
-    std::cout << ast->Print() << std::endl;
+    //std::cout << ast->Print() << std::endl;
 
-    Token token = Token(nullptr, source, 0, 0);
-    std::cout << token.Name() << std::endl;
+    auto symbol = Type2Symbol[SymbolType::Add];
+    Token token = Token(&symbol, source, 2, 1);
+    std::cout << token << std::endl;
 
+    for(auto &item : Type2Symbol) {
+        std::cout << item.first << item.second << std::endl;
+    }
     return 0;
 }
