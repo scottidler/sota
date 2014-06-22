@@ -75,9 +75,9 @@ namespace sota {
         SymbolType Type() const;
         std::string Pattern() const;
         size_t LBP() const;
-        size_t Scan(size_t index) const;
         std::string Value() const;
-        Ast * Parse(Parser *parser, Ast *ast, Token token) const;
+        size_t Scan(size_t index);
+        Ast * Parse(Parser *parser, Ast *ast, Token *token);
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);
     };
@@ -85,8 +85,8 @@ namespace sota {
     size_t EndOfFileScanner(const std::string &source, size_t index);
     size_t RegexScanner(const std::string &source, size_t index);
     size_t LiteralScanner(const std::string &source, size_t index);
-    Ast * NullParser(Parser *parser, Ast *ast, Token token);
-    Ast * InfixParser(Parser *parser, Ast *ast, Token token);
+    Ast * NullParser(Parser *parser, Ast *ast, Token *token);
+    Ast * InfixParser(Parser *parser, Ast *ast, Token *token);
 
     /*
     #define T(n,v,s,p,b) std::make_pair(SymbolType::n, new Symbol(SymbolType::n, v, s, p, b) ),

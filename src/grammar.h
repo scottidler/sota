@@ -5,7 +5,16 @@
 
 namespace sota {
 
+    class Ast;
+    class Token;
+    class Parser;
     class Symbol;
+
+    size_t EndOfFileScanner(const std::string &source, size_t index);
+    size_t RegexScanner(const std::string &source, size_t index);
+    size_t LiteralScanner(const std::string &source, size_t index);
+    Ast * NullParser(Parser *parser, Ast *ast, Token *token);
+    Ast * InfixParser(Parser *parser, Ast *ast, Token *token);
 
     //NAME          PATTERN     SCANNER             PARSER          LEFT_BIND_POWER
     #define SYMBOLS                                                                     \
@@ -22,10 +31,8 @@ namespace sota {
     };
     #undef T
 
-    /*
     extern std::map<SymbolType, Symbol *> Type2Symbol;
     extern std::map<std::string, Symbol *> Name2Symbol; 
-    */
 }
 
 #endif /*__SOTA_GRAMMAR__*/

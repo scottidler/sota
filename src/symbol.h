@@ -1,7 +1,12 @@
 #ifndef __SOTA_SYMBOL__
 #define __SOTA_SYMBOL__ = 1
 
+#include <functional>
+
 namespace sota {
+
+    typedef std::function<size_t(const std::string &, size_t)> ScanFunc;
+    typedef std::function<Ast*(Parser *, Ast *, Token *)> ParseFunc;
 
     class Ast;
     class Token;
@@ -9,8 +14,6 @@ namespace sota {
     class Symbol {
 
         public:
-        typedef std::function<size_t(const std::string &, size_t)> ScanFunc;
-        typedef std::function<Ast*(Parser*, Ast*, Token)> ParseFunc;
 
         SymbolType      Type;
         std::string     Pattern;

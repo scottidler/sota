@@ -20,9 +20,9 @@ int main(int argc, char* argv[]) {
     Ast *ast = parser.Parse(source);
     //std::cout << ast->Print() << std::endl;
 
-    //auto symbol = Type2Symbol[SymbolType::Add];
-    auto symbol = Symbol(SymbolType::Add, "+", LiteralScanner, InfixParser, BindPower::Sum);
-    Token token = Token(&symbol, source, 2, 1);
+    auto symbol = Type2Symbol[SymbolType::Add];
+    //auto symbol = Symbol(SymbolType::Add, "+", LiteralScanner, InfixParser, BindPower::Sum);
+    Token token = Token(symbol, source, 2, 1);
     std::cout << token << std::endl;
 
     /*
