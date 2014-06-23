@@ -13,6 +13,7 @@ namespace sota {
     size_t EndOfFileScanner(const std::string &source, size_t index);
     size_t RegexScanner(const std::string &source, size_t index);
     size_t LiteralScanner(const std::string &source, size_t index);
+
     Ast * NullParser(Parser *parser, Ast *ast, Token *token);
     Ast * InfixParser(Parser *parser, Ast *ast, Token *token);
 

@@ -36,12 +36,6 @@ namespace sota {
         return ast;
     }
 
-    /*
-    std::map<SymbolType, Symbol *> Type2Symbol {
-        std::make_pair(SymbolType::Add, new Symbol(SymbolType::Add, "+", LiteralScanner, InfixParser, BindPower::Sum) ),
-    };
-    */
-
     #define T(n,v,s,p,b) std::make_pair(SymbolType::n, new Symbol(SymbolType::n, v, s, p, b) ),
     std::map<SymbolType, Symbol *> Type2Symbol {
         SYMBOLS
