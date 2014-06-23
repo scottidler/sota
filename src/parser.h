@@ -4,19 +4,25 @@
 #include <string>
 
 #include "ast.h"
+#include "token.h"
 
 namespace sota {
 
     class Ast;
     class Parser {
 
+        std::string _source;
+
+        Token Consume();
+
         public:
-        Ast * Parse(const std::string &source) {
-            return nullptr;
-        }
-        Ast * ParseFile(const std::string &filename) {
-            return Parse("");
-        }
+
+        Parser();
+        Parser(const std::string &source);
+
+        Ast * ParseFile(const std::string &filename);
+        Ast * Parse(const std::string &source);
+        Ast * Parse(size_t lbp = 0);
     };
 }
 
