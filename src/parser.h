@@ -36,7 +36,7 @@ namespace sota {
         Ast * Parse(size_t lbp = 0);
 
         Token Consume();
-        Token Consume(const std::string &expected, const std::string &message);
+        Token Consume(const SymbolType &expected, const std::string &message);
 
         size_t Line();
         size_t Column();

@@ -75,9 +75,9 @@ namespace sota {
         return Token(symbol, _source, 0, 0);
     }
 
-    Token Parser::Consume(const std::string &expected, const std::string &message) {
+    Token Parser::Consume(const SymbolType &expected, const std::string &message) {
         auto token = Consume();
-        if (token.Value() != expected)
+        if (token.Type() != expected)
             throw SotaException(message);
         return token;
     }
