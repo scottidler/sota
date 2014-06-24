@@ -6,16 +6,16 @@
 #include <exception>
 
 namespace sota {
-	class SotaException: public std::exception {
-		std::string _message;
+    class SotaException: public std::exception {
+        std::string _message;
     public:
-		SotaException(std::string message) {
-			_message = message;
-		}
-		virtual const char * what() const throw() {
-			return _message.c_str();
-		}
-	};
+        SotaException(std::string message) {
+            _message = message;
+        }
+        virtual const char * what() const throw() {
+            return _message.c_str();
+        }
+    };
 
     class SotaNotImplemented: SotaException {
     public:
