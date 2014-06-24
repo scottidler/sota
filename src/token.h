@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <functional>
 
@@ -22,6 +23,35 @@ namespace sota {
         Product = 20,
         Negation = 30,
     };
+
+    typedef std::function<size_t(const std::string &, size_t)> ScanFunc;
+    typedef std::function<Ast *(Parser *, Token *)> NudFunc;
+    typedef std::function<Ast *(Parser *, Ast *, Token *)> LedFunc;
+
+    class Ast;
+    class Token;
+    class Parser;
+
+    typedef struct Symbol {
+
+    public:
+
+        SymbolType      Type;
+        std::string     Pattern;
+        ScanFunc        Scan;
+        NudFunc         Nud;
+        LedFunc         Led;
+        size_t          LBP;
+
+        Symbol();
+        Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp);
+
+        operator bool();
+        bool operator==(const Symbol &rhs);
+        bool operator!=(const Symbol &rhs);
+
+        friend std::ostream & operator<<(std::ostream &out, const Symbol &symbol);
+    } Struct;
 
     typedef struct Token {
 
