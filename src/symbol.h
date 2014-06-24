@@ -14,7 +14,8 @@ namespace sota {
     class Ast;
     class Token;
     class Parser;
-    class Symbol {
+
+    typedef struct Symbol {
 
     public:
 
@@ -33,13 +34,7 @@ namespace sota {
         bool operator!=(const Symbol &rhs);
 
         friend std::ostream & operator<<(std::ostream &out, const Symbol &symbol);
-    };
-    /*
-    extern std::map<SymbolType, Symbol *> Type2Symbol;
-    extern std::map<std::string, Symbol *> Name2Symbol;
-    extern std::map<std::string, SymbolType> Name2Type;
-    extern std::map<SymbolType, std::string> Type2Name;
-    */
+    } Struct;
 }
 
 #endif /*__SOTA_SYMBOL__*/

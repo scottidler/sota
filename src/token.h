@@ -23,7 +23,7 @@ namespace sota {
         Negation = 30,
     };
 
-    class Token {
+    typedef struct Token {
 
         Symbol              *_symbol;
         std::string         _source;
@@ -45,7 +45,7 @@ namespace sota {
 
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);
-    };
+    } Token;
 }
 
 #endif /*__SOTA_TOKEN__*/
