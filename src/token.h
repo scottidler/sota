@@ -24,7 +24,7 @@ namespace sota {
     class Token {
 
         Symbol              *_symbol;
-        const std::string   &_source;
+        std::string         _source;
 
         public:
         size_t              Index;

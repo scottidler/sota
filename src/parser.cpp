@@ -30,7 +30,7 @@ namespace sota {
     }
 
     Token Parser::LookAhead(int distance) {
-        auto token Token();
+        auto token = Token();
         while (distance--) {
             if (token = Emit())
                 continue;
