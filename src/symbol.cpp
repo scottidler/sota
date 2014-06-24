@@ -31,4 +31,8 @@ namespace sota {
     bool Symbol::operator!=(const Symbol &rhs) {
         return Type != rhs.Type;
     }
+
+    std::ostream & operator<<(std::ostream &out, const Symbol &symbol) {
+        return out << symbol.Type;
+    }
 }

@@ -19,20 +19,23 @@ namespace sota {
     Ast * EndOfFileNud(Parser *parser, Token *token);
     Ast * WhiteSpaceNud(Parser *parser, Token *token);
     Ast * IdentifierNud(Parser *parser, Token *token);
+    Ast * PrefixOperatorNud(Parser *parser, Token *token);
 
     // led parsing functions
     Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token);
     Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token);
+    Ast * PostfixOperatorLed(Parser *parser, Ast *left, Token *token);
 
     //NAME          PATTERN     SCANNER             NUD                 LED                 LEFT_BIND_POWER
     #define SYMBOLS                                                                                                 \
-    T(EndOfFile,    "[\0]",     LiteralScanner,     EndOfFileNud,       NotImplementedLed,  BindPower::None)        \
+    T(EndOfFile,    "\0",       LiteralScanner,     EndOfFileNud,       NotImplementedLed,  BindPower::None)        \
     T(WhiteSpace,   "[ \t]+",   RegexScanner,       WhiteSpaceNud,      NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
     T(Sub,          "-",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
     T(Mul,          "*",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)     \
-    T(Div,          "/",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)
+    T(Div,          "/",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)     \
+    T(Neg,          "-",        LiteralScanner,     PrefixOperatorNud,  NotImplementedLed,  BindPower::Negation)
 
     #define T(k,p,s,n,l,b) k,
     enum SymbolType: size_t {
@@ -40,8 +43,6 @@ namespace sota {
     };
     #undef T
 
-    extern std::map<SymbolType, Symbol *> Type2Symbol;
-    extern std::map<std::string, Symbol *> Name2Symbol; 
 }
 
 #endif /*__SOTA_GRAMMAR__*/

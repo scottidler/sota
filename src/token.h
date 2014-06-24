@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <iostream>
 #include <functional>
 
 #include "exceptions.h"
@@ -19,6 +20,7 @@ namespace sota {
         None = 0,
         Sum = 10,
         Product = 20,
+        Negation = 30,
     };
 
     class Token {
