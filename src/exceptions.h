@@ -8,7 +8,7 @@
 namespace sota {
 	class SotaException: public std::exception {
 		std::string _message;
-        public:
+    public:
 		SotaException(std::string message) {
 			_message = message;
 		}
@@ -18,7 +18,7 @@ namespace sota {
 	};
 
     class SotaNotImplemented: SotaException {
-        public:
+    public:
         SotaNotImplemented(std::string message)
             : SotaException(message) {
         }

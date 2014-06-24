@@ -28,7 +28,7 @@ namespace sota {
         Symbol              *_symbol;
         std::string         _source;
 
-        public:
+    public:
         size_t              Index;
         size_t              Length;
 

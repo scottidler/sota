@@ -16,7 +16,7 @@ namespace sota {
     class Parser;
     class Symbol {
 
-        public:
+    public:
 
         SymbolType      Type;
         std::string     Pattern;

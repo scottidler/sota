@@ -26,7 +26,7 @@ namespace sota {
         Token Scan();
         Token LookAhead(int distance);
 
-        public:
+    public:
 
         Parser();
         Parser(const std::string &source);

@@ -6,7 +6,7 @@
 namespace sota {
 
     class Ast {
-        public:
+    public:
         virtual std::string Print() = 0;
         virtual ~Ast() {}
         Ast() {}
@@ -15,7 +15,7 @@ namespace sota {
     class Token;
 
     class Identifier : public Ast {
-        public:
+    public:
         std::string Value;
 
         std::string Print();
@@ -24,7 +24,7 @@ namespace sota {
     };
 
     class InfixOperator : public Ast {
-        public:
+    public:
         Token *Op;
         Ast *Left;
         Ast *Right;
