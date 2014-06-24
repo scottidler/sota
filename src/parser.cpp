@@ -4,6 +4,11 @@
 #include "token.h"
 #include "symbol.h"
 
+#include "exceptions.h"
+
+#include <string>
+#include <vector>
+
 namespace sota {
 
     std::string Parser::Load(const std::string &filename) {
@@ -26,6 +31,21 @@ namespace sota {
     }
 
     Token Parser::Scan() {
+
+        Symbol *match = nullptr;
+        if (_index < _source.length()) {
+            auto end = _index;
+            std::vector<Symbol *> symbols;
+            for (auto symbol : symbols) {
+                auto index = symbol->Scan(_source, _index);
+                if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
+                    match = symbol;
+                    end = index;
+                }
+            }
+            if (_index == end)
+                throw SotaException("Parser::Scan: invalid symbol");
+        }
         return Token();
     }
 
@@ -45,7 +65,7 @@ namespace sota {
 
     Parser::Parser(const std::string &source)
         : _source(source) {}
-    
+
     Ast * Parser::ParseFile(const std::string &filename) {
         auto source = Load(filename);
         return Parse(source);

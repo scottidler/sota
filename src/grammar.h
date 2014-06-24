@@ -43,6 +43,10 @@ namespace sota {
     };
     #undef T
 
+    extern std::map<SymbolType, Symbol *> Type2Symbol;
+    extern std::map<std::string, Symbol *> Name2Symbol;
+    extern std::map<SymbolType, std::string> Type2Name;
+    extern std::map<std::string, SymbolType> Name2Type;
 }
 
 #endif /*__SOTA_GRAMMAR__*/
