@@ -5,10 +5,7 @@
 #include <string>
 #include <functional>
 
-//#include "ast.h"
-//#include "parser.h"
 #include "exceptions.h"
-
 #include "grammar.h"
 
 namespace sota {
@@ -27,21 +24,23 @@ namespace sota {
     class Token {
 
         Symbol              *_symbol;
+        const std::string   &_source;
 
         public:
-        const std::string   &Source;
         size_t              Index;
         size_t              Length;
 
         Token();
         Token(Symbol *symbol, const std::string &source, size_t index, size_t length);
 
-        SymbolType Type() const;
-        std::string Pattern() const;
-        size_t LBP() const;
-        std::string Value() const;
-        size_t Scan(size_t index);
-        Ast * Parse(Parser *parser, Ast *ast, Token *token);
+        SymbolType          Type() const;
+        std::string         Pattern() const;
+        size_t              LBP() const;
+        std::string         Value() const;
+
+        Ast *               Nud(Parser *parser, Token *token);
+        Ast *               Led(Parser *parser, Ast *ast, Token *token);
+
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);
     };

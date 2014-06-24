@@ -3,19 +3,21 @@
 
 namespace sota {
 
-    Symbol::Symbol():
-        Type(SymbolType::EndOfFile),
-        Pattern(""),
-        Scan(nullptr),
-        Parse(nullptr),
-        LBP(0) {
+    Symbol::Symbol()
+        : Type(SymbolType::EndOfFile)
+        , Pattern("")
+        , Scan(nullptr)
+        , Nud(nullptr)
+        , Led(nullptr)
+        , LBP(0) {
     }
-    Symbol::Symbol(SymbolType type, std::string pattern, ScanFunc scan, ParseFunc parse, size_t lbp):
-        Type(type),
-        Pattern(pattern),
-        Scan(scan),
-        Parse(parse),
-        LBP(lbp) {
+    Symbol::Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp)
+        : Type(type)
+        , Pattern(pattern)
+        , Scan(scan)
+        , Nud(nud)
+        , Led(led)
+        , LBP(lbp) {
     }
 
     Symbol::operator bool() {

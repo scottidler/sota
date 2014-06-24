@@ -13,16 +13,25 @@ namespace sota {
     };
 
     class Token;
+
+    class Identifier : public Ast {
+        public:
+        std::string Value;
+
+        std::string Print();
+        ~Identifier();
+        Identifier(std::string value);
+    };
+
     class InfixOperator : public Ast {
         public:
-        std::string Print();
-        ~InfixOperator();
-        InfixOperator(Token *op, Ast *left, Ast *right);
-
         Token *Op;
         Ast *Left;
         Ast *Right;
 
+        std::string Print();
+        ~InfixOperator();
+        InfixOperator(Token *op, Ast *left, Ast *right);
     };
 }
 #endif /*__SOTA_AST__*/

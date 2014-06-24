@@ -5,14 +5,14 @@ namespace sota {
 
     Token::Token()
         : _symbol(nullptr)
-        , Source("")
+        , _source("")
         , Index(0)
         , Length(0) {
     }
 
     Token::Token(Symbol *symbol, const std::string &source, size_t index, size_t length)   
         : _symbol(symbol)
-        , Source(source)
+        , _source(source)
         , Index(index)
         , Length(length) {
     }
@@ -32,15 +32,15 @@ namespace sota {
     }
 
     std::string Token::Value() const {
-        return Source.substr(Index, Length);
+        return _source.substr(Index, Length);
     }
 
-    size_t Token::Scan(size_t index) {
-        return _symbol->Scan(Source, index);
+    Ast * Token::Nud(Parser *parser, Token *token) {
+        return _symbol->Nud(parser, token);
     }
 
-    Ast * Token::Parse(Parser *parser, Ast *ast, Token *token) {
-        return _symbol->Parse(parser, ast, token);
+    Ast * Token::Led(Parser *parser, Ast *ast, Token *token) {
+        return _symbol->Led(parser, ast, token);
     }
 
     Token::operator bool() {

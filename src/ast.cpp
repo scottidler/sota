@@ -3,6 +3,12 @@
 
 namespace sota {
 
+    std::string Identifier::Print() { return "Identifier"; }
+    Identifier::~Identifier() {}
+    Identifier::Identifier(std::string value)
+        : Value(value) {
+    }
+
     std::string InfixOperator::Print() { return "InfixOperator"; }
     InfixOperator::~InfixOperator() {
         if (Left)

@@ -6,7 +6,8 @@
 namespace sota {
 
     typedef std::function<size_t(const std::string &, size_t)> ScanFunc;
-    typedef std::function<Ast*(Parser *, Ast *, Token *)> ParseFunc;
+    typedef std::function<Ast *(Parser *, Token *)> NudFunc;
+    typedef std::function<Ast *(Parser *, Ast *, Token *)> LedFunc;
 
     class Ast;
     class Token;
@@ -18,11 +19,12 @@ namespace sota {
         SymbolType      Type;
         std::string     Pattern;
         ScanFunc        Scan;
-        ParseFunc       Parse;
+        NudFunc         Nud;
+        LedFunc         Led;
         size_t          LBP;
 
         Symbol();
-        Symbol(SymbolType type, std::string pattern, ScanFunc scan, ParseFunc parse, size_t lbp);
+        Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp);
 
         operator bool();
         bool operator==(const Symbol &rhs);

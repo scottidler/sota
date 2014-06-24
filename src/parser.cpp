@@ -7,7 +7,7 @@
 namespace sota {
 
     Token Parser::Consume() {
-        auto symbol = new Symbol(SymbolType::Add, "+", nullptr, nullptr, 0);
+        auto symbol = new Symbol(SymbolType::Add, "+", nullptr, nullptr, nullptr, 0);
         return Token(symbol, _source, 0, 0);
     }
 
@@ -25,15 +25,15 @@ namespace sota {
         _source = source;
         return Parse();
     }
-    Ast * Parser::Parse(size_t lbp) {
+    Ast * Parser::Parse(size_t lbp/* = 0 */) {
 
         Token token = Consume();
 
-        Ast *left = token.Parse(this, nullptr, &token);
+        Ast *left = token.Nud(this, &token);
 
         while (lbp < token.LBP()) {
             Token token = Consume();
-            token.Parse(this, left, &token);
+            token.Led(this, left, &token);
         }
 
         return left;

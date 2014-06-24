@@ -5,17 +5,14 @@
 #include "parser.h"
 #include "symbol.h"
 #include "grammar.h"
+#include "exceptions.h"
 
 #include <map>
 #include <iostream>
 
 namespace sota {
 
-    size_t EndOfFileScanner(const std::string &source, size_t index) {
-        std::cout << "EndOfFileScanner" << std::endl;
-        return index;
-    }
-
+    // scanners
     size_t RegexScanner(const std::string &source, size_t index) {
         std::cout << "RegexScanner" << std::endl;
         return index;
@@ -26,23 +23,39 @@ namespace sota {
         return index;
     }
 
-    Ast * NullParser(Parser *parser, Ast *ast, Token *token) {
-        std::cout << "NullParser" << std::endl;
-        return ast;
+    // nud parsing functions
+    Ast * NotImplementedNud(Parser *parser, Token *token) {
+        throw SotaNotImplemented("nud: NotImplemented; this shouldn't be called!");
+    }
+    Ast * EndOfFileNud(Parser *parser, Token *token) {
+        std::cout << "EndOfFileNud" << std::endl;
+        return nullptr;
+    }
+    Ast * WhiteSpaceNud(Parser *parser, Token *token) {
+        std::cout << "WhiteSpaceNud" << std::endl;
+        return nullptr;
+    }
+    Ast * IdentifierNud(Parser *parser, Token *token) {
+        std::cout << "IdentifierNud" << std::endl;
+        return nullptr;
     }
 
-    Ast * InfixParser(Parser *parser, Ast *ast, Token *token) {
-        std::cout << "InfixOperator" << std::endl;
-        return ast;
+    // led parsing functions
+    Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token) {
+        throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
+    }
+    Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token) {
+        std::cout << "InfixOperatorLed" << std::endl;
+        return left;
     }
 
-    #define T(n,v,s,p,b) std::make_pair(SymbolType::n, new Symbol(SymbolType::n, v, s, p, b) ),
+    #define T(k,p,s,n,l,b) std::make_pair(SymbolType::k, new Symbol(SymbolType::k,p,s,n,l,b) ),
     std::map<SymbolType, Symbol *> Type2Symbol {
         SYMBOLS
     };
     #undef T
 
-    #define T(n,v,s,p,b) std::make_pair(#n, new Symbol(SymbolType::n, v, s, p, b) ),
+    #define T(k,p,s,n,l,b) std::make_pair(#k, new Symbol(SymbolType::k,p,s,n,l,b) ),
     std::map<std::string, Symbol *> Name2Symbol {
         SYMBOLS
     };
