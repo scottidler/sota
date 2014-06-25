@@ -1,17 +1,24 @@
 #include "parser.h"
 
 #include "ast.h"
+#include "utils.h"
 #include "token.h"
 
 #include "exceptions.h"
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 namespace sota {
 
     std::string Parser::Load(const std::string &filename) {
-        return "";
+        if (!exists(filename))
+            SotaException(filename + " doesn't exist or is unreadable");
+        std::ifstream file(filename);
+        std::string text((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        return text;
     }
 
     Token Parser::Take(Token token) {
@@ -36,10 +43,12 @@ namespace sota {
         if (Index < Source.length()) {
             for (auto kvp : Symbols) {
                 auto symbol = kvp.second;
-                auto index = symbol->Scan(Source, Index);
-                if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
-                    match = symbol;
-                    end = index;
+                if (symbol->Scan) {
+                    auto index = symbol->Scan(symbol, Source, Index);
+                    if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
+                        match = symbol;
+                        end = index;
+                    }
                 }
             }
             if (Index == end)
@@ -61,14 +70,16 @@ namespace sota {
     /*public*/
 
     Parser::Parser(const Types2Symbols &symbols)
-        : Symbols(symbols) {}
+        : Symbols(symbols)
+        , Source("")
+        , Index(0) {}
 
     Ast * Parser::ParseFile(const std::string &filename) {
         auto source = Load(filename);
         return Parse(source);
     }
 
-    Ast * Parser::Parse(const std::string &source) {
+    Ast * Parser::Parse(std::string source) {
         Source = source;
         return Parse();
     }

@@ -21,6 +21,7 @@ namespace sota {
         std::stack<Token>   _nesting;
         std::deque<Token>   _tokens;
 
+    public:
         std::string Load(const std::string &filename);
         Token Take(Token token);
         Token Emit();
@@ -36,7 +37,7 @@ namespace sota {
         Parser(const Types2Symbols &symbols);
 
         Ast * ParseFile(const std::string &filename);
-        Ast * Parse(const std::string &source);
+        Ast * Parse(std::string source);
         Ast * Parse(size_t lbp = 0);
 
         Token Consume();
