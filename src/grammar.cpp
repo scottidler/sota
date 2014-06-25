@@ -7,26 +7,29 @@
 #include "exceptions.h"
 
 #include <map>
-#include <regex>
+#include <boost/regex.hpp>
 #include <iostream>
 
 namespace sota {
 
     // scanners
     size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index) {
-        std::cout << "RegexScanner; Pattern: " << symbol->Pattern << std::endl;
-        std::regex re(symbol->Pattern);
-        std::smatch match;
-        std::cout << "before" << std::endl;
-        if (std::regex_match(source, match, re))
-            std::cout << "after" << std::endl;
-            std::cout << match.str() << std::endl;
-            return match.size();
+        auto pattern = symbol->Pattern;
+        boost::smatch matches;
+        boost::regex re("^" + pattern);
+        if (boost::regex_search(source, matches, re)) {
+            auto match = matches[0];
+            std::cout << "re pattern: " << pattern << " matched: " << match << std::endl;
+            return match.length();
+        }
         return index;
     }
 
     size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
-        std::cout << "LiteralScanner" << std::endl;
+        auto pattern = symbol->Pattern;
+        if (!source.compare(0, pattern.size(), pattern))
+            std::cout << "lit pattern: " << pattern << " matched: " << pattern << std::endl;
+            return pattern.size();
         return index;
     }
 
@@ -40,6 +43,10 @@ namespace sota {
     }
     Ast * WhiteSpaceNud(Parser *parser, Token *token) {
         std::cout << "WhiteSpaceNud" << std::endl;
+        return nullptr;
+    }
+    Ast * NumberNud(Parser *parser, Token *token) {
+        std::cout << "IdentifierNud" << std::endl;
         return nullptr;
     }
     Ast * IdentifierNud(Parser *parser, Token *token) {
