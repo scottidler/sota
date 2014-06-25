@@ -2,7 +2,6 @@
 
 #include "ast.h"
 #include "token.h"
-#include "symbol.h"
 
 #include "exceptions.h"
 

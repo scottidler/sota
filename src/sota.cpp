@@ -8,7 +8,6 @@
 #include "ast.h"
 #include "token.h"
 #include "parser.h"
-#include "symbol.h"
 #include "grammar.h"
 
 using namespace sota;

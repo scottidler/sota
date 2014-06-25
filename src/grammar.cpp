@@ -3,7 +3,6 @@
 #include "ast.h"
 #include "token.h"
 #include "parser.h"
-#include "symbol.h"
 #include "grammar.h"
 #include "exceptions.h"
 
