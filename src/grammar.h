@@ -11,8 +11,8 @@ namespace sota {
     class Symbol;
 
     // scanners
-    size_t RegexScanner(const std::string &source, size_t index);
-    size_t LiteralScanner(const std::string &source, size_t index);
+    size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index);
+    size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index);
 
     // nud parsing functions
     Ast * NotImplementedNud(Parser *parser, Token *token);

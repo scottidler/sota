@@ -7,17 +7,25 @@
 #include "exceptions.h"
 
 #include <map>
+#include <regex>
 #include <iostream>
 
 namespace sota {
 
     // scanners
-    size_t RegexScanner(const std::string &source, size_t index) {
-        std::cout << "RegexScanner" << std::endl;
+    size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index) {
+        std::cout << "RegexScanner; Pattern: " << symbol->Pattern << std::endl;
+        std::regex re(symbol->Pattern);
+        std::smatch match;
+        std::cout << "before" << std::endl;
+        if (std::regex_match(source, match, re))
+            std::cout << "after" << std::endl;
+            std::cout << match.str() << std::endl;
+            return match.size();
         return index;
     }
 
-    size_t LiteralScanner(const std::string &source, size_t index) {
+    size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
         std::cout << "LiteralScanner" << std::endl;
         return index;
     }
