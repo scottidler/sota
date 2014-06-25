@@ -1,7 +1,8 @@
 // sota.cpp : Defines the entry point for the console application.
 //
-#include <regex>
+#include <boost/regex.hpp>
 #include <array>
+#include <string>
 #include <iostream>
 #include <exception>
 
@@ -15,23 +16,19 @@ using namespace sota;
 int main(int argc, char* argv[]) {
 
     std::string source = "1 + 2";
+    boost::regex re("[0-9]+");
+    boost::match_results<std::string::const_iterator> matches;
+    boost::regex_match(source, matches, re);
+    std::cout << matches[1].str() << std::endl;
+    return 0;
+
     auto parser = Parser(Type2Symbol);
-    //Ast *ast = parser.Parse(source);
-    //std::cout << ast->Print() << std::endl;
+    parser.Source = source;
+    auto token = parser.Scan();
 
-    auto symbol = Type2Symbol[SymbolType::Add];
-    //auto symbol = Symbol(SymbolType::Add, "+", LiteralScanner, InfixParser, BindPower::Sum);
-    Token token = Token(symbol, source, 2, 1);
-    std::cout << token << std::endl;
+    std::cout
+        << token.Index << std::endl
+        << token.Length << std::endl;
 
-    for (const auto &item : Type2Symbol) {
-        std::cout << item.first << std::endl;
-    }
-
-    /*
-    for(auto &item : Type2Symbol) {
-        std::cout << item.first << item.second << std::endl;
-    }
-    */
     return 0;
 }
