@@ -16,7 +16,6 @@ namespace sota {
 
     // nud parsing functions
     Ast * NotImplementedNud(Parser *parser, Token *token);
-    Ast * EndOfFileNud(Parser *parser, Token *token);
     Ast * WhiteSpaceNud(Parser *parser, Token *token);
     Ast * IdentifierNud(Parser *parser, Token *token);
     Ast * PrefixOperatorNud(Parser *parser, Token *token);
@@ -28,7 +27,7 @@ namespace sota {
 
     //NAME          PATTERN     SCANNER             NUD                 LED                 LEFT_BIND_POWER
     #define SYMBOLS                                                                                                 \
-    T(EndOfFile,    "\0",       LiteralScanner,     EndOfFileNud,       NotImplementedLed,  BindPower::None)        \
+    T(EndOfFile,    "\0",       LiteralScanner,     NotImplementedNud,  NotImplementedLed,  BindPower::None)        \
     T(WhiteSpace,   "[ \t]+",   RegexScanner,       WhiteSpaceNud,      NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
