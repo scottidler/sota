@@ -41,14 +41,14 @@ namespace sota {
 
     Token::Token()
         : _symbol(nullptr)
-        , _source("")
+        , Source("")
         , Index(0)
         , Length(0) {
     }
 
     Token::Token(Symbol *symbol, const std::string &source, size_t index, size_t length)   
         : _symbol(symbol)
-        , _source(source)
+        , Source(source)
         , Index(index)
         , Length(length) {
     }
@@ -68,7 +68,7 @@ namespace sota {
     }
 
     std::string Token::Value() const {
-        return _source.substr(Index, Length);
+        return Source.substr(Index, Length);
     }
 
     Ast * Token::Nud(Parser *parser, Token *token) {

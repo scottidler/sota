@@ -24,7 +24,7 @@ namespace sota {
         Negation = 30,
     };
 
-    typedef std::function<size_t(const std::string &, size_t)> ScanFunc;
+    typedef std::function<size_t(Symbol *, const std::string &, size_t)> ScanFunc;
     typedef std::function<Ast *(Parser *, Token *)> NudFunc;
     typedef std::function<Ast *(Parser *, Ast *, Token *)> LedFunc;
 
@@ -33,8 +33,6 @@ namespace sota {
     class Parser;
 
     typedef struct Symbol {
-
-    public:
 
         SymbolType      Type;
         std::string     Pattern;
@@ -51,14 +49,13 @@ namespace sota {
         bool operator!=(const Symbol &rhs);
 
         friend std::ostream & operator<<(std::ostream &out, const Symbol &symbol);
-    } Struct;
+
+    } Symbol;
 
     typedef struct Token {
 
         Symbol              *_symbol;
-        std::string         _source;
-
-    public:
+        std::string         Source;
         size_t              Index;
         size_t              Length;
 
@@ -75,6 +72,7 @@ namespace sota {
 
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);
+
     } Token;
 }
 
