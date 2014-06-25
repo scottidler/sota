@@ -31,9 +31,9 @@ namespace sota {
 
     Token Parser::Scan() {
 
+        auto end = Index;
         Symbol *match = nullptr;
         if (Index < Source.length()) {
-            auto end = Index;
             for (auto kvp : Symbols) {
                 auto symbol = kvp.second;
                 auto index = symbol->Scan(Source, Index);
@@ -45,7 +45,7 @@ namespace sota {
             if (Index == end)
                 throw SotaException("Parser::Scan: invalid symbol");
         }
-        return Token();
+        return Token(match, Source, Index, end - Index);
     }
 
     Token Parser::LookAhead(int distance) {
