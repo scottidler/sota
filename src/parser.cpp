@@ -34,8 +34,8 @@ namespace sota {
         Symbol *match = nullptr;
         if (Index < Source.length()) {
             auto end = Index;
-            std::vector<Symbol *> symbols;
-            for (auto symbol : symbols) {
+            for (auto kvp : Symbols) {
+                auto symbol = kvp.second;
                 auto index = symbol->Scan(Source, Index);
                 if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
                     match = symbol;
