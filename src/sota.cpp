@@ -15,7 +15,7 @@ using namespace sota;
 int main(int argc, char* argv[]) {
 
     std::string source = "1 + 2";
-    auto parser = Parser();
+    auto parser = Parser(Type2Symbol);
     //Ast *ast = parser.Parse(source);
     //std::cout << ast->Print() << std::endl;
 

@@ -57,7 +57,7 @@ namespace sota {
     }
 
     #define T(k,p,s,n,l,b) std::make_pair(SymbolType::k, new Symbol(SymbolType::k,p,s,n,l,b) ),
-    std::map<SymbolType, Symbol *> Type2Symbol {
+    std::map<size_t, Symbol *> Type2Symbol {
         SYMBOLS
     };
     #undef T
@@ -69,13 +69,13 @@ namespace sota {
     #undef T
 
     #define T(k,p,s,n,l,b) std::make_pair(SymbolType::k, #k),
-    std::map<SymbolType, std::string> Type2Name {
+    std::map<size_t, std::string> Type2Name {
         SYMBOLS
     };
     #undef T
 
     #define T(k,p,s,n,l,b) std::make_pair(#k, SymbolType::k),
-    std::map<std::string, SymbolType> Name2Type {
+    std::map<std::string, size_t> Name2Type {
         SYMBOLS
     };
     #undef T

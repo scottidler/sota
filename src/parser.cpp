@@ -21,7 +21,7 @@ namespace sota {
     }
 
     Token Parser::Emit() {
-        Token token = Token(nullptr, _source, _index, 0);
+        Token token = Token(nullptr, Source, Index, 0);
         if (_tokens.size()) {
             token = _tokens.front();
             _tokens.pop_front();
@@ -32,17 +32,17 @@ namespace sota {
     Token Parser::Scan() {
 
         Symbol *match = nullptr;
-        if (_index < _source.length()) {
-            auto end = _index;
+        if (Index < Source.length()) {
+            auto end = Index;
             std::vector<Symbol *> symbols;
             for (auto symbol : symbols) {
-                auto index = symbol->Scan(_source, _index);
+                auto index = symbol->Scan(Source, Index);
                 if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
                     match = symbol;
                     end = index;
                 }
             }
-            if (_index == end)
+            if (Index == end)
                 throw SotaException("Parser::Scan: invalid symbol");
         }
         return Token();
@@ -60,10 +60,8 @@ namespace sota {
 
     /*public*/
 
-    Parser::Parser() {}
-
-    Parser::Parser(const std::string &source)
-        : _source(source) {}
+    Parser::Parser(const Types2Symbols &symbols)
+        : Symbols(symbols) {}
 
     Ast * Parser::ParseFile(const std::string &filename) {
         auto source = Load(filename);
@@ -71,7 +69,7 @@ namespace sota {
     }
 
     Ast * Parser::Parse(const std::string &source) {
-        _source = source;
+        Source = source;
         return Parse();
     }
 
@@ -91,10 +89,10 @@ namespace sota {
 
     Token Parser::Consume() {
         auto symbol = new Symbol(SymbolType::Add, "+", nullptr, nullptr, nullptr, 0);
-        return Token(symbol, _source, 0, 0);
+        return Token(symbol, Source, 0, 0);
     }
 
-    Token Parser::Consume(const SymbolType &expected, const std::string &message) {
+    Token Parser::Consume(const size_t &expected, const std::string &message) {
         auto token = Consume();
         if (token.Type() != expected)
             throw SotaException(message);
