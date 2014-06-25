@@ -9,7 +9,7 @@ EXEC=sota
 all: $(EXEC)
 
 $(EXEC): $(OBJS_CXX)
-	$(CXX) $^ $(LD_FLAGS) -o $@
+	$(CXX) $^ $(LD_FLAGS) -o $@ -lboost_regex -lboost_iostreams
 
 # (re)compile objects
 %.o: %.cpp
