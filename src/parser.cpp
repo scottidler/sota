@@ -38,31 +38,30 @@ namespace sota {
 
     Token Parser::Scan() {
 
-        auto end = Index;
-        Symbol *match = nullptr;
         if (Index < Source.length()) {
+            std::cout << "Scan: Index=" << Index << std::endl;
+            size_t end = Index;
+            Symbol *match = nullptr;
             for (auto kvp : Symbols) {
                 auto symbol = kvp.second;
-                if (symbol->Scan) {
-                    auto index = symbol->Scan(symbol, Source, Index);
-                    if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
-                        match = symbol;
-                        end = index;
-                    }
+                size_t index = symbol->Scan(symbol, Source.substr(Index, Source.length() - Index), Index);
+                if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
+                    match = symbol;
+                    end = index;
                 }
             }
             if (Index == end)
                 throw SotaException("Parser::Scan: invalid symbol");
+            return Token(match, Source, Index, end - Index);
         }
-        return Token(match, Source, Index, end - Index);
+        return Token();
     }
 
-    Token Parser::LookAhead(int distance) {
+    Token Parser::LookAhead(size_t distance) {
         auto token = Token();
-        while (distance--) {
-            if (token = Emit())
-                continue;
+        for (size_t i = 0; i < distance; ++i) {
             token = Scan();
+            ++Index;
         }
         return token;
     }
@@ -99,8 +98,8 @@ namespace sota {
     }
 
     Token Parser::Consume() {
-        auto symbol = new Symbol(SymbolType::Add, "+", nullptr, nullptr, nullptr, 0);
-        return Token(symbol, Source, 0, 0);
+        auto token = LookAhead(1);
+        return token;
     }
 
     Token Parser::Consume(const size_t &expected, const std::string &message) {

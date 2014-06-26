@@ -26,7 +26,7 @@ namespace sota {
         Token Take(Token token);
         Token Emit();
         Token Scan();
-        Token LookAhead(int distance);
+        Token LookAhead(size_t distance);
 
     public:
 
