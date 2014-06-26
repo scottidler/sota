@@ -34,7 +34,7 @@ namespace sota {
     }
 
     std::ostream & operator<<(std::ostream &out, const Symbol &symbol) {
-        return out << symbol.Type;
+        return out << "Symbol(Type=" << symbol.Type << ", Pattern=" << symbol.Pattern << ", LBP=" << symbol.LBP <<  ")";
     }
 
     /*Token*/
@@ -84,6 +84,6 @@ namespace sota {
     }
 
     std::ostream & operator<<(std::ostream &out, const Token &token) {
-        return out << token.Value();
+        return out << "Token(_symbol=" << *token._symbol <<  ", Value=" << token.Value() << ")";
     }
 }
