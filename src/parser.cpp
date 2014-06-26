@@ -39,7 +39,6 @@ namespace sota {
     Token Parser::Scan() {
 
         if (Index < Source.length()) {
-            std::cout << "Scan: Index=" << Index << std::endl;
             size_t end = Index;
             Symbol *match = nullptr;
             for (auto kvp : Symbols) {
