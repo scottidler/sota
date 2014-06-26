@@ -49,12 +49,11 @@ namespace sota {
     }
     Ast * NumberNud(Parser *parser, Token *token) {
         std::cout << "NumberNud" << std::endl;
-        return nullptr;
+        return new NumberAst(token->Value());
     }
     Ast * IdentifierNud(Parser *parser, Token *token) {
         std::cout << "IdentifierNud" << std::endl;
-        Ast *ast = new IdentifierAst(token->Value());
-        return ast;
+        return new IdentifierAst(token->Value());
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
         std::cout << "PrefixOperatorNud" << std::endl;
