@@ -14,7 +14,7 @@ namespace sota {
 
     // scanners
     size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index) {
-        auto pattern = symbol->Pattern;
+        auto pattern = symbol->pattern;
         boost::smatch matches;
         boost::regex re("^" + pattern);
         if (boost::regex_search(source, matches, re)) {
@@ -26,7 +26,7 @@ namespace sota {
     }
 
     size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
-        auto pattern = symbol->Pattern;
+        auto pattern = symbol->pattern;
         auto patternSize = pattern.size();
         if (source.size() >= patternSize && source.compare(0, patternSize, pattern) == 0) {
             //std::cout << "lit pattern: " << pattern << " matched: " << pattern << std::endl;

@@ -30,9 +30,9 @@ namespace sota {
 
     public:
 
-        Types2Symbols       Symbols;
-        std::string         Source;
-        size_t              Index;
+        Types2Symbols       symbols;
+        std::string         source;
+        size_t              index;
 
         Parser(const Types2Symbols &symbols);
 

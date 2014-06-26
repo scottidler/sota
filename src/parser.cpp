@@ -28,7 +28,7 @@ namespace sota {
     }
 
     Token Parser::Emit() {
-        Token token = Token(nullptr, Source, Index, 0);
+        Token token = Token();
         if (_tokens.size()) {
             token = _tokens.front();
             _tokens.pop_front();
@@ -38,20 +38,20 @@ namespace sota {
 
     Token Parser::Scan() {
 
-        if (Index < Source.length()) {
-            size_t end = Index;
+        if (index < source.length()) {
+            size_t end = index;
             Symbol *match = nullptr;
-            for (auto kvp : Symbols) {
+            for (auto kvp : symbols) {
                 auto symbol = kvp.second;
-                size_t index = symbol->Scan(symbol, Source.substr(Index, Source.length() - Index), Index);
-                if (index > end || (match != nullptr && symbol->LBP > match->LBP && index == end)) {
+                size_t pos = symbol->scan(symbol, source.substr(index, source.length() - index), index);
+                if (pos > end || (match != nullptr && symbol->lbp > match->lbp && pos == end)) {
                     match = symbol;
-                    end = index;
+                    end = pos;
                 }
             }
-            if (Index == end)
+            if (index == end)
                 throw SotaException("Parser::Scan: invalid symbol");
-            return Token(match, Source, Index, end - Index);
+            return Token(*match, source, index, end - index);
         }
         return Token();
     }
@@ -60,7 +60,7 @@ namespace sota {
         auto token = Token();
         for (size_t i = 0; i < distance; ++i) {
             token = Scan();
-            ++Index;
+            ++index;
         }
         return token;
     }
@@ -68,9 +68,9 @@ namespace sota {
     /*public*/
 
     Parser::Parser(const Types2Symbols &symbols)
-        : Symbols(symbols)
-        , Source("")
-        , Index(0) {}
+        : symbols(symbols)
+        , source("")
+        , index(0) {}
 
     Ast * Parser::ParseFile(const std::string &filename) {
         auto source = Load(filename);
@@ -78,7 +78,7 @@ namespace sota {
     }
 
     Ast * Parser::Parse(std::string source) {
-        Source = source;
+        source = source;
         return Parse();
     }
 
@@ -86,11 +86,11 @@ namespace sota {
 
         Token token = Consume();
 
-        Ast *left = token.Nud(this, &token);
+        Ast *left = token.nud(this, &token);
 
-        while (lbp < token.LBP()) {
+        while (lbp < token.symbol.lbp) {
             Token token = Consume();
-            token.Led(this, left, &token);
+            token.led(this, left, &token);
         }
 
         return left;
@@ -103,7 +103,7 @@ namespace sota {
 
     Token Parser::Consume(const size_t &expected, const std::string &message) {
         auto token = Consume();
-        if (token.Type() != expected)
+        if (token.symbol.type != expected)
             throw SotaException(message);
         return token;
     }

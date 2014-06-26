@@ -5,85 +5,71 @@ namespace sota {
     /*Symbol*/
 
     Symbol::Symbol()
-        : Type(SymbolType::EndOfFile)
-        , Pattern("")
-        , Scan(nullptr)
-        , Nud(nullptr)
-        , Led(nullptr)
-        , LBP(0) {
+        : type(SymbolType::EndOfFile)
+        , pattern("")
+        , scan(nullptr)
+        , nud(nullptr)
+        , led(nullptr)
+        , lbp(0) {
     }
     Symbol::Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp)
-        : Type(type)
-        , Pattern(pattern)
-        , Scan(scan)
-        , Nud(nud)
-        , Led(led)
-        , LBP(lbp) {
+        : type(type)
+        , pattern(pattern)
+        , scan(scan)
+        , nud(nud)
+        , led(led)
+        , lbp(lbp) {
     }
 
     Symbol::operator bool() {
-        return Type != SymbolType::EndOfFile;
+        return type != SymbolType::EndOfFile;
     }
 
     bool Symbol::operator==(const Symbol &rhs) {
-        return Type == rhs.Type;
+        return type == rhs.type;
     }
 
     bool Symbol::operator!=(const Symbol &rhs) {
-        return Type != rhs.Type;
+        return type != rhs.type;
     }
 
     std::ostream & operator<<(std::ostream &out, const Symbol &symbol) {
-        return out << "Symbol(Type=" << symbol.Type << ", Pattern=" << symbol.Pattern << ", LBP=" << symbol.LBP <<  ")";
+        return out << "Symbol(type=" << symbol.type << ", pattern=" << symbol.pattern << ", lbp=" << symbol.lbp <<  ")";
     }
 
     /*Token*/
 
     Token::Token()
-        : _symbol(nullptr)
-        , Source("")
-        , Index(0)
-        , Length(0) {
+        : symbol(Symbol())
+        , source("")
+        , index(0)
+        , length(0) {
     }
 
-    Token::Token(Symbol *symbol, const std::string &source, size_t index, size_t length)   
-        : _symbol(symbol)
-        , Source(source)
-        , Index(index)
-        , Length(length) {
+    Token::Token(const Symbol &symbol, const std::string &source, size_t index, size_t length)   
+        : symbol(symbol)
+        , source(source)
+        , index(index)
+        , length(length) {
     }
 
-    SymbolType Token::Type() const {
-        if (_symbol == nullptr)
-            throw SotaException("_symbol == nullptr");
-        return _symbol->Type;
+    std::string Token::value() const {
+        return source.substr(index, length);
     }
 
-    std::string Token::Pattern() const {
-        return _symbol->Pattern;
+    Ast * Token::nud(Parser *parser, Token *token) {
+        return symbol.nud(parser, token);
     }
 
-    size_t Token::LBP() const {
-        return _symbol->LBP;
-    }
-
-    std::string Token::Value() const {
-        return Source.substr(Index, Length);
-    }
-
-    Ast * Token::Nud(Parser *parser, Token *token) {
-        return _symbol->Nud(parser, token);
-    }
-
-    Ast * Token::Led(Parser *parser, Ast *ast, Token *token) {
-        return _symbol->Led(parser, ast, token);
+    Ast * Token::led(Parser *parser, Ast *ast, Token *token) {
+        return symbol.led(parser, ast, token);
     }
 
     Token::operator bool() {
-       return *_symbol == true;
+       return symbol == true;
     }
 
     std::ostream & operator<<(std::ostream &out, const Token &token) {
-        return out << "Token(_symbol=" << *token._symbol <<  ", Value=" << token.Value() << ")";
+        return out << "Token(_symbol=" << token.symbol <<  ", Value=" << token.value() << ")";
     }
 }

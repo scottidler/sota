@@ -34,12 +34,12 @@ namespace sota {
 
     typedef struct Symbol {
 
-        SymbolType      Type;
-        std::string     Pattern;
-        ScanFunc        Scan;
-        NudFunc         Nud;
-        LedFunc         Led;
-        size_t          LBP;
+        SymbolType      type;
+        std::string     pattern;
+        ScanFunc        scan;
+        NudFunc         nud;
+        LedFunc         led;
+        size_t          lbp;
 
         Symbol();
         Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp);
@@ -54,21 +54,18 @@ namespace sota {
 
     typedef struct Token {
 
-        Symbol              *_symbol;
-        std::string         Source;
-        size_t              Index;
-        size_t              Length;
+        Symbol              symbol;
+        std::string         source;
+        size_t              index;
+        size_t              length;
 
         Token();
-        Token(Symbol *symbol, const std::string &source, size_t index, size_t length);
+        Token(const Symbol &symbol, const std::string &source, size_t index, size_t length);
 
-        SymbolType          Type() const;
-        std::string         Pattern() const;
-        size_t              LBP() const;
-        std::string         Value() const;
+        std::string         value() const;
 
-        Ast *               Nud(Parser *parser, Token *token);
-        Ast *               Led(Parser *parser, Ast *ast, Token *token);
+        Ast *               nud(Parser *parser, Token *token);
+        Ast *               led(Parser *parser, Ast *ast, Token *token);
 
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);
