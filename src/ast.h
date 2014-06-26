@@ -23,6 +23,15 @@ namespace sota {
         IdentifierAst(std::string value);
     };
 
+    class NumberAst : public Ast {
+    public:
+        std::string value;
+
+        std::string Print();
+        ~NumberAst();
+        NumberAst(std::string value);
+    };
+
     class InfixOperatorAst : public Ast {
     public:
         Token *op;

@@ -11,7 +11,13 @@ namespace sota {
         : value(value) {
     }
 
-    std::string InfixOperatorAst::Print() { return "(op:" + left->Print() + " " + right->Print() + ")"; }
+    std::string NumberAst::Print() { return "(num " + value + ")"; }
+    NumberAst::~NumberAst() {}
+    NumberAst::NumberAst(std::string value)
+        : value(value) {
+    }
+
+    std::string InfixOperatorAst::Print() { return "(" + op->Value() + " " + left->Print() + " " + right->Print() + ")"; }
     InfixOperatorAst::~InfixOperatorAst() {
         if (left)
             delete left;
