@@ -37,8 +37,8 @@ namespace sota {
         SymbolType      type;
         std::string     pattern;
         ScanFunc        scan;
-        NudFunc         nud;
-        LedFunc         led;
+        NudFunc         Nud;
+        LedFunc         Led;
         size_t          lbp;
 
         Symbol();
@@ -62,10 +62,10 @@ namespace sota {
         Token();
         Token(const Symbol &symbol, const std::string &source, size_t index, size_t length);
 
-        std::string         value() const;
+        std::string         Value() const;
 
-        Ast *               nud(Parser *parser, Token *token);
-        Ast *               led(Parser *parser, Ast *ast, Token *token);
+        Ast *               Nud(Parser *parser, Token *token);
+        Ast *               Led(Parser *parser, Ast *ast, Token *token);
 
         operator bool();
         friend std::ostream & operator<<(std::ostream &out, const Token &token);

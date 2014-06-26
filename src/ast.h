@@ -9,7 +9,7 @@ namespace sota {
 
     class Ast {
     public:
-        virtual std::string print() = 0;
+        virtual std::string Print() = 0;
         virtual ~Ast() {}
         Ast() {}
     };
@@ -18,20 +18,20 @@ namespace sota {
     public:
         std::string value;
 
-        std::string print();
+        std::string Print();
         ~IdentifierAst();
         IdentifierAst(std::string value);
     };
 
-    class InfixOperator : public Ast {
+    class InfixOperatorAst : public Ast {
     public:
         Token *op;
         Ast *left;
         Ast *right;
 
-        std::string print();
-        ~InfixOperator();
-        InfixOperator(Token *op, Ast *left, Ast *right);
+        std::string Print();
+        ~InfixOperatorAst();
+        InfixOperatorAst(Token *op, Ast *left, Ast *right);
     };
 }
 #endif /*__SOTA_AST__*/

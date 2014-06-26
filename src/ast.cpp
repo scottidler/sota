@@ -5,20 +5,20 @@
 
 namespace sota {
 
-    std::string IdentifierAst::print() { return "(id " + value + ")"; }
+    std::string IdentifierAst::Print() { return "(id " + value + ")"; }
     IdentifierAst::~IdentifierAst() {}
     IdentifierAst::IdentifierAst(std::string value)
         : value(value) {
     }
 
-    std::string InfixOperator::print() { return "(op:" + left->print() + " " + right->print() + ")"; }
-    InfixOperator::~InfixOperator() {
+    std::string InfixOperatorAst::Print() { return "(op:" + left->Print() + " " + right->Print() + ")"; }
+    InfixOperatorAst::~InfixOperatorAst() {
         if (left)
             delete left;
         if (right)
             delete right;
     }
-    InfixOperator::InfixOperator(Token *op, Ast *left, Ast *right)
+    InfixOperatorAst::InfixOperatorAst(Token *op, Ast *left, Ast *right)
         : op(op)
         , left(left)
         , right(right) {

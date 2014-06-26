@@ -8,16 +8,16 @@ namespace sota {
         : type(SymbolType::EndOfFile)
         , pattern("")
         , scan(nullptr)
-        , nud(nullptr)
-        , led(nullptr)
+        , Nud(nullptr)
+        , Led(nullptr)
         , lbp(0) {
     }
     Symbol::Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp)
         : type(type)
         , pattern(pattern)
         , scan(scan)
-        , nud(nud)
-        , led(led)
+        , Nud(nud)
+        , Led(led)
         , lbp(lbp) {
     }
 
@@ -53,16 +53,16 @@ namespace sota {
         , length(length) {
     }
 
-    std::string Token::value() const {
+    std::string Token::Value() const {
         return source.substr(index, length);
     }
 
-    Ast * Token::nud(Parser *parser, Token *token) {
-        return symbol.nud(parser, token);
+    Ast * Token::Nud(Parser *parser, Token *token) {
+        return symbol.Nud(parser, token);
     }
 
-    Ast * Token::led(Parser *parser, Ast *ast, Token *token) {
-        return symbol.led(parser, ast, token);
+    Ast * Token::Led(Parser *parser, Ast *ast, Token *token) {
+        return symbol.Led(parser, ast, token);
     }
 
     Token::operator bool() {
@@ -70,6 +70,6 @@ namespace sota {
     }
 
     std::ostream & operator<<(std::ostream &out, const Token &token) {
-        return out << "Token(symbol=" << token.symbol <<  ", value=" << token.value() << ")";
+        return out << "Token(symbol=" << token.symbol <<  ", Value=" << token.Value() << ")";
     }
 }

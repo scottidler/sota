@@ -53,7 +53,7 @@ namespace sota {
     }
     Ast * IdentifierNud(Parser *parser, Token *token) {
         std::cout << "IdentifierNud" << std::endl;
-        Ast *ast = new IdentifierAst(token->value());
+        Ast *ast = new IdentifierAst(token->Value());
         return ast;
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
@@ -67,7 +67,8 @@ namespace sota {
     }
     Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token) {
         std::cout << "InfixOperatorLed" << std::endl;
-        return left;
+        Ast *right = parser->Parse(token->symbol.lbp);
+        return new InfixOperatorAst(token, left, right);
     }
     Ast * PostfixOperatorNud(Parser *parser, Ast *left, Token *token) {
         std::cout << "PostfixOperatorLed" << std::endl;

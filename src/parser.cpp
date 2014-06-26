@@ -89,12 +89,12 @@ namespace sota {
         Token token = Consume();
         std::cout << token << std::endl;
 
-        Ast *left = token.nud(this, &token);
-        std::cout << left->print() << std::endl;
+        Ast *left = token.Nud(this, &token);
+        std::cout << left->Print() << std::endl;
 
         while (lbp < token.symbol.lbp) {
             Token token = Consume();
-            token.led(this, left, &token);
+            token.Led(this, left, &token);
         }
 
         return left;
