@@ -19,17 +19,19 @@ namespace sota {
         boost::regex re("^" + pattern);
         if (boost::regex_search(source, matches, re)) {
             auto match = matches[0];
-            std::cout << "re pattern: " << pattern << " matched: " << match << std::endl;
-            return match.length();
+            //std::cout << "re pattern: " << pattern << " matched: " << match << std::endl;
+            return index + match.length();
         }
         return index;
     }
 
     size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
         auto pattern = symbol->Pattern;
-        if (!source.compare(0, pattern.size(), pattern))
-            std::cout << "lit pattern: " << pattern << " matched: " << pattern << std::endl;
-            return pattern.size();
+        auto patternSize = pattern.size();
+        if (source.size() >= patternSize && source.compare(0, patternSize, pattern) == 0) {
+            //std::cout << "lit pattern: " << pattern << " matched: " << pattern << std::endl;
+            return index + patternSize;
+        }
         return index;
     }
 
