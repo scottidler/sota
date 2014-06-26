@@ -70,6 +70,6 @@ namespace sota {
     }
 
     std::ostream & operator<<(std::ostream &out, const Token &token) {
-        return out << "Token(_symbol=" << token.symbol <<  ", Value=" << token.value() << ")";
+        return out << "Token(symbol=" << token.symbol <<  ", value=" << token.value() << ")";
     }
 }
