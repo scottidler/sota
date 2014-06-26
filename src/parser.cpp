@@ -78,15 +78,19 @@ namespace sota {
     }
 
     Ast * Parser::Parse(std::string source) {
-        source = source;
+        this->source = source;
         return Parse();
     }
 
     Ast * Parser::Parse(size_t lbp/* = 0 */) {
 
+        std::cout << source << std::endl;
+
         Token token = Consume();
+        std::cout << token << std::endl;
 
         Ast *left = token.nud(this, &token);
+        std::cout << left->print() << std::endl;
 
         while (lbp < token.symbol.lbp) {
             Token token = Consume();
