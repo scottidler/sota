@@ -14,12 +14,11 @@ using namespace sota;
 
 int main(int argc, char* argv[]) {
 
-    std::string source = "1 + 2";
+    std::string source = "a + b";
 
     auto parser = Parser(Type2Symbol);
-
     auto *ast = parser.Parse(source);
-    std::cout << ast->Print() << std::endl;
+    std::cout << "Parse result: " << ast->Print() << std::endl;
 
     return 0;
 }
