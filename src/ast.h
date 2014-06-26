@@ -5,31 +5,31 @@
 
 namespace sota {
 
+    class Token;
+
     class Ast {
     public:
-        virtual std::string Print() = 0;
+        virtual std::string print() = 0;
         virtual ~Ast() {}
         Ast() {}
     };
 
-    class Token;
-
-    class Identifier : public Ast {
+    class IdentifierAst : public Ast {
     public:
-        std::string Value;
+        std::string value;
 
-        std::string Print();
-        ~Identifier();
-        Identifier(std::string value);
+        std::string print();
+        ~IdentifierAst();
+        IdentifierAst(std::string value);
     };
 
     class InfixOperator : public Ast {
     public:
-        Token *Op;
-        Ast *Left;
-        Ast *Right;
+        Token *op;
+        Ast *left;
+        Ast *right;
 
-        std::string Print();
+        std::string print();
         ~InfixOperator();
         InfixOperator(Token *op, Ast *left, Ast *right);
     };

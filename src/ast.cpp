@@ -1,25 +1,27 @@
 #include "ast.h"
 #include "token.h"
 
+#include <string>
+
 namespace sota {
 
-    std::string Identifier::Print() { return "Identifier"; }
-    Identifier::~Identifier() {}
-    Identifier::Identifier(std::string value)
-        : Value(value) {
+    std::string IdentifierAst::print() { return "(id " + value + ")"; }
+    IdentifierAst::~IdentifierAst() {}
+    IdentifierAst::IdentifierAst(std::string value)
+        : value(value) {
     }
 
-    std::string InfixOperator::Print() { return "InfixOperator"; }
+    std::string InfixOperator::print() { return "(op:" + left->print() + " " + right->print() + ")"; }
     InfixOperator::~InfixOperator() {
-        if (Left)
-            delete Left;
-        if (Right)
-            delete Right;
+        if (left)
+            delete left;
+        if (right)
+            delete right;
     }
     InfixOperator::InfixOperator(Token *op, Ast *left, Ast *right)
-        : Op(op)
-        , Left(left)
-        , Right(right) {
+        : op(op)
+        , left(left)
+        , right(right) {
     }
         
 }
