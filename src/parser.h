@@ -21,12 +21,10 @@ namespace sota {
         std::stack<Token>   _nesting;
         std::deque<Token>   _tokens;
 
-    public:
         std::string Load(const std::string &filename);
         Token Take(Token token);
         Token Emit();
         Token Scan();
-        Token LookAhead(size_t distance);
 
     public:
 
@@ -40,6 +38,7 @@ namespace sota {
         Ast * Parse(std::string source);
         Ast * Parse(size_t lbp = 0);
 
+        Token LookAhead(size_t distance);
         Token Consume();
         Token Consume(const size_t &expected, const std::string &message);
 
