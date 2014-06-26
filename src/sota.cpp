@@ -18,7 +18,8 @@ int main(int argc, char* argv[]) {
 
     auto parser = Parser(Type2Symbol);
     parser.Source = source;
-    auto token = parser.Scan();
+    auto token = parser.LookAhead(5);
+    std::cout << token << std::endl;
 
     return 0;
 }
