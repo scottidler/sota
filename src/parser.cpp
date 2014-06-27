@@ -75,34 +75,41 @@ namespace sota {
 
     Ast * Parser::Parse(size_t lbp/* = 0 */) {
 
-        Token token = Consume();
+        Token curr = Consume();
+        std::cout << "curr: " << curr << std::endl;
 
-        Ast *left = token.Nud(this, &token);
+        Ast *left = curr.Nud(this, &curr);
 
-        std::cout << "lbp: " << lbp << " token.symbol.lbp: " << token.symbol.lbp << std::endl;
-        while (lbp < token.symbol.lbp) {
+        Token next = LookAhead(1);
+        std::cout << "next: " << next << std::endl;
+        std::cout << "lbp: " << lbp << " next.symbol.lbp: " << next.symbol.lbp << std::endl;
+
+        while (lbp < next.symbol.lbp) {
             std::cout << "lbp test passed" << std::endl;
-            Token token = Consume();
-            left = token.Led(this, left, &token);
+            Token next  = Consume();
+            left = next.Led(this, left, &next);
         }
 
         return left;
     }
 
     Token Parser::LookAhead(size_t distance) {
-        Token token;
-        while(distance >= _tokens.size())
-            token = Take(Scan());
+        if (distance == 0) {
+            return Scan();
+        }
 
-        if (token)
-            return token;
-        return Scan();
+        Token token;
+        while(distance > _tokens.size()) {
+            token = Take(Scan());
+        }
+
+        return token;
     }
 
     Token Parser::Consume() {
-        if (auto token = Emit())
-            return token;
-        return Scan();
+        auto la = LookAhead(1);
+        index += la.length;
+        return   Emit();
     }
 
     Token Parser::Consume(const size_t &expected, const std::string &message) {
