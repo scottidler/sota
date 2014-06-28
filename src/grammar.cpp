@@ -13,64 +13,67 @@
 namespace sota {
 
     // scanners
-    size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index) {
+    long SkippingScanner(Symbol *symbol, const std::string &source, size_t index) {
+       return RegexScanner(symbol, source, index) * -1; //returns a neg number if matched
+    }
+    long RegexScanner(Symbol *symbol, const std::string &source, size_t index) {
         auto pattern = symbol->pattern;
         boost::smatch matches;
         boost::regex re("^" + pattern);
         if (boost::regex_search(source, matches, re)) {
             auto match = matches[0];
-            //std::cout << "re pattern: " << pattern << " matched: " << match << std::endl;
-            return index + match.length();
+            return match.length();
         }
-        return index;
+        return 0;
     }
 
-    size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
+    long LiteralScanner(Symbol *symbol, const std::string &source, size_t index) {
         auto pattern = symbol->pattern;
         auto patternSize = pattern.size();
         if (source.size() >= patternSize && source.compare(0, patternSize, pattern) == 0) {
-            //std::cout << "lit pattern: " << pattern << " matched: " << pattern << std::endl;
-            return index + patternSize;
+            return  patternSize;
         }
-        return index;
+        return 0;
     }
 
     // nud parsing functions
     Ast * NotImplementedNud(Parser *parser, Token *token) {
+        std::cout << "NotImplementedNud: token=" << *token << std::endl;
         throw SotaNotImplemented("nud: NotImplemented; this shouldn't be called!");
     }
     Ast * EndOfFileNud(Parser *parser, Token *token) {
-        std::cout << "EndOfFileNud" << std::endl;
+        std::cout << "EndOfFileNud: token=" << *token << std::endl;
         return nullptr;
     }
     Ast * WhiteSpaceNud(Parser *parser, Token *token) {
-        std::cout << "WhiteSpaceNud" << std::endl;
+        std::cout << "WhiteSpaceNud: token=" << *token << std::endl;
         return nullptr;
     }
     Ast * NumberNud(Parser *parser, Token *token) {
-        std::cout << "NumberNud" << std::endl;
+        std::cout << "NumberNud: token=" << *token << std::endl;
         return new NumberAst(token->Value());
     }
     Ast * IdentifierNud(Parser *parser, Token *token) {
-        std::cout << "IdentifierNud" << std::endl;
+        std::cout << "IdentifierNud: token=" << *token << std::endl;
         return new IdentifierAst(token->Value());
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
-        std::cout << "PrefixOperatorNud" << std::endl;
+        std::cout << "PrefixOperatorNud: token=" << *token << std::endl;
         return nullptr;
     }
 
     // led parsing functions
     Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token) {
+        std::cout << "NotImplementedLed: left=" << left->Print() << " token=" << *token << std::endl;
         throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
     }
     Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token) {
-        std::cout << "InfixOperatorLed" << std::endl;
+        std::cout << "InfixOperatorLed: left=" << left->Print() << " token=" << *token << std::endl;
         Ast *right = parser->Parse(token->symbol.lbp);
         return new InfixOperatorAst(token, left, right);
     }
     Ast * PostfixOperatorNud(Parser *parser, Ast *left, Token *token) {
-        std::cout << "PostfixOperatorLed" << std::endl;
+        std::cout << "PostfixOperatorLed: left=" << left->Print() << " token=" << *token << std::endl;
         return nullptr;
     }
 

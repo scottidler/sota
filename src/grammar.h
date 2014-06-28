@@ -11,11 +11,13 @@ namespace sota {
     class Symbol;
 
     // scanners
-    size_t RegexScanner(Symbol *symbol, const std::string &source, size_t index);
-    size_t LiteralScanner(Symbol *symbol, const std::string &source, size_t index);
+    long SkippingScanner(Symbol *symbol, const std::string &source, size_t index);
+    long RegexScanner(Symbol *symbol, const std::string &source, size_t index);
+    long LiteralScanner(Symbol *symbol, const std::string &source, size_t index);
 
     // nud parsing functions
     Ast * NotImplementedNud(Parser *parser, Token *token);
+    Ast * EndOfFileNud(Parser *parser, Token *token);
     Ast * WhiteSpaceNud(Parser *parser, Token *token);
     Ast * NumberNud(Parser *parser, Token *token);
     Ast * IdentifierNud(Parser *parser, Token *token);
@@ -28,7 +30,8 @@ namespace sota {
 
     //NAME          PATTERN     SCANNER             NUD                 LED                 LEFT_BIND_POWER
     #define SYMBOLS                                                                                                 \
-    T(WhiteSpace,   "[ \t]+",   RegexScanner,       WhiteSpaceNud,      NotImplementedLed,  BindPower::None)        \
+    T(EndOfFile,    "\0",       RegexScanner,       EndOfFileNud,       NotImplementedLed,  BindPower::None)        \
+    T(WhiteSpace,   "[ \t]+",   SkippingScanner,    WhiteSpaceNud,      NotImplementedLed,  BindPower::None)        \
     T(Number,       "[0-9]+",   RegexScanner,       NumberNud,          NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
@@ -39,7 +42,6 @@ namespace sota {
 
     #define T(k,p,s,n,l,b) k,
     enum SymbolType: size_t {
-        EndOfFile,
         SYMBOLS
     };
     #undef T
