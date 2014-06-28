@@ -22,38 +22,46 @@ namespace sota {
     }
 
     Token Parser::Take(Token token) {
-        if (token)
+        //if (token)
             _tokens.push_back(token);
         return token;
     }
 
     Token Parser::Emit() {
-        Token token = Token();
         if (_tokens.size()) {
-            token = _tokens.front();
+            auto token = _tokens.front();
             _tokens.pop_front();
+            return token;
         }
-        return token;
+        //throw SotaException("how?");
+        return Scan();
     }
 
     Token Parser::Scan() {
 
+        size_t end = index;
+        Symbol *match = nullptr;
         if (index < source.length()) {
-            size_t end = index;
-            Symbol *match = nullptr;
             for (auto kvp : symbols) {
                 auto symbol = kvp.second;
-                size_t pos = symbol->scan(symbol, source.substr(index, source.length() - index), index);
-                if (pos > end || (match != nullptr && symbol->lbp > match->lbp && pos == end)) {
-                    match = symbol;
-                    end = pos;
+                long delta = symbol->Scan(symbol, source.substr(index, source.length() - index), index);
+
+                if (delta) {
+                    if (delta > 0 || (match != nullptr && symbol->lbp > match->lbp && index + delta == end)) {
+                        match = symbol;
+                        end = index + delta;
+                    }
+                    else {
+                        index -= delta; //adds the delta (
+                        return Scan();
+                    }
                 }
             }
             if (index == end)
                 throw SotaException("Parser::Scan: invalid symbol");
             return Token(*match, source, index, end - index);
         }
-        return Token();
+        return Token(); //eof
     }
 
     /*public*/
@@ -75,17 +83,17 @@ namespace sota {
 
     Ast * Parser::Parse(size_t lbp/* = 0 */) {
 
+        std::cout << "Parse: lbp=" << lbp << std::endl;
+
         Token curr = Consume();
-        std::cout << "curr: " << curr << std::endl;
+        if (curr.symbol.type == SymbolType::EndOfFile)
+            return nullptr;
 
         Ast *left = curr.Nud(this, &curr);
 
-        Token next = LookAhead(1);
-        std::cout << "next: " << next << std::endl;
-        std::cout << "lbp: " << lbp << " next.symbol.lbp: " << next.symbol.lbp << std::endl;
+        Token la = LookAhead(1);
 
-        while (lbp < next.symbol.lbp) {
-            std::cout << "lbp test passed" << std::endl;
+        while (lbp < la.symbol.lbp) {
             Token next  = Consume();
             left = next.Led(this, left, &next);
         }
@@ -95,21 +103,25 @@ namespace sota {
 
     Token Parser::LookAhead(size_t distance) {
         if (distance == 0) {
+            throw SotaException("distance == 0");
             return Scan();
         }
-
         Token token;
         while(distance > _tokens.size()) {
-            token = Take(Scan());
+            std::cout << "b: _tokens.size()=" << _tokens.size() << std::endl;
+            Take(Scan());
+            std::cout << "a: _tokens.size()=" << _tokens.size() << std::endl;
         }
-
-        return token;
+        return Emit();
     }
 
     Token Parser::Consume() {
+        std::cout << "\tpre Consume: index=" << index << std::endl;
         auto la = LookAhead(1);
         index += la.length;
-        return   Emit();
+        auto consumed = Emit();
+        std::cout << "\tpost Consume: index=" << index << " la=" << la << " consumed=" << consumed << std::endl;
+        return consumed;
     }
 
     Token Parser::Consume(const size_t &expected, const std::string &message) {

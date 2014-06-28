@@ -21,6 +21,7 @@ namespace sota {
         std::stack<Token>   _nesting;
         std::deque<Token>   _tokens;
 
+    public:
         std::string Load(const std::string &filename);
         Token Take(Token token);
         Token Emit();
