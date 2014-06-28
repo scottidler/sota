@@ -24,7 +24,7 @@ namespace sota {
         Negation = 30,
     };
 
-    typedef std::function<size_t(Symbol *, const std::string &, size_t)> ScanFunc;
+    typedef std::function<long(Symbol *, const std::string &, size_t)> ScanFunc;
     typedef std::function<Ast *(Parser *, Token *)> NudFunc;
     typedef std::function<Ast *(Parser *, Ast *, Token *)> LedFunc;
 
@@ -36,7 +36,7 @@ namespace sota {
 
         SymbolType      type;
         std::string     pattern;
-        ScanFunc        scan;
+        ScanFunc        Scan;
         NudFunc         Nud;
         LedFunc         Led;
         size_t          lbp;

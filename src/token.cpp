@@ -7,7 +7,7 @@ namespace sota {
     Symbol::Symbol()
         : type(SymbolType::EndOfFile)
         , pattern("")
-        , scan(nullptr)
+        , Scan(nullptr)
         , Nud(nullptr)
         , Led(nullptr)
         , lbp(0) {
@@ -15,7 +15,7 @@ namespace sota {
     Symbol::Symbol(SymbolType type, std::string pattern, ScanFunc scan, NudFunc nud, LedFunc led, size_t lbp)
         : type(type)
         , pattern(pattern)
-        , scan(scan)
+        , Scan(scan)
         , Nud(nud)
         , Led(led)
         , lbp(lbp) {
