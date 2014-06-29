@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "token.h"
+
 namespace sota {
 
     class Token;
@@ -12,6 +14,15 @@ namespace sota {
         virtual std::string Print() = 0;
         virtual ~Ast() {}
         Ast() {}
+    };
+
+    class NewlineAst : public Ast {
+    public:
+        std::string value;
+
+        std::string Print();
+        ~NewlineAst();
+        NewlineAst(std::string value);
     };
 
     class IdentifierAst : public Ast {
@@ -34,13 +45,13 @@ namespace sota {
 
     class InfixOperatorAst : public Ast {
     public:
-        Token *op;
+        Token op;
         Ast *left;
         Ast *right;
 
         std::string Print();
         ~InfixOperatorAst();
-        InfixOperatorAst(Token *op, Ast *left, Ast *right);
+        InfixOperatorAst(Token op, Ast *left, Ast *right);
     };
 }
 #endif /*__SOTA_AST__*/
