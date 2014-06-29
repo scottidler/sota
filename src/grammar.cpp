@@ -58,7 +58,8 @@ namespace sota {
         return new IdentifierAst(token->Value());
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
-        return nullptr;
+        Ast *right = parser->Parse(token->symbol.lbp);
+        return new PrefixOperatorAst(*token, right);
     }
 
     // led parsing functions

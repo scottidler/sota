@@ -35,5 +35,14 @@ namespace sota {
         , left(left)
         , right(right) {
     }
-        
+
+    std::string PrefixOperatorAst::Print() { return "(" + op.Value() + " " + right->Print() + ")"; }
+    PrefixOperatorAst::~PrefixOperatorAst() {
+        if (right)
+            delete right;
+    }
+    PrefixOperatorAst::PrefixOperatorAst(Token op, Ast *right)
+        : op(op)
+        , right(right) {
+    }
 }

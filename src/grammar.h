@@ -37,10 +37,9 @@ namespace sota {
     T(Number,       "[0-9]+",   RegexScanner,       NumberNud,          NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
-    T(Sub,          "-",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
+    T(Sub,          "-",        LiteralScanner,     PrefixOperatorNud,  InfixOperatorLed,   BindPower::Sum)         \
     T(Mul,          "*",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)     \
     T(Div,          "/",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)     \
-    T(Neg,          "-",        LiteralScanner,     PrefixOperatorNud,  NotImplementedLed,  BindPower::Negation)
 
     #define T(k,p,s,n,l,b) k,
     enum SymbolType: size_t {

@@ -53,5 +53,16 @@ namespace sota {
         ~InfixOperatorAst();
         InfixOperatorAst(Token op, Ast *left, Ast *right);
     };
+
+    class PrefixOperatorAst : public Ast {
+    public:
+        Token op;
+        Ast *right;
+
+        std::string Print();
+        ~PrefixOperatorAst();
+        PrefixOperatorAst(Token op, Ast *right);
+    };
+
 }
 #endif /*__SOTA_AST__*/
