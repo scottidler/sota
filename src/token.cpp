@@ -43,14 +43,16 @@ namespace sota {
         : symbol(Symbol())
         , source("")
         , index(0)
-        , length(0) {
+        , length(0)
+        , skip(false) {
     }
 
-    Token::Token(const Symbol &symbol, const std::string &source, size_t index, size_t length)   
+    Token::Token(const Symbol &symbol, const std::string &source, size_t index, size_t length, bool skip)
         : symbol(symbol)
         , source(source)
         , index(index)
-        , length(length) {
+        , length(length)
+        , skip(skip) {
     }
 
     std::string Token::Value() const {
@@ -70,6 +72,6 @@ namespace sota {
     }
 
     std::ostream & operator<<(std::ostream &out, const Token &token) {
-        return out << "Token(symbol=" << token.symbol <<  ", Value=" << token.Value() << ")";
+        return out << "Token(symbol=" << token.symbol <<  ", Value()=" << token.Value() << ")";
     }
 }

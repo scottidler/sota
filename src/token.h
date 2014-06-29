@@ -58,9 +58,10 @@ namespace sota {
         std::string         source;
         size_t              index;
         size_t              length;
+        bool                skip;
 
         Token();
-        Token(const Symbol &symbol, const std::string &source, size_t index, size_t length);
+        Token(const Symbol &symbol, const std::string &source, size_t index, size_t length, bool skip);
 
         std::string         Value() const;
 
