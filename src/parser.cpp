@@ -80,7 +80,7 @@ namespace sota {
         return Parse();
     }
 
-    Ast * Parser::Parse(size_t lbp/* = 0 */) {
+    Ast * Parser::Parse(size_t rbp/* = 0 */) {
 
         Token curr = Consume();
         if (curr.symbol.type == SymbolType::EndOfFile)
@@ -92,7 +92,7 @@ namespace sota {
         if (next.symbol.type == SymbolType::EndOfFile)
             return left;
 
-        while (lbp < next.symbol.lbp) {
+        while (rbp < next.symbol.lbp) {
             next  = Consume();
             if (next.symbol.type == SymbolType::EndOfFile)
                 return left;

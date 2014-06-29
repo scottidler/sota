@@ -38,7 +38,7 @@ namespace sota {
 
         Ast * ParseFile(const std::string &filename);
         Ast * Parse(std::string source);
-        Ast * Parse(size_t lbp = 0);
+        Ast * Parse(size_t rbp = 0);
 
         Token LookAhead(size_t distance);
         Token Consume();
