@@ -12,22 +12,48 @@
 
 using namespace sota;
 
+void usage() {
+    std::cout << "usage" << std::endl;
+}
+
+std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
+    std::vector<std::string> items;
+    for(; i < argc; ++i) {
+        items.push_back(argv[i]);
+    }
+    return items;
+}
 int main(int argc, char* argv[]) {
 
-    std::string source = "a * b + c";
+    std::vector<std::string> filenames;
+    std::vector<std::string> sources;
+    switch (argc) {
+        case 1:
+            usage();
+            return 0;
+        default:
+            if (std::string(argv[1]) == "-c") {
+                sources = accumulate(2, argc, argv);
+            }
+            else {
+                filenames = accumulate(1, argc, argv);
+            }
+            break;
+    }
 
     auto parser = Parser(Type2Symbol);
-    parser.source = source;
-    auto t1 = parser.Scan();
-    std::cout << "expect a; t1=" << t1 << std::endl;
-    auto t2 = parser.Consume();
-    std::cout << "expect a; t2=" << t2 << std::endl;
-    auto t3 = parser.LookAhead(1);
-    std::cout << "expect *; t3=" << t3 << std::endl;
-    auto t4 = parser.Consume();
-    std::cout << "expect *; t4=" << t4 << std::endl;
-    //auto *ast = parser.Parse(source);
-    //std::cout << "Parse result: " << ast->Print() << std::endl;
+
+    for (auto source : sources) {
+        auto *ast = parser.Parse(source);
+        std::cout << source << ":" << std::endl;
+        std::cout << ast->Print() << std::endl;
+    }
+
+    for (auto filename : filenames) {
+        auto *ast = parser.ParseFile(filename);
+        std::cout << filename << ":" << std::endl;
+        std::cout << ast->Print() << std::endl;
+    }
 
     return 0;
 }
