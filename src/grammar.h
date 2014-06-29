@@ -19,6 +19,7 @@ namespace sota {
     Ast * NotImplementedNud(Parser *parser, Token *token);
     Ast * EndOfFileNud(Parser *parser, Token *token);
     Ast * WhiteSpaceNud(Parser *parser, Token *token);
+    Ast * NewlineNud(Parser *parser, Token *token);
     Ast * NumberNud(Parser *parser, Token *token);
     Ast * IdentifierNud(Parser *parser, Token *token);
     Ast * PrefixOperatorNud(Parser *parser, Token *token);
@@ -32,6 +33,7 @@ namespace sota {
     #define SYMBOLS                                                                                                 \
     T(EndOfFile,    "\0",       RegexScanner,       EndOfFileNud,       NotImplementedLed,  BindPower::None)        \
     T(WhiteSpace,   "[ \t]+",   SkippingScanner,    WhiteSpaceNud,      NotImplementedLed,  BindPower::None)        \
+    T(Newline,      "[\r\n]+",  RegexScanner,       NewlineNud,         NotImplementedLed,  BindPower::Sum)         \
     T(Number,       "[0-9]+",   RegexScanner,       NumberNud,          NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \

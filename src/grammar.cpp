@@ -38,42 +38,39 @@ namespace sota {
 
     // nud parsing functions
     Ast * NotImplementedNud(Parser *parser, Token *token) {
-        std::cout << "NotImplementedNud: token=" << *token << std::endl;
+        std::cout << "ni nud; token=" << *token << std::endl;
         throw SotaNotImplemented("nud: NotImplemented; this shouldn't be called!");
     }
     Ast * EndOfFileNud(Parser *parser, Token *token) {
-        std::cout << "EndOfFileNud: token=" << *token << std::endl;
         return nullptr;
     }
     Ast * WhiteSpaceNud(Parser *parser, Token *token) {
-        std::cout << "WhiteSpaceNud: token=" << *token << std::endl;
         return nullptr;
     }
+    Ast * NewlineNud(Parser *parser, Token *token) {
+        std::cout << "newline" << std::endl;
+        return new NewlineAst(token->Value());
+    }
     Ast * NumberNud(Parser *parser, Token *token) {
-        std::cout << "NumberNud: token=" << *token << std::endl;
         return new NumberAst(token->Value());
     }
     Ast * IdentifierNud(Parser *parser, Token *token) {
-        std::cout << "IdentifierNud: token=" << *token << std::endl;
         return new IdentifierAst(token->Value());
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
-        std::cout << "PrefixOperatorNud: token=" << *token << std::endl;
         return nullptr;
     }
 
     // led parsing functions
     Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token) {
-        std::cout << "NotImplementedLed: left=" << left->Print() << " token=" << *token << std::endl;
+        std::cout << "ni led; token=" << *token  << " left=" << left->Print() << std::endl;
         throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
     }
     Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token) {
-        std::cout << "InfixOperatorLed: left=" << left->Print() << " token=" << *token << std::endl;
         Ast *right = parser->Parse(token->symbol.lbp);
-        return new InfixOperatorAst(token, left, right);
+        return new InfixOperatorAst(*token, left, right);
     }
-    Ast * PostfixOperatorNud(Parser *parser, Ast *left, Token *token) {
-        std::cout << "PostfixOperatorLed: left=" << left->Print() << " token=" << *token << std::endl;
+    Ast * PostfixOperatorLed(Parser *parser, Ast *left, Token *token) {
         return nullptr;
     }
 
