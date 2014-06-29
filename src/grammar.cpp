@@ -4,6 +4,7 @@
 #include "token.h"
 #include "parser.h"
 #include "grammar.h"
+#include "bindpower.h"
 #include "exceptions.h"
 
 #include <map>
@@ -58,7 +59,7 @@ namespace sota {
         return new IdentifierAst(token->Value());
     }
     Ast * PrefixOperatorNud(Parser *parser, Token *token) {
-        Ast *right = parser->Parse(token->symbol.lbp);
+        Ast *right = parser->Parse(BindPower::Unary);
         return new PrefixOperatorAst(*token, right);
     }
 

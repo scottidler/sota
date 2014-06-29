@@ -7,8 +7,9 @@
 #include <iostream>
 #include <functional>
 
-#include "exceptions.h"
 #include "grammar.h"
+#include "bindpower.h"
+#include "exceptions.h"
 
 namespace sota {
 
@@ -16,13 +17,6 @@ namespace sota {
     class Token;
     class Parser;
     class Symbol;
-
-    enum BindPower: size_t {
-        None = 0,
-        Sum = 10,
-        Product = 20,
-        Negation = 30,
-    };
 
     typedef std::function<long(Symbol *, const std::string &, size_t)> ScanFunc;
     typedef std::function<Ast *(Parser *, Token *)> NudFunc;
