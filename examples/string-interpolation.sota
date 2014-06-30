@@ -64,8 +64,8 @@ main = ()
     person4.set_age(47)
 
     # lets take it up a notch here:
-    [ person1, person2, person3, person4 ] | (personObj)
-        personObj.set_sex(Sex.Male)
+    [ person1, person2, person3, person4 ] | (person)
+        person.set_sex(Sex.Male)
 
     # it is also possible to use #ifdef style conditionals
     
