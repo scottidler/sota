@@ -9,6 +9,11 @@ namespace sota {
         return (stat (filename, &buffer) == 0);
     }
 
+    bool exists(const std::string &filename) {
+        struct stat buffer;
+        return (stat (filename.c_str(), &buffer) == 0);
+    }
+
     std::vector<std::string> get_lines(std::string filename) {
     	std::vector<std::string> lines;
     	std::ifstream file(filename);

@@ -1,55 +1,59 @@
 // sota.cpp : Defines the entry point for the console application.
 //
-#include <regex>
-#include "stdafx.h"
-#include "utils.h"
-#include "lexer.h"
-#include "parser.h"
-#include "token.h"
-#include "stream.hpp"
 #include <array>
+#include <string>
 #include <iostream>
 #include <exception>
 
-#include "ast.hpp"
+#include "ast.h"
+#include "token.h"
+#include "parser.h"
+#include "grammar.h"
 
 using namespace sota;
 
-class A {
-    public:
-    std::shared_ptr<int> M;
-    A(int *m) : M(m) {}
-};
+void usage() {
+    std::cout << "usage" << std::endl;
+}
 
-
+std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
+    std::vector<std::string> items;
+    for(; i < argc; ++i) {
+        items.push_back(argv[i]);
+    }
+    return items;
+}
 int main(int argc, char* argv[]) {
 
-    /*auto a1 = A(new int(1));
-    auto a2 = A(new int(2));
-    a1 = std::move(a2);*/
-
-    try {
-        Token add = { TokenType::Add, 0, 0 };
-        auto id1 = new IdentifierNode("id1");
-        auto id2 = new IdentifierNode("id2");
-        auto infix = InfixOperatorNode(add, id1, id2);
-        std::cout << infix << std::endl;
-
+    std::vector<std::string> filenames;
+    std::vector<std::string> sources;
+    switch (argc) {
+        case 1:
+            usage();
+            return 0;
+        default:
+            if (std::string(argv[1]) == "-c") {
+                sources = accumulate(2, argc, argv);
+            }
+            else {
+                filenames = accumulate(1, argc, argv);
+            }
+            break;
     }
-    catch (const std::exception &ex) {
-        std::cout << ex.what();
+
+    auto parser = Parser(Type2Symbol);
+
+    for (auto source : sources) {
+        auto *ast = parser.Parse(source);
+        std::cout << source << ":" << std::endl;
+        std::cout << ast->Print() << std::endl;
     }
 
-    //auto dbln = [](double x) { return x * 2; };
-    //std::cout << dbln(50) << std::endl;
-
-
-    if (argc < 2)
-        return 1;
-    const char *filename = argv[1];
-    auto parser = SotaParser();
-    parser.ParseFile(filename);
+    for (auto filename : filenames) {
+        auto *ast = parser.ParseFile(filename);
+        std::cout << filename << ":" << std::endl;
+        std::cout << ast->Print() << std::endl;
+    }
 
     return 0;
 }
-

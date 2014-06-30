@@ -6,6 +6,8 @@ include ../mk/common-defs.mk
 
 EXEC=sota
 
+LD_FLAGS += -lboost_regex -lboost_iostreams
+
 all: $(EXEC)
 
 $(EXEC): $(OBJS_CXX)

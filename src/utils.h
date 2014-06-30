@@ -12,6 +12,7 @@ namespace sota {
     typedef unsigned int uint;
 
     bool exists(const char *filename);
+    bool exists(const std::string &filename);
     std::vector<std::string> get_lines(std::string filename);
     std::vector<std::string> split(const std::string &s, char delim, bool empties);
     std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems, bool empties);

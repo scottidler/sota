@@ -4,22 +4,48 @@
 #include <queue>
 #include <stack>
 #include <string>
-#include <vector>
-#include "utils.h"
+
+#include "ast.h"
 #include "token.h"
-#include "stream.hpp"
 
 namespace sota {
-    class SotaParser : public SotaStream<Token> {
 
-        std::vector<char> Load(std::string filename);
+    typedef std::map<size_t, Symbol *> Types2Symbols;
+
+    class Ast;
+
+    class Parser {
+
+        size_t              _stride;
+        std::stack<size_t>  _indents;
+        std::stack<Token>   _nesting;
+        std::deque<Token>   _tokens;
 
     public:
-        ~SotaParser();
-        SotaParser();
+        std::string Load(const std::string &filename);
+        Token Take(Token token);
+        Token Emit();
+        Token Scan();
 
-        void Parse(std::vector<char> source);
-        void ParseFile(const char *filename);
+    public:
+
+        Token               Curr;
+        Types2Symbols       symbols;
+        std::string         source;
+        size_t              index;
+
+        Parser(const Types2Symbols &symbols);
+
+        Ast * ParseFile(const std::string &filename);
+        Ast * Parse(std::string source);
+        Ast * Parse(size_t rbp = 0);
+
+        Token LookAhead(size_t distance);
+        Token Consume();
+        Token Consume(const size_t &expected, const std::string &message);
+
+        size_t Line();
+        size_t Column();
     };
 }
 
