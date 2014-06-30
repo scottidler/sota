@@ -29,7 +29,7 @@ namespace sota {
 
     public:
 
-        Token               Curr;
+        Token               curr;
         Types2Symbols       symbols;
         std::string         source;
         size_t              index;

@@ -105,7 +105,7 @@ namespace sota {
 
     Token Parser::LookAhead(size_t distance) {
         if (distance == 0)
-            return Curr;
+            return curr;
 
         Token token;
         while(distance > _tokens.size()) {
@@ -122,9 +122,9 @@ namespace sota {
 
     Token Parser::Consume() {
         auto la1 = LookAhead(1);
-        Curr = Emit();
-        index += Curr.length;
-        return Curr;
+        curr = Emit();
+        index += curr.length;
+        return curr;
     }
 
     Token Parser::Consume(const size_t &expected, const std::string &message) {
