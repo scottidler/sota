@@ -5,7 +5,7 @@ namespace sota {
 
     enum BindPower: size_t {
         None = 0,
-        Assign = 10,
+        Assignment = 10,
         Question = 20,
         Logical = 30,
         Relational = 40,

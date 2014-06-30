@@ -36,6 +36,7 @@ namespace sota {
     T(Newline,      "[\r\n]+",  RegexScanner,       NewlineNud,         NotImplementedLed,  BindPower::Sum)         \
     T(Number,       "[0-9]+",   RegexScanner,       NumberNud,          NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
+    T(Assign,       "=",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Assignment)  \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Sum)         \
     T(Sub,          "-",        LiteralScanner,     PrefixOperatorNud,  InfixOperatorLed,   BindPower::Sum)         \
     T(Mul,          "*",        LiteralScanner,     NotImplementedNud,  InfixOperatorLed,   BindPower::Product)     \
