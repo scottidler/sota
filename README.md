@@ -142,7 +142,7 @@ Person = Type(object)
     .new = (name, age, sex)
         .name = name
         .age = age
-        .set = sex
+        .sex = sex
 ````
 
 Although Sota is primarily written in the flow style (like
