@@ -43,25 +43,25 @@ namespace sota {
         NumberAst(std::string value);
     };
 
-    class InfixOperatorAst : public Ast {
+    class InfixAst : public Ast {
     public:
         Token op;
         Ast *left;
         Ast *right;
 
         std::string Print();
-        ~InfixOperatorAst();
-        InfixOperatorAst(Token op, Ast *left, Ast *right);
+        ~InfixAst();
+        InfixAst(Token op, Ast *left, Ast *right);
     };
 
-    class PrefixOperatorAst : public Ast {
+    class PrefixAst : public Ast {
     public:
         Token op;
         Ast *right;
 
         std::string Print();
-        ~PrefixOperatorAst();
-        PrefixOperatorAst(Token op, Ast *right);
+        ~PrefixAst();
+        PrefixAst(Token op, Ast *right);
     };
 
 }

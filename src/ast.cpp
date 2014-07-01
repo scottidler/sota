@@ -23,25 +23,25 @@ namespace sota {
         : value(value) {
     }
 
-    std::string InfixOperatorAst::Print() { return "(" + op.Value() + " " + left->Print() + " " + right->Print() + ")"; }
-    InfixOperatorAst::~InfixOperatorAst() {
+    std::string InfixAst::Print() { return "(" + op.Value() + " " + left->Print() + " " + right->Print() + ")"; }
+    InfixAst::~InfixAst() {
         if (left)
             delete left;
         if (right)
             delete right;
     }
-    InfixOperatorAst::InfixOperatorAst(Token op, Ast *left, Ast *right)
+    InfixAst::InfixAst(Token op, Ast *left, Ast *right)
         : op(op)
         , left(left)
         , right(right) {
     }
 
-    std::string PrefixOperatorAst::Print() { return "(" + op.Value() + " " + right->Print() + ")"; }
-    PrefixOperatorAst::~PrefixOperatorAst() {
+    std::string PrefixAst::Print() { return "(" + op.Value() + " " + right->Print() + ")"; }
+    PrefixAst::~PrefixAst() {
         if (right)
             delete right;
     }
-    PrefixOperatorAst::PrefixOperatorAst(Token op, Ast *right)
+    PrefixAst::PrefixAst(Token op, Ast *right)
         : op(op)
         , right(right) {
     }

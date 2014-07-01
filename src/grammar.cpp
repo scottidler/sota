@@ -58,9 +58,9 @@ namespace sota {
     Ast * IdentifierNud(Parser *parser, Token *token) {
         return new IdentifierAst(token->Value());
     }
-    Ast * PrefixOperatorNud(Parser *parser, Token *token) {
+    Ast * PrefixNud(Parser *parser, Token *token) {
         Ast *right = parser->Parse(BindPower::Unary);
-        return new PrefixOperatorAst(*token, right);
+        return new PrefixAst(*token, right);
     }
 
     // led parsing functions
@@ -68,13 +68,26 @@ namespace sota {
         std::cout << "ni led; token=" << *token  << " left=" << left->Print() << std::endl;
         throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
     }
-    Ast * InfixOperatorLed(Parser *parser, Ast *left, Token *token) {
-        Ast *right = parser->Parse(token->symbol.lbp);
-        return new InfixOperatorAst(*token, left, right);
-    }
-    Ast * PostfixOperatorLed(Parser *parser, Ast *left, Token *token) {
+    Ast * ComparisonLed(Parser *parser, Ast *left, Token *token) {
         return nullptr;
     }
+    Ast * InfixLed(Parser *parser, Ast *left, Token *token) {
+        Ast *right = parser->Parse(token->symbol.lbp);
+        return new InfixAst(*token, left, right);
+    }
+    Ast * PostfixLed(Parser *parser, Ast *left, Token *token) {
+        return nullptr;
+    }
+    Ast * AssignLed(Parser *parser, Ast *left, Token *token) {
+        return nullptr;
+    }
+    Ast * TernaryLed(Parser *parser, Ast *left, Token *token) {
+        return nullptr;
+    }
+    Ast * RegexLed(Parser *parser, Ast *left, Token *token) {
+        return nullptr;
+    }
+
 
     #define T(k,p,s,n,l,b) std::make_pair(SymbolType::k, new Symbol(SymbolType::k,p,s,n,l,b) ),
     std::map<size_t, Symbol *> Type2Symbol {

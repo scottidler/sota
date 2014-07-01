@@ -6,13 +6,14 @@ namespace sota {
     enum BindPower: size_t {
         None = 0,
         Assignment = 10,
-        Question = 20,
+        Ternary = 20,
         Logical = 30,
-        Relational = 40,
+        Comparison = 40,
         Sum = 50,
         Product = 60,
         Unary = 70,
         Dereference = 80,
+        Regex = 90,
     };
 }
 
