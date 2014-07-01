@@ -46,4 +46,29 @@ namespace sota {
         : op(op)
         , right(right) {
     }
+
+    std::string ConditionalAst::Pair::Print() { return ""; }
+    ConditionalAst::Pair::~Pair() {
+        if (predicate)
+            delete predicate;
+        if (block)
+            delete block;
+    }
+    ConditionalAst::Pair::Pair(Ast *predicate, Ast *block)
+        : predicate(predicate)
+        , block(block) {
+    }
+
+    std::string ConditionalAst::Print() { return ""; }
+    ConditionalAst::~ConditionalAst() {
+        if (elseBlock)
+            delete elseBlock;
+    }
+    ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs)
+        : pairs(pairs) {
+    }
+    ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs, Ast *elseBlock)
+        : pairs(pairs)
+        , elseBlock(elseBlock) {
+    }
 }

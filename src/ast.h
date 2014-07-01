@@ -64,5 +64,24 @@ namespace sota {
         PrefixAst(Token op, Ast *right);
     };
 
+    class ConditionalAst : public Ast {
+    public:
+        typedef struct Pair {
+            Ast *predicate;
+            Ast *block;
+
+            std::string Print();
+            ~Pair();
+            Pair(Ast *predicate, Ast *block);
+        } Pair;
+
+        std::vector<Pair> pairs;
+        Ast *elseBlock;
+
+        std::string Print();
+        ~ConditionalAst();
+        ConditionalAst(std::initializer_list<Pair> pairs);
+        ConditionalAst(std::initializer_list<Pair> pairs, Ast *elseBlock);
+    };
 }
 #endif /*__SOTA_AST__*/
