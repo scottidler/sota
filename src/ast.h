@@ -76,12 +76,12 @@ namespace sota {
         } Pair;
 
         std::vector<Pair> pairs;
-        Ast *elseBlock;
+        Ast *block;
 
         std::string Print();
         ~ConditionalAst();
         ConditionalAst(std::initializer_list<Pair> pairs);
-        ConditionalAst(std::initializer_list<Pair> pairs, Ast *elseBlock);
+        ConditionalAst(std::initializer_list<Pair> pairs, Ast *block);
     };
 }
 #endif /*__SOTA_AST__*/

@@ -61,14 +61,14 @@ namespace sota {
 
     std::string ConditionalAst::Print() { return ""; }
     ConditionalAst::~ConditionalAst() {
-        if (elseBlock)
-            delete elseBlock;
+        if (block)
+            delete block;
     }
     ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs)
         : pairs(pairs) {
     }
-    ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs, Ast *elseBlock)
+    ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs, Ast *block)
         : pairs(pairs)
-        , elseBlock(elseBlock) {
+        , block(block) {
     }
 }
