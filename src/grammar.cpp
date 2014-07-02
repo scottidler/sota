@@ -59,7 +59,7 @@ namespace sota {
         return new IdentifierAst(token->Value());
     }
     Ast * PrefixNud(Parser *parser, Token *token) {
-        Ast *right = parser->Parse(BindPower::Unary);
+        Ast *right = parser->Expression(BindPower::Unary);
         return new PrefixAst(*token, right);
     }
 
@@ -72,7 +72,7 @@ namespace sota {
         return nullptr;
     }
     Ast * InfixLed(Parser *parser, Ast *left, Token *token) {
-        Ast *right = parser->Parse(token->symbol.lbp);
+        Ast *right = parser->Expression(token->symbol.lbp);
         return new InfixAst(*token, left, right);
     }
     Ast * PostfixLed(Parser *parser, Ast *left, Token *token) {
@@ -83,11 +83,11 @@ namespace sota {
     }
     Ast * TernaryLed(Parser *parser, Ast *left, Token *token) {
         std::cout << "TernaryLed" << std::endl;
-        auto pair = ConditionalAst::Pair(left, parser->Parse());
+        auto pair = ConditionalAst::Pair(left, parser->Expression());
         std::cout << "pair: " << pair.Print() << std::endl;
         parser->Consume(SymbolType::Colon, "colon : expected");
         std::cout << "past consume" << std::endl;
-        Ast *ast = new ConditionalAst({pair}, parser->Parse());
+        Ast *ast = new ConditionalAst({pair}, parser->Expression());
         std::cout << "ast.Print(): " << ast->Print() << std::endl;
         return ast;
     }

@@ -77,10 +77,10 @@ namespace sota {
 
     Ast * Parser::Parse(std::string source) {
         this->source = source;
-        return Parse();
+        return Expression();
     }
 
-    Ast * Parser::Parse(size_t rbp/* = 0 */) {
+    Ast * Parser::Expression(size_t rbp/* = 0 */) {
 
         Token curr = Consume();
         if (curr.symbol.type == SymbolType::EndOfFile)
