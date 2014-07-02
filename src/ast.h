@@ -68,20 +68,20 @@ namespace sota {
     public:
         typedef struct Pair {
             Ast *predicate;
-            Ast *block;
+            Ast *action;
 
             std::string Print();
             ~Pair();
-            Pair(Ast *predicate, Ast *block);
+            Pair(Ast *predicate, Ast *action);
         } Pair;
 
         std::vector<Pair> pairs;
-        Ast *block;
+        Ast *action;
 
         std::string Print();
         ~ConditionalAst();
         ConditionalAst(std::initializer_list<Pair> pairs);
-        ConditionalAst(std::initializer_list<Pair> pairs, Ast *block);
+        ConditionalAst(std::initializer_list<Pair> pairs, Ast *action);
     };
 }
 #endif /*__SOTA_AST__*/

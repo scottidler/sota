@@ -40,6 +40,7 @@ namespace sota {
     T(Newline,      "[\r\n]+",  RegexScanner,       NewlineNud,         NotImplementedLed,  BindPower::Sum)         \
     T(Number,       "[0-9]+",   RegexScanner,       NumberNud,          NotImplementedLed,  BindPower::None)        \
     T(Identifier,   "[a-zA-Z]", RegexScanner,       IdentifierNud,      NotImplementedLed,  BindPower::None)        \
+    T(Colon,        ":",        LiteralScanner,     NotImplementedNud,  NotImplementedLed,  BindPower::None)        \
     T(Equals,       "==",       LiteralScanner,     NotImplementedNud,  ComparisonLed,      BindPower::Comparison)  \
     T(NotEquals,    "!=",       LiteralScanner,     NotImplementedNud,  ComparisonLed,      BindPower::Comparison)  \
     T(Add,          "+",        LiteralScanner,     NotImplementedNud,  InfixLed,           BindPower::Sum)         \
