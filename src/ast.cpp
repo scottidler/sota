@@ -3,6 +3,7 @@
 #include "symbol.h"
 
 #include <string>
+#include <typeinfo>
 
 namespace sota {
 
@@ -26,9 +27,9 @@ namespace sota {
 
     std::string InfixAst::Print() { return "(" + op.Value() + " " + left->Print() + " " + right->Print() + ")"; }
     InfixAst::~InfixAst() {
-        if (left)
+        if (nullptr != left)
             delete left;
-        if (right)
+        if (nullptr != right)
             delete right;
     }
     InfixAst::InfixAst(Token op, Ast *left, Ast *right)
@@ -39,7 +40,7 @@ namespace sota {
 
     std::string PrefixAst::Print() { return "(" + op.Value() + " " + right->Print() + ")"; }
     PrefixAst::~PrefixAst() {
-        if (right)
+        if (nullptr != right)
             delete right;
     }
     PrefixAst::PrefixAst(Token op, Ast *right)
@@ -49,12 +50,21 @@ namespace sota {
 
     std::string ConditionalAst::Pair::Print() { return "(pair " + predicate->Print() + " " + action->Print() + ")"; }
 
+    /*
     ConditionalAst::Pair::~Pair() {
-        if (predicate)
+        std::cout << "~Pair called" << std::endl;
+        std::cout << "Pair:" << std::endl;
+        if (nullptr != predicate) {
             delete predicate;
-        if (action)
+        }
+        std::cout << "before action test: " << action->Print() << std::endl;
+        if (nullptr != action) {
+            std::cout << "before action delete" << std::endl;
             delete action;
+        }
+        std::cout << "after predicate and action delete" << std::endl;
     }
+    */
     ConditionalAst::Pair::Pair(Ast *predicate, Ast *action)
         : predicate(predicate)
         , action(action) {
@@ -65,16 +75,22 @@ namespace sota {
         for (auto pair : pairs) {
             result += " " + pair.Print();
         }
-        if (action)
-            result += action->Print() + ")";
+        if (nullptr != action)
+            result += " " + action->Print() + ")";
         return result;
     }
     ConditionalAst::~ConditionalAst() {
-        if (action)
+        std::cout << "ConditionalAst:" << std::endl;
+        std::cout << "before action test: " << action->Print() << std::endl;
+        if (nullptr != action) {
+            std::cout << "before action delete" << std::endl;
             delete action;
+        }
+        std::cout << "after action delete" << std::endl;
     }
     ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs)
-        : pairs(pairs) {
+        : pairs(pairs)
+        , action(nullptr) {
     }
     ConditionalAst::ConditionalAst(std::initializer_list<Pair> pairs, Ast *action)
         : pairs(pairs)

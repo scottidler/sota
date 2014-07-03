@@ -82,13 +82,10 @@ namespace sota {
         return nullptr;
     }
     Ast * TernaryLed(Parser *parser, Ast *left, Token *token) {
-        std::cout << "TernaryLed" << std::endl;
         auto pair = ConditionalAst::Pair(left, parser->Expression());
-        std::cout << "pair: " << pair.Print() << std::endl;
         parser->Consume(SymbolType::Colon, "colon : expected");
-        std::cout << "past consume" << std::endl;
-        Ast *ast = new ConditionalAst({pair}, parser->Expression());
-        std::cout << "ast.Print(): " << ast->Print() << std::endl;
+        auto defaultAction = parser->Expression();
+        Ast *ast = new ConditionalAst({pair}, defaultAction);
         return ast;
     }
     Ast * RegexLed(Parser *parser, Ast *left, Token *token) {
