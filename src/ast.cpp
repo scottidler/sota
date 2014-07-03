@@ -71,7 +71,7 @@ namespace sota {
     }
 
     std::string ConditionalAst::Print() {
-        std::string result = "(conditional";
+        std::string result = "(cond";
         for (auto pair : pairs) {
             result += " " + pair.Print();
         }
