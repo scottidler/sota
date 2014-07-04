@@ -8,7 +8,6 @@
 #include <functional>
 
 #include "grammar.h"
-#include "bindpower.h"
 #include "exceptions.h"
 
 #include "symbol.h"
