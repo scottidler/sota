@@ -14,7 +14,7 @@ $(EXEC): $(OBJS_CXX)
 	$(CXX) $^ $(LD_FLAGS) -o $@
 
 # (re)compile objects
-%.o: %.cpp
+%.o: %.cpp %.h
 	$(CXX) $(CXXFLAGS) -c $<
 
 install: $(DESTDIR)$(bindir)
