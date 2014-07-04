@@ -1,6 +1,7 @@
 #include "ast.h"
-#include "token.h"
-#include "symbol.h"
+
+#include "z2h/token.hpp"
+#include "z2h/symbol.hpp"
 
 #include <string>
 #include <typeinfo>
@@ -25,25 +26,25 @@ namespace sota {
         : value(value) {
     }
 
-    std::string InfixAst::Print() { return "(" + op.Value() + " " + left->Print() + " " + right->Print() + ")"; }
+    std::string InfixAst::Print() { return "(" + op->Value() + " " + left->Print() + " " + right->Print() + ")"; }
     InfixAst::~InfixAst() {
         if (nullptr != left)
             delete left;
         if (nullptr != right)
             delete right;
     }
-    InfixAst::InfixAst(Token op, Ast *left, Ast *right)
+    InfixAst::InfixAst(z2h::Token<Ast *> *op, Ast *left, Ast *right)
         : op(op)
         , left(left)
         , right(right) {
     }
 
-    std::string PrefixAst::Print() { return "(" + op.Value() + " " + right->Print() + ")"; }
+    std::string PrefixAst::Print() { return "(" + op->Value() + " " + right->Print() + ")"; }
     PrefixAst::~PrefixAst() {
         if (nullptr != right)
             delete right;
     }
-    PrefixAst::PrefixAst(Token op, Ast *right)
+    PrefixAst::PrefixAst(z2h::Token<Ast *> *op, Ast *right)
         : op(op)
         , right(right) {
     }

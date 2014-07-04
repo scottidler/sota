@@ -5,10 +5,9 @@
 #include <iostream>
 #include <exception>
 
-#include "ast.h"
-#include "token.h"
-#include "parser.h"
-#include "grammar.h"
+#include "ast.hpp"
+#include "z2h/parser.hpp"
+#include "grammar.hpp"
 
 using namespace sota;
 
@@ -23,6 +22,7 @@ std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
     }
     return items;
 }
+
 int main(int argc, char* argv[]) {
 
     std::vector<std::string> filenames;
@@ -41,7 +41,8 @@ int main(int argc, char* argv[]) {
             break;
     }
 
-    auto parser = Parser(Type2Symbol);
+    auto grammar = new SotaGrammar();
+    auto parser = z2h::Parser<Ast *>(grammar);
 
     for (auto source : sources) {
         auto *ast = parser.Parse(source);
@@ -54,6 +55,5 @@ int main(int argc, char* argv[]) {
         std::cout << filename << ":" << std::endl;
         std::cout << ast->Print() << std::endl;
     }
-
     return 0;
 }

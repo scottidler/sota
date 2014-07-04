@@ -2,12 +2,11 @@
 #define __SOTA_AST__ = 1
 
 #include <string>
+#include <vector>
 
-#include "token.h"
+#include "z2h/token.hpp"
 
 namespace sota {
-
-    class Token;
 
     class Ast {
     public:
@@ -45,23 +44,23 @@ namespace sota {
 
     class InfixAst : public Ast {
     public:
-        Token op;
+        z2h::Token<Ast *> *op;
         Ast *left;
         Ast *right;
 
         std::string Print();
         ~InfixAst();
-        InfixAst(Token op, Ast *left, Ast *right);
+        InfixAst(z2h::Token<Ast *> *op, Ast *left, Ast *right);
     };
 
     class PrefixAst : public Ast {
     public:
-        Token op;
+        z2h::Token<Ast *> *op;
         Ast *right;
 
         std::string Print();
         ~PrefixAst();
-        PrefixAst(Token op, Ast *right);
+        PrefixAst(z2h::Token<Ast *> *op, Ast *right);
     };
 
     class ConditionalAst : public Ast {
