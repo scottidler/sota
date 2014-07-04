@@ -62,6 +62,9 @@ namespace sota {
         Ast *right = parser->Expression(BindPower::Unary);
         return new PrefixAst(*token, right);
     }
+    Ast * IfThenElifElseNud(Parser *parser, Token *token) {
+        return nullptr;
+    }
 
     // led parsing functions
     Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token) {
@@ -81,17 +84,23 @@ namespace sota {
     Ast * AssignLed(Parser *parser, Ast *left, Token *token) {
         return nullptr;
     }
-    Ast * TernaryLed(Parser *parser, Ast *left, Token *token) {
-        auto pair = ConditionalAst::Pair(left, parser->Expression());
-        parser->Consume(SymbolType::Colon, "colon : expected");
-        auto defaultAction = parser->Expression();
-        Ast *ast = new ConditionalAst({pair}, defaultAction);
-        return ast;
-    }
     Ast * RegexLed(Parser *parser, Ast *left, Token *token) {
         return nullptr;
     }
-
+    Ast * TernaryLed(Parser *parser, Ast *left, Token *token) {
+        auto action = parser->Expression();
+        auto pair = ConditionalAst::Pair(left, action);
+        parser->Consume(SymbolType::Colon, "colon : expected");
+        auto defaultAction = parser->Expression();
+        return new ConditionalAst({pair}, defaultAction);
+    }
+    Ast * IfThenElseLed(Parser *parser, Ast *left, Token *token) {
+        auto predicate = parser->Expression();
+        auto pair = ConditionalAst::Pair(predicate, left);
+        parser->Consume(SymbolType::Else, "else expected");
+        auto defaultAction = parser->Expression();
+        return new ConditionalAst({pair}, defaultAction);
+    }
 
     #define T(k,p,s,n,l,b) std::make_pair(SymbolType::k, new Symbol(SymbolType::k,p,s,n,l,b) ),
     std::map<size_t, Symbol *> Type2Symbol {

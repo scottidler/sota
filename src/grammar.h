@@ -23,6 +23,7 @@ namespace sota {
     Ast * NumberNud(Parser *parser, Token *token);
     Ast * IdentifierNud(Parser *parser, Token *token);
     Ast * PrefixNud(Parser *parser, Token *token);
+    Ast * IfThenElifElseNud(Parser *parser, Token *token);
 
     // led parsing functions
     Ast * NotImplementedLed(Parser *parser, Ast *left, Token *token);
@@ -30,8 +31,9 @@ namespace sota {
     Ast * InfixLed(Parser *parser, Ast *left, Token *token);
     Ast * PostfixLed(Parser *parser, Ast *left, Token *token);
     Ast * AssignLed(Parser *parser, Ast *left, Token *token);
-    Ast * TernaryLed(Parser *parser, Ast *left, Token *token);
     Ast * RegexLed(Parser *parser, Ast *left, Token *token);
+    Ast * TernaryLed(Parser *parser, Ast *left, Token *token);
+    Ast * IfThenElseLed(Parser *parser, Ast *left, Token *token);
 
     //NAME          PATTERN     SCANNER             NUD                 LED                 BINDPOWER
     #define SYMBOLS                                                                                                 \
@@ -53,9 +55,11 @@ namespace sota {
     T(SubAssign,    "-=",       LiteralScanner,     NotImplementedNud,  AssignLed,          BindPower::Assignment)  \
     T(MulAssign,    "*=",       LiteralScanner,     NotImplementedNud,  AssignLed,          BindPower::Assignment)  \
     T(DivAssign,    "/=",       LiteralScanner,     NotImplementedNud,  AssignLed,          BindPower::Assignment)  \
-    T(Question,     "?",        LiteralScanner,     NotImplementedNud,  TernaryLed,         BindPower::Ternary)     \
     T(RegexMatch,   "m/",       LiteralScanner,     NotImplementedNud,  RegexLed,           BindPower::Regex)       \
     T(RegexReplace, "s/",       LiteralScanner,     NotImplementedNud,  RegexLed,           BindPower::Regex)       \
+    T(Question,     "?",        LiteralScanner,     NotImplementedNud,  TernaryLed,         BindPower::Ternary)     \
+    T(If,           "if",       LiteralScanner,     IfThenElifElseNud,  IfThenElseLed,      BindPower::Ternary)     \
+    T(Else,         "else",     LiteralScanner,     NotImplementedNud,  NotImplementedLed,  BindPower::None)        \
 
     #define T(k,p,s,n,l,b) k,
     enum SymbolType: size_t {
