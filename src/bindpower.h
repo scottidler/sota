@@ -3,7 +3,7 @@
 
 namespace sota {
 
-    enum BindPower: size_t {
+    enum BindPower: long {
         None = 0,
         Assignment = 10,
         Ternary = 20,

@@ -5,9 +5,12 @@
 #include <iostream>
 #include <exception>
 
-#include "ast.h"
 #include "z2h/parser.hpp"
-#include "grammar.h"
+#include "z2h/symbol.hpp"
+
+#include "ast.h"
+#include "parser.h"
+#include "bindpower.h"
 
 using namespace sota;
 
@@ -25,6 +28,10 @@ std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
 
 int main(int argc, char* argv[]) {
 
+
+    //Symbol(long type, long lbp, std::string pattern, ScanFunc<TAst> scan, StdFunc<TAst> std, NudFunc<TAst> nud, LedFunc<TAst> led)
+    //auto symbol = new z2h::Symbol<Ast *>(SotaGrammar::SymbolType::Add, BindPower::Sum, "+", nullptr, nullptr, nullptr, nullptr);
+
     std::vector<std::string> filenames;
     std::vector<std::string> sources;
     switch (argc) {
@@ -41,8 +48,7 @@ int main(int argc, char* argv[]) {
             break;
     }
 
-    auto grammar = new SotaGrammar();
-    auto parser = z2h::Parser<Ast *>(grammar);
+    auto parser = SotaParser();
 
     for (auto source : sources) {
         auto *ast = parser.Parse(source);

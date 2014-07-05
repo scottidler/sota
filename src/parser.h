@@ -1,34 +1,23 @@
-#ifndef __SOTA_GRAMMAR__
-#define __SOTA_GRAMMAR__ = 1
+#ifndef __SOTA_PARSER__
+#define __SOTA_PARSER__ = 1
 
 #include <map>
 #include <vector>
-/*
 #include "z2h/token.hpp"
 #include "z2h/parser.hpp"
 #include "z2h/symbol.hpp"
-*/
-#include "z2h/grammar.h"
+
 namespace sota {
 
     class Ast;
-/*
-    template <typename TAst>
-    class z2h::Token;
 
-    template <typename TAst>
-    class z2h::Parser;
-
-    template <typename TAst>
-    class z2h::Symbol;
-*/
-    class SotaGrammar : public z2h::Grammar<Ast *> {
+    class SotaParser : public z2h::Parser<Ast *> {
 
     public:
         // scanners
-        long SkippingScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, long index);
-        long RegexScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, long index);
-        long LiteralScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, long index);
+        long SkippingScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
+        long RegexScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
+        long LiteralScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
 
         // std parsing functions
         Ast * NotImplementedStd(z2h::Parser<Ast *> *parser);
@@ -80,20 +69,15 @@ namespace sota {
         T(Else,         "else",     LiteralScanner,     NotImplementedStd,  NotImplementedNud,  NotImplementedLed,  BindPower::None)        \
 
         #define T(k,p,s,t,n,l,b) k,
-        enum SymbolType: long {
+        enum SymbolType: size_t {
             SYMBOLS
         };
         #undef T
 
+        SotaParser();
         std::vector<z2h::Symbol<Ast *> *> Symbols();
 
     };
-/*
-    extern std::map<long, Symbol *> Type2Symbol;
-    extern std::map<std::string, z2h::Symbol *> Name2Symbol;
-    extern std::map<long, std::string> Type2Name;
-    extern std::map<std::string, long> Name2Type;
-*/
 }
 
-#endif /*__SOTA_GRAMMAR__*/
+#endif /*__SOTA_PARSER__*/
