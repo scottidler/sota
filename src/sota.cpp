@@ -49,6 +49,15 @@ int main(int argc, char* argv[]) {
     }
 
     auto parser = SotaParser();
+    std::cout << 1 << std::endl;
+    auto symbols = parser.Symbols();
+    std::cout << symbols.size() << std::endl;
+    auto symbol = symbols[0];
+    std::cout << 3 << std::endl;
+
+    std::cout << symbol << std::endl;
+
+    return 0;
 
     for (auto source : sources) {
         auto *ast = parser.Parse(source);

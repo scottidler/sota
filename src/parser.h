@@ -11,36 +11,43 @@ namespace sota {
 
     class Ast;
 
+    using SotaToken = z2h::Token<Ast *>;
+    using SotaSymbol = z2h::Symbol<Ast *>;
+
     class SotaParser : public z2h::Parser<Ast *> {
 
     public:
+
+        // must be implemented in derived class (SotaParser)
+        std::vector<SotaSymbol *> Symbols();
+
         // scanners
-        long SkippingScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
-        long RegexScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
-        long LiteralScanner(z2h::Symbol<Ast *> *symbol, const std::string &source, size_t index);
+        long SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t index);
+        long RegexScanner(SotaSymbol *symbol, const std::string &source, size_t index);
+        long LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t index);
 
         // std parsing functions
-        Ast * NotImplementedStd(z2h::Parser<Ast *> *parser);
+        Ast * NotImplementedStd();
 
         // nud parsing functions
-        Ast * NotImplementedNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * EndOfFileNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * WhiteSpaceNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * NewlineNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * NumberNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * IdentifierNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * PrefixNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
-        Ast * IfThenElifElseNud(z2h::Parser<Ast *> *parser, z2h::Token<Ast *> *token);
+        Ast * NotImplementedNud(SotaToken *token);
+        Ast * EndOfFileNud(SotaToken *token);
+        Ast * WhiteSpaceNud(SotaToken *token);
+        Ast * NewlineNud(SotaToken *token);
+        Ast * NumberNud(SotaToken *token);
+        Ast * IdentifierNud(SotaToken *token);
+        Ast * PrefixNud(SotaToken *token);
+        Ast * IfThenElifElseNud(SotaToken *token);
 
         // led parsing functions
-        Ast * NotImplementedLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * ComparisonLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * InfixLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * PostfixLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * AssignLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * RegexLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * TernaryLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
-        Ast * IfThenElseLed(z2h::Parser<Ast *> *parser, Ast *left, z2h::Token<Ast *> *token);
+        Ast * NotImplementedLed(Ast *left, SotaToken *token);
+        Ast * ComparisonLed(Ast *left, SotaToken *token);
+        Ast * InfixLed(Ast *left, SotaToken *token);
+        Ast * PostfixLed(Ast *left, SotaToken *token);
+        Ast * AssignLed(Ast *left, SotaToken *token);
+        Ast * RegexLed(Ast *left, SotaToken *token);
+        Ast * TernaryLed(Ast *left, SotaToken *token);
+        Ast * IfThenElseLed(Ast *left, SotaToken *token);
 
         //NAME          PATTERN     SCANNER             STD                 NUD                 LED                 BINDPOWER
         #define SYMBOLS                                                                                                                     \
@@ -75,7 +82,6 @@ namespace sota {
         #undef T
 
         SotaParser();
-        std::vector<z2h::Symbol<Ast *> *> Symbols();
 
     };
 }
