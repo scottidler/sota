@@ -7,7 +7,7 @@
 
 #include "ast.h"
 #include "z2h/parser.hpp"
-#include "grammar.hpp"
+#include "grammar.h"
 
 using namespace sota;
 
