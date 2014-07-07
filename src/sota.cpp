@@ -12,6 +12,15 @@
 #include "parser.h"
 #include "bindpower.h"
 
+/*
+#define TEST(num) ((num % 2) ? (true) : (false))
+#define IFNDEF(method) ((method != nullptr) ? (method) : (nullptr))
+
+*/
+
+int Add(int x, int y) {
+    return x + y;
+}
 using namespace sota;
 
 void usage() {
@@ -28,6 +37,8 @@ std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
 
 int main(int argc, char* argv[]) {
 
+    //std::function<int(int,int)> func = 
+    //std::cout << func(1, 2) << std::endl;
 
     //Symbol(long type, long lbp, std::string pattern, ScanFunc<TAst> scan, StdFunc<TAst> std, NudFunc<TAst> nud, LedFunc<TAst> led)
     //auto symbol = new z2h::Symbol<Ast *>(SotaGrammar::SymbolType::Add, BindPower::Sum, "+", nullptr, nullptr, nullptr, nullptr);
