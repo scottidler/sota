@@ -104,30 +104,31 @@ namespace sota {
 
     SotaParser::SotaParser() {
         std::map<size_t, SotaSymbol *> Test {
-            std::make_pair(SotaParser::SymbolType::Add, new SotaSymbol(SotaParser::SymbolType::Add, BindPower::Sum, "+", std::bind(&SotaParser::LiteralScanner, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), nullptr, nullptr, nullptr) ),
+            //std::make_pair(SotaParser::SymbolType::Add, new SotaSymbol(SotaParser::SymbolType::Add, BindPower::Sum, "+", std::bind(&SotaParser::LiteralScanner, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), nullptr, nullptr, nullptr) ),
+            std::make_pair(SotaParser::SymbolType::Add, new SotaSymbol(SotaParser::SymbolType::Sub, BindPower::Sum, "-", nullptr, nullptr, NUD_IF(&SotaParser::PrefixNud), LED_IF(&SotaParser::InfixLed) ) ),
         };
     }
 /*
-    #define T(k,p,s,t,n,l,b) std::make_pair(SotaParser::SymbolType::k, new SotaSymbol(SotaParser::SymbolType::k,p,&SotaParser::s,&SotaParser::t,&SotaParser::n,&SotaParser::l,b) ),
+    #define T(k,p,b,s,t,n,l) std::make_pair(SotaParser::SymbolType::k, new SotaSymbol(SotaParser::SymbolType::k,p,&SotaParser::s,&SotaParser::t,&SotaParser::n,&SotaParser::l,b) ),
     std::map<size_t, SotaSymbol *> Type2Symbol {
         SYMBOLS
     };
     #undef T
 */
 /*
-    #define T(k,p,s,t,n,l,b) std::make_pair(#k, Type2Symbol[SotaParser::SymbolType::k]),
+    #define T(k,p,b,s,t,n,l,b) std::make_pair(#k, Type2Symbol[SotaParser::SymbolType::k]),
     std::map<std::string, SotaSymbol *> Name2Symbol {
         SYMBOLS
     };
     #undef T
 
-    #define T(k,p,s,t,n,l,b) std::make_pair(SotaParser::SymbolType::k, #k),
+    #define T(k,p,b,s,t,n,l) std::make_pair(SotaParser::SymbolType::k, #k),
     std::map<size_t, std::string> Type2Name {
         SYMBOLS
     };
     #undef T
 
-    #define T(k,p,s,t,n,l,b) std::make_pair(#k, SotaParser::SymbolType::k),
+    #define T(k,p,b,s,t,n,l) std::make_pair(#k, SotaParser::SymbolType::k),
     std::map<std::string, size_t> Name2Type {
         SYMBOLS
     };
