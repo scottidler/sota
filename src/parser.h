@@ -10,16 +10,6 @@
 #include "z2h/parser.hpp"
 #include "z2h/symbol.hpp"
 
-#define BIND0(method) (std::bind(method, this))
-#define BIND1(method) (std::bind(method, this, std::placeholders::_1))
-#define BIND2(method) (std::bind(method, this, std::placeholders::_1, std::placeholders::_2))
-#define BIND3(method) (std::bind(method, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
-
-#define STD_IF(method) (method == nullptr) ? ((SotaStd)nullptr) : ((SotaStd)std::bind(method, this))
-#define NUD_IF(method) (method == nullptr) ? ((SotaLed)nullptr) : ((SotaLed)std::bind(method, this, std::placeholders::_1))
-#define LED_IF(method) (method == nullptr) ? ((SotaLed)nullptr) : ((SotaLed)std::bind(method, this, std::placeholders::_1, std::placeholders::_2))
-#define SCAN_IF(method) (method == nullptr) ? ((SotaLed)nullptr) : ((SotaLed)std::bind(method, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3))
-
 namespace sota {
 
     class Ast;
