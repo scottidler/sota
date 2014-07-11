@@ -9,6 +9,7 @@
 #include "z2h/token.hpp"
 #include "z2h/parser.hpp"
 #include "z2h/symbol.hpp"
+#include "z2h/binder.hpp"
 
 namespace sota {
 

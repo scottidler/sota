@@ -110,10 +110,14 @@ namespace sota {
     SotaParser::SotaParser() {
 
         //example calls, proving it works
-        auto std = BindStd(&SotaParser::NotImplementedStd);
-        auto nud = BindNud(&SotaParser::NumberNud);
-        auto led = BindLed(&SotaParser::PostfixLed);
-        auto scan = BindScan(&SotaParser::LiteralScanner); 
+        auto std1 = BindStd(nullptr);
+        auto std2 = BindStd(&SotaParser::NotImplementedStd);
+        auto nud1 = BindNud(nullptr);
+        auto nud2 = BindNud(&SotaParser::NumberNud);
+        auto led1 = BindLed(nullptr);
+        auto led2 = BindLed(&SotaParser::PostfixLed);
+        auto scan1 = BindScan(nullptr);
+        auto scan2 = BindScan(&SotaParser::LiteralScanner); 
     }
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {
