@@ -37,6 +37,11 @@ namespace sota {
         return 0;
     }
 
+    // std parsing functions
+    Ast * SotaParser::NotImplementedStd() {
+        throw SotaNotImplemented("std: NotImplemented; this shouldn't be called!");
+    }
+
     // nud parsing functions
     Ast * SotaParser::NotImplementedNud(SotaToken *token) {
         std::cout << "ni nud; token=" << *token << std::endl;
@@ -103,8 +108,12 @@ namespace sota {
     }
 
     SotaParser::SotaParser() {
-        auto nud = &SotaParser::NumberNud;
-        auto std = BindNud(nud);
+
+        //example calls, proving it works
+        auto std = BindStd(&SotaParser::NotImplementedStd);
+        auto nud = BindNud(&SotaParser::NumberNud);
+        auto led = BindLed(&SotaParser::PostfixLed);
+        auto scan = BindScan(&SotaParser::LiteralScanner); 
     }
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {
