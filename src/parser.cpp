@@ -103,6 +103,8 @@ namespace sota {
     }
 
     SotaParser::SotaParser() {
+        auto nud = &SotaParser::NumberNud;
+        auto std = BindNud(nud);
     }
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {

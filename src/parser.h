@@ -22,9 +22,7 @@ namespace sota {
     using SotaToken = z2h::Token<Ast *>;
     using SotaSymbol = z2h::Symbol<Ast *>;
 
-    class SotaParser : public z2h::Parser<Ast *> {
-
-    public:
+    struct SotaParser : public z2h::Parser<Ast *, SotaParser> {
 
         // must be implemented in derived class (SotaParser)
         std::vector<SotaSymbol *> Symbols();
