@@ -1,6 +1,11 @@
 #ifndef __SOTA_PARSER__
 #define __SOTA_PARSER__ = 1
 
+#define SCAN(x) BindScan(&SotaParser::x)
+#define STD(x) BindStd(&SotaParser::x)
+#define NUD(x) BindNud(&SotaParser::x)
+#define LED(x) BindLed(&SotaParser::x)
+
 #include <map>
 #include <vector>
 
@@ -56,6 +61,7 @@ namespace sota {
         Ast * TernaryLed(Ast *left, SotaToken *token);
         Ast * IfThenElseLed(Ast *left, SotaToken *token);
 
+        //              4           3                       6                   5                   5                   5
         //NAME          PATTERN     BINDPOWER               SCANNER             STD                 NUD                 LED                 
         #define SYMBOLS                                                                                                                     \
         T(EndOfFile,    "\0",       BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       Nullptr)            \

@@ -118,6 +118,14 @@ namespace sota {
         auto led2 = BindLed(&SotaParser::PostfixLed);
         auto scan1 = BindScan(&SotaParser::Nullptr);
         auto scan2 = BindScan(&SotaParser::LiteralScanner); 
+
+        #define T(k,p,b,s,t,n,l) { SymbolType::k, new SotaSymbol(SymbolType::k, b, p, SCAN(s), STD(t), NUD(n), LED(l) ) }, \
+
+        std::map<SymbolType, SotaSymbol *> x {
+            //new SotaSymbol(SymbolType::EndOfFile, BindPower::None, "\0", (&SotaParser::RegexScanner), (&SotaParser::Nullptr), (&SotaParser::EndOfFileNud), (&SotaParser::Nullptr) ), 
+            SYMBOLS
+        };
+        #undef T
     }
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {
