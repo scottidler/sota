@@ -37,6 +37,24 @@ namespace sota {
         return 0;
     }
 
+    long SotaParser::EosScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+        if (!this->nesting.size()) {
+            return RegexScanner(symbol, source, index);
+        }
+        return 0;
+    }
+
+    long SotaParser::EoeScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+        if (this->nesting.size()) {
+        }
+        return 0;
+    }
+
+
+    long SotaParser::DentingScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+        return 0;
+    }
+
     // std parsing functions
     Ast * SotaParser::NotImplementedStd() {
         throw SotaNotImplemented("std: NotImplemented; this shouldn't be called!");
