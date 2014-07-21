@@ -37,12 +37,6 @@ std::vector<std::string> accumulate(int i, int argc, char *argv[]) {
 
 int main(int argc, char* argv[]) {
 
-    //std::function<int(int,int)> func = 
-    //std::cout << func(1, 2) << std::endl;
-
-    //Symbol(long type, long lbp, std::string pattern, ScanFunc<TAst> scan, StdFunc<TAst> std, NudFunc<TAst> nud, LedFunc<TAst> led)
-    //auto symbol = new z2h::Symbol<Ast *>(SotaGrammar::SymbolType::Add, BindPower::Sum, "+", nullptr, nullptr, nullptr, nullptr);
-
     std::vector<std::string> filenames;
     std::vector<std::string> sources;
     switch (argc) {
@@ -60,23 +54,28 @@ int main(int argc, char* argv[]) {
     }
 
     auto parser = SotaParser();
-    std::cout << 1 << std::endl;
-    auto symbols = parser.Symbols();
-    std::cout << symbols.size() << std::endl;
-    auto symbol = symbols[0];
-    std::cout << 3 << std::endl;
+    parser.source = sources[0];
 
-    std::cout << symbol << std::endl;
+    auto *token1 = parser.Consume();
+    std::cout << "token: " << *token1 << std::endl;
+    std::cout << "position: " << parser.position << std::endl;
+
+    auto *token2 = parser.Consume();
+    std::cout << "token: " << *token2 << std::endl;
+    std::cout << "position: " << parser.position << std::endl;
 
     return 0;
 
     for (auto source : sources) {
+        std::cout << "sources:" << std::endl;
         auto *ast = parser.Parse(source);
+        std::cout << "tokens: " << *(parser.tokens[0]) << std::endl;
         std::cout << source << ":" << std::endl;
         std::cout << ast->Print() << std::endl;
     }
 
     for (auto filename : filenames) {
+        std::cout << "filenames:" << std::endl;
         auto *ast = parser.ParseFile(filename);
         std::cout << filename << ":" << std::endl;
         std::cout << ast->Print() << std::endl;
