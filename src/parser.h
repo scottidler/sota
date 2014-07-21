@@ -103,6 +103,8 @@ namespace sota {
         };
         #undef T
 
+        std::map<SymbolType, SotaSymbol *> symbolmap;
+
         SotaParser();
 
     };

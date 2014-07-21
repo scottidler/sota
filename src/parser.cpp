@@ -139,8 +139,7 @@ namespace sota {
 
         #define T(k,p,b,s,t,n,l) { SymbolType::k, new SotaSymbol(SymbolType::k, b, p, SCAN(s), STD(t), NUD(n), LED(l) ) }, \
 
-        std::map<SymbolType, SotaSymbol *> x {
-            //new SotaSymbol(SymbolType::EndOfFile, BindPower::None, "\0", (&SotaParser::RegexScanner), (&SotaParser::Nullptr), (&SotaParser::EndOfFileNud), (&SotaParser::Nullptr) ), 
+        symbolmap = {
             SYMBOLS
         };
         #undef T
@@ -148,6 +147,9 @@ namespace sota {
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {
         std::vector<SotaSymbol *> symbols;
+        for (auto kvp : symbolmap) {
+            symbols.push_back(kvp.second);
+        }
         return symbols;
     }
 }
