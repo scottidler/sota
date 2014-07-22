@@ -54,17 +54,6 @@ int main(int argc, char* argv[]) {
     }
 
     auto parser = SotaParser();
-    parser.source = sources[0];
-
-    auto *token1 = parser.Consume();
-    std::cout << "token: " << *token1 << std::endl;
-    std::cout << "position: " << parser.position << std::endl;
-
-    auto *token2 = parser.Consume();
-    std::cout << "token: " << *token2 << std::endl;
-    std::cout << "position: " << parser.position << std::endl;
-
-    return 0;
 
     for (auto source : sources) {
         std::cout << "sources:" << std::endl;

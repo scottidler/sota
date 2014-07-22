@@ -98,6 +98,7 @@ namespace sota {
         return nullptr;
     }
     Ast * SotaParser::InfixLed(Ast *left, SotaToken *token) {
+        std::cout << "InfixLed: " << std::endl;
         Ast *right = this->Expression(token->symbol->lbp);
         return new InfixAst(token, left, right);
     }
