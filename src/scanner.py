@@ -5,7 +5,8 @@ import re
 import sys
 
 symbols = [
-    ('id', '[A-Za-z]+', 0),
+    ('eof', '\0', 0),
+    ('id', '([0-9]+)?[A-Za-z]+([0-9]+)?', 0),
     ('num', '[0-9]+', 0),
     ('add', '\+', 50),
     ('sub', '-', 50),
@@ -22,17 +23,19 @@ class Scanner(object):
 
     def Scan(self):
 
-        end = self.position
-        token = None
+        token = symbols[0] + (self.position, 0, '\0')
         if self.position < len(self.source):
+            end = self.position
             for tipo, pattern, lbp in symbols:
                 text = self.source[self.position:]
-                match = re.match(pattern, self.source[self.position:])
-                length = len(match.group(0)) if match else 0
-                if length > 0 or (token != None and lbp > token[2] and self.position + length == end):
+                string = self.source[self.position:]
+                m = re.match(pattern, string)
+                match = m.group(0) if m else ''
+                length = len(match) if match else 0
+                if self.position + length > end or (token != None and lbp > token[2] and self.position + length == end):
                     token = (tipo, pattern, lbp, self.position, length, self.source[self.position:self.position+length])
                     end = self.position + length
-            return token
+        return token
 
     def LookAhead(self, distance):
         if distance == 0:
@@ -52,14 +55,16 @@ class Scanner(object):
             raise Exception(message or '')
         return token
 
+    def Tokenize(self):
+        token = self.Consume()
+        while token[0] != 'eof':
+            token = self.Consume()
+        return self.tokens
+
 def main(args):
     scanner = Scanner(' '.join(args) )
-    t1 = scanner.LookAhead(1)
-    print t1
-    t2 = scanner.Consume()
-    print t2
-    t3 = scanner.Consume()
-    print t3
+    for token in scanner.Tokenize():
+        print token
     
 
 if __name__ == '__main__':
