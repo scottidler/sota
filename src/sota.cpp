@@ -58,7 +58,6 @@ int main(int argc, char* argv[]) {
     for (auto source : sources) {
         std::cout << "sources:" << std::endl;
         auto *ast = parser.Parse(source);
-        std::cout << "tokens: " << *(parser.tokens[0]) << std::endl;
         std::cout << source << ":" << std::endl;
         std::cout << ast->Print() << std::endl;
     }
