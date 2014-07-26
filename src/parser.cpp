@@ -114,14 +114,16 @@ namespace sota {
     Ast * SotaParser::TernaryLed(Ast *left, SotaToken *token) {
         auto action = this->Expression();
         auto pair = ConditionalAst::Pair(left, action);
-        this->Consume(SotaParser::SymbolType::Colon, "colon : expected");
+        auto expected = symbolmap[SotaParser::SymbolType::Colon];
+        this->Consume(expected, "colon : expected");
         auto defaultAction = this->Expression();
         return new ConditionalAst({pair}, defaultAction);
     }
     Ast * SotaParser::IfThenElseLed(Ast *left, SotaToken *token) {
         auto predicate = this->Expression();
         auto pair = ConditionalAst::Pair(predicate, left);
-        this->Consume(SotaParser::SymbolType::Else, "else expected");
+        auto expected = symbolmap[SotaParser::SymbolType::Else];
+        this->Consume(expected, "else expected");
         auto defaultAction = this->Expression();
         return new ConditionalAst({pair}, defaultAction);
     }
