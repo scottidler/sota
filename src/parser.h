@@ -59,6 +59,7 @@ namespace sota {
 
         // led parsing functions
         Ast * NotImplementedLed(Ast *left, SotaToken *token);
+        Ast * EndOfFileLed(Ast *left, SotaToken *token);
         Ast * ComparisonLed(Ast *left, SotaToken *token);
         Ast * InfixLed(Ast *left, SotaToken *token);
         Ast * PostfixLed(Ast *left, SotaToken *token);
@@ -70,14 +71,14 @@ namespace sota {
         //              4                   3                       6                   5                   5                   5
         //NAME          PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
         #define SYMBOLS                                                                                                                             \
-        T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       Nullptr)            \
+        T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
         T(EndOfStatement,   "[\r\n]+|;",    BindPower::Separator,   EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(EndOfExpression,  "[\r\n]+|,",    BindPower::Separator,   EoeScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            WhiteSpaceNud,      Nullptr)            \
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
-        T(Identifier,       "[a-zA-Z]",     BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
+        T(Identifier,       "[a-zA-Z]+",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \

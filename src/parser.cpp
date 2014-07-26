@@ -94,11 +94,13 @@ namespace sota {
         std::cout << "ni led; token=" << *token  << " left=" << left->Print() << std::endl;
         throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
     }
+    Ast * SotaParser::EndOfFileLed(Ast *left, SotaToken *token) {
+        return left;
+    }
     Ast * SotaParser::ComparisonLed(Ast *left, SotaToken *token) {
         return nullptr;
     }
     Ast * SotaParser::InfixLed(Ast *left, SotaToken *token) {
-        std::cout << "InfixLed: " << std::endl;
         Ast *right = Expression(token->symbol->lbp);
         return new InfixAst(token, left, right);
     }
