@@ -38,14 +38,14 @@ namespace sota {
     }
 
     long SotaParser::EosScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
-        if (!this->nesting.size()) {
+        if (!nesting.size()) {
             return RegexScanner(symbol, source, index);
         }
         return 0;
     }
 
     long SotaParser::EoeScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
-        if (this->nesting.size()) {
+        if (nesting.size()) {
         }
         return 0;
     }
@@ -82,7 +82,7 @@ namespace sota {
         return new IdentifierAst(token->Value());
     }
     Ast * SotaParser::PrefixNud(SotaToken *token) {
-        Ast *right = this->Expression(BindPower::Unary);
+        Ast *right = Expression(BindPower::Unary);
         return new PrefixAst(token, right);
     }
     Ast * SotaParser::IfThenElifElseNud(SotaToken *token) {
@@ -99,7 +99,7 @@ namespace sota {
     }
     Ast * SotaParser::InfixLed(Ast *left, SotaToken *token) {
         std::cout << "InfixLed: " << std::endl;
-        Ast *right = this->Expression(token->symbol->lbp);
+        Ast *right = Expression(token->symbol->lbp);
         return new InfixAst(token, left, right);
     }
     Ast * SotaParser::PostfixLed(Ast *left, SotaToken *token) {
@@ -112,19 +112,19 @@ namespace sota {
         return nullptr;
     }
     Ast * SotaParser::TernaryLed(Ast *left, SotaToken *token) {
-        auto action = this->Expression();
+        auto action = Expression();
         auto pair = ConditionalAst::Pair(left, action);
         auto expected = symbolmap[SotaParser::SymbolType::Colon];
-        this->Consume(expected, "colon : expected");
-        auto defaultAction = this->Expression();
+        Consume(expected, "colon : expected");
+        auto defaultAction = Expression();
         return new ConditionalAst({pair}, defaultAction);
     }
     Ast * SotaParser::IfThenElseLed(Ast *left, SotaToken *token) {
-        auto predicate = this->Expression();
+        auto predicate = Expression();
         auto pair = ConditionalAst::Pair(predicate, left);
         auto expected = symbolmap[SotaParser::SymbolType::Else];
-        this->Consume(expected, "else expected");
-        auto defaultAction = this->Expression();
+        Consume(expected, "else expected");
+        auto defaultAction = Expression();
         return new ConditionalAst({pair}, defaultAction);
     }
 
