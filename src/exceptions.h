@@ -14,11 +14,11 @@ namespace sota {
         std::string _what;
     public:
         SotaException(const char *file, size_t line, const std::string message = "")
-            : _filename(file)
+            : _file(file)
             , _line(line)
             , _message(message) {
             std::ostringstream out;
-            out << _filename << ":" << _line << " " << _message << std::endl;
+            out << _file << ":" << _line << " " << _message << std::endl;
             _what = out.str();
         }
         virtual const char * what() const throw() {
