@@ -51,16 +51,11 @@ int main(int argc, char* argv[]) {
         /*
         parser.source = source;
         auto t0 = parser.LookAhead(1);
-        std::cout << "t0=" << *t0 << std::endl;
-        auto t1 = parser.LookAhead(2);
-        std::cout << "t1=" << *t1 << std::endl;
-        auto t2 = parser.LookAhead(3);
-        std::cout << "t2=" << *t2 << std::endl;
-        return 0;*/
-        parser.source = source;
-        for (auto token : parser.Tokenize())
-            std::cout << *token << std::endl;
+        std::cout << *t0 << std::endl;
+        auto t1 = parser.Consume();
+        std::cout << *t1 << std::endl;
         return 0;
+        */
         auto *ast = parser.Parse(source);
         std::cout << source << ":" << std::endl;
         std::cout << ast->Print() << std::endl;
