@@ -8,20 +8,17 @@
 
 namespace sota {
     class SotaException: public std::exception {
-        const char *_filename;
+        const char *_file;
         size_t _line;
         const std::string _message;
         std::string _what;
     public:
-        SotaException(const char *filename, size_t line, const std::string message = "")
-            : _filename(filename)
+        SotaException(const char *file, size_t line, const std::string message = "")
+            : _filename(file)
             , _line(line)
             , _message(message) {
             std::ostringstream out;
-            out << "filename=" << _filename
-                << " line=" << _line
-                << " msg=" << _message
-                << std::endl;
+            out << _filename << ":" << _line << " " << _message << std::endl;
             _what = out.str();
         }
         virtual const char * what() const throw() {
