@@ -50,7 +50,6 @@ namespace sota {
         // nud parsing functions
         Ast * NotImplementedNud(SotaToken *token);
         Ast * EndOfFileNud(SotaToken *token);
-        Ast * WhiteSpaceNud(SotaToken *token);
         Ast * NewlineNud(SotaToken *token);
         Ast * NumberNud(SotaToken *token);
         Ast * IdentifierNud(SotaToken *token);
@@ -76,7 +75,7 @@ namespace sota {
         T(EndOfExpression,  "[\r\n]+|,",    BindPower::Separator,   EoeScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            WhiteSpaceNud,      Nullptr)            \
+        T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
         T(Identifier,       "[a-zA-Z]+",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \

@@ -57,18 +57,15 @@ namespace sota {
 
     // std parsing functions
     Ast * SotaParser::NotImplementedStd() {
-        throw SotaNotImplemented("std: NotImplemented; this shouldn't be called!");
+        throw SotaNotImplemented(__FILE__, __LINE__, "std: NotImplemented; this shouldn't be called!");
     }
 
     // nud parsing functions
     Ast * SotaParser::NotImplementedNud(SotaToken *token) {
         std::cout << "ni nud; token=" << *token << std::endl;
-        throw SotaNotImplemented("nud: NotImplemented; this shouldn't be called!");
+        throw SotaNotImplemented(__FILE__, __LINE__, "nud: NotImplemented; this shouldn't be called!");
     }
     Ast * SotaParser::EndOfFileNud(SotaToken *token) {
-        return nullptr;
-    }
-    Ast * SotaParser::WhiteSpaceNud(SotaToken *token) {
         return nullptr;
     }
     Ast * SotaParser::NewlineNud(SotaToken *token) {
@@ -92,7 +89,7 @@ namespace sota {
     // led parsing functions
     Ast * SotaParser::NotImplementedLed(Ast *left, SotaToken *token) {
         std::cout << "ni led; token=" << *token  << " left=" << left->Print() << std::endl;
-        throw SotaNotImplemented("led: NotImplemented; this shouldn't be called!");
+        throw SotaNotImplemented(__FILE__, __LINE__, "led: NotImplemented; this shouldn't be called!");
     }
     Ast * SotaParser::EndOfFileLed(Ast *left, SotaToken *token) {
         return left;
