@@ -48,14 +48,6 @@ int main(int argc, char* argv[]) {
 
     for (auto source : sources) {
         std::cout << "sources:" << std::endl;
-        /*
-        parser.source = source;
-        auto t0 = parser.LookAhead(1);
-        std::cout << *t0 << std::endl;
-        auto t1 = parser.Consume();
-        std::cout << *t1 << std::endl;
-        return 0;
-        */
         auto *ast = parser.Parse(source);
         std::cout << source << ":" << std::endl;
         std::cout << ast->Print() << std::endl;

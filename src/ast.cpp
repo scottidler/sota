@@ -51,21 +51,6 @@ namespace sota {
 
     std::string ConditionalAst::Pair::Print() { return "(pair " + predicate->Print() + " " + action->Print() + ")"; }
 
-    /*
-    ConditionalAst::Pair::~Pair() {
-        std::cout << "~Pair called" << std::endl;
-        std::cout << "Pair:" << std::endl;
-        if (nullptr != predicate) {
-            delete predicate;
-        }
-        std::cout << "before action test: " << action->Print() << std::endl;
-        if (nullptr != action) {
-            std::cout << "before action delete" << std::endl;
-            delete action;
-        }
-        std::cout << "after predicate and action delete" << std::endl;
-    }
-    */
     ConditionalAst::Pair::Pair(Ast *predicate, Ast *action)
         : predicate(predicate)
         , action(action) {

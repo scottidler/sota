@@ -70,7 +70,6 @@ namespace sota {
             Ast *action;
 
             std::string Print();
-            //~Pair();
             Pair(Ast *predicate, Ast *action);
         } Pair;
 
