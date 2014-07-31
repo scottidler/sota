@@ -6,6 +6,7 @@ include ../mk/common-defs.mk
 
 EXEC=sota
 
+CXXFLAGS += -I ..
 LD_FLAGS += -lboost_regex -lboost_iostreams
 
 all: $(EXEC)
