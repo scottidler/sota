@@ -129,18 +129,7 @@ namespace sota {
 
     SotaParser::SotaParser() {
 
-        //example calls, proving it works
-        auto std1 = BindStd(&SotaParser::Nullptr);
-        auto std2 = BindStd(&SotaParser::NotImplementedStd);
-        auto nud1 = BindNud(&SotaParser::Nullptr);
-        auto nud2 = BindNud(&SotaParser::NumberNud);
-        auto led1 = BindLed(&SotaParser::Nullptr);
-        auto led2 = BindLed(&SotaParser::PostfixLed);
-        auto scan1 = BindScan(&SotaParser::Nullptr);
-        auto scan2 = BindScan(&SotaParser::LiteralScanner); 
-
-        #define T(k,p,b,s,t,n,l) { SymbolType::k, new SotaSymbol(SymbolType::k, b, p, SCAN(s), STD(t), NUD(n), LED(l) ) }, \
-
+        #define T(k,p,b,s,t,n,l) { SymbolType::k, new SotaSymbol(SymbolType::k, b, p, SCAN(s), STD(t), NUD(n), LED(l) ) },
         symbolmap = {
             SYMBOLS
         };
