@@ -31,16 +31,29 @@ int main(int argc, char **argv) {
 
         auto parser = SotaParser();
 
+        if (tokenize.getValue()) {
+            std::vector<SotaToken *> tokens;
+            if (!filename.empty()) {
+                tokens = parser.TokenizeFile(filename);
+            }
+            else if (!source.empty()) {
+                tokens = parser.Tokenize(source);
+            }
+            for (auto token : tokens)
+                std::cout << *token << std::endl;
+            return 0;
+        }
+
+        Ast *ast = nullptr;
         if (!filename.empty()) {
-            auto ast = parser.ParseFile(filename);
+            ast = parser.ParseFile(filename);
             std::cout << filename << ":" << std::endl;
-            std::cout << ast->Print() << std::endl;
         }
         else if (!source.empty()) {
-            auto ast = parser.Parse(source);
+            ast = parser.Parse(source);
             std::cout << source << ":" << std::endl;
-            std::cout << ast->Print() << std::endl;
         }
+        std::cout << ast->Print() << std::endl;
     }
     catch (TCLAP::ArgException &e) {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
