@@ -26,7 +26,7 @@ namespace sota {
         : value(value) {
     }
 
-    std::string InfixAst::Print() { return "(" + op->Value() + " " + left->Print() + " " + right->Print() + ")"; }
+    std::string InfixAst::Print() { return "(" + op->value + " " + left->Print() + " " + right->Print() + ")"; }
     InfixAst::~InfixAst() {
         if (nullptr != left)
             delete left;
@@ -39,7 +39,7 @@ namespace sota {
         , right(right) {
     }
 
-    std::string PrefixAst::Print() { return "(" + op->Value() + " " + right->Print() + ")"; }
+    std::string PrefixAst::Print() { return "(" + op->value + " " + right->Print() + ")"; }
     PrefixAst::~PrefixAst() {
         if (nullptr != right)
             delete right;

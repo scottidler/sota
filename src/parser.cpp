@@ -70,13 +70,13 @@ namespace sota {
     }
     Ast * SotaParser::NewlineNud(SotaToken *token) {
         std::cout << "newline" << std::endl;
-        return new NewlineAst(token->Value());
+        return new NewlineAst(token->value);
     }
     Ast * SotaParser::NumberNud(SotaToken *token) {
-        return new NumberAst(token->Value());
+        return new NumberAst(token->value);
     }
     Ast * SotaParser::IdentifierNud(SotaToken *token) {
-        return new IdentifierAst(token->Value());
+        return new IdentifierAst(token->value);
     }
     Ast * SotaParser::PrefixNud(SotaToken *token) {
         Ast *right = Expression(BindPower::Unary);
