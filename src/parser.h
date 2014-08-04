@@ -77,7 +77,7 @@ namespace sota {
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
-        T(Identifier,       "[a-zA-Z]+",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
+        T(Identifier,       "([0-9]+)?[a-zA-Z]+([a-zA-Z0-9]+)?",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
