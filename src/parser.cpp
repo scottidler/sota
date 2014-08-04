@@ -20,7 +20,7 @@ namespace sota {
     long SotaParser::RegexScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
         auto pattern = symbol->pattern;
         boost::smatch matches;
-        boost::regex re("^" + pattern);
+        boost::regex re("^(" + pattern + ")");
         if (boost::regex_search(source, matches, re)) {
             auto match = matches[0];
             return match.length();
