@@ -14,45 +14,46 @@
 namespace sota {
 
     // scanners
-    long SotaParser::SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
-       return RegexScanner(symbol, source, index) * -1; //returns a neg number if matched
+    SotaToken * SotaParser::SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
+       return RegexScanner(symbol, source, position);
     }
-    long SotaParser::RegexScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+    SotaToken * SotaParser::RegexScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
+        SotaToken *token = nullptr;
         auto pattern = symbol->pattern;
         boost::smatch matches;
         boost::regex re("^(" + pattern + ")");
         if (boost::regex_search(source, matches, re)) {
             auto match = matches[0];
-            return match.length();
+            token = new SotaToken(symbol, match, position, match.length(), false);
         }
-        return 0;
+        return token;
     }
 
-    long SotaParser::LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+    SotaToken * SotaParser::LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
         auto pattern = symbol->pattern;
         auto patternSize = pattern.size();
         if (source.size() >= patternSize && source.compare(0, patternSize, pattern) == 0) {
-            return  patternSize;
+            return new SotaToken(symbol, pattern, position, patternSize, false);
         }
-        return 0;
+        return nullptr;
     }
 
-    long SotaParser::EosScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+    SotaToken * SotaParser::EosScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
         if (!nesting.size()) {
-            return RegexScanner(symbol, source, index);
+            return RegexScanner(symbol, source, position);
         }
-        return 0;
+        return nullptr;
     }
 
-    long SotaParser::EoeScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
+    SotaToken * SotaParser::EoeScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
         if (nesting.size()) {
         }
-        return 0;
+        return nullptr;
     }
 
 
-    long SotaParser::DentingScanner(SotaSymbol *symbol, const std::string &source, size_t index) {
-        return 0;
+    SotaToken * SotaParser::DentingScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
+        return nullptr;
     }
 
     // std parsing functions

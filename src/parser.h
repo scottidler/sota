@@ -37,12 +37,12 @@ namespace sota {
         std::vector<SotaSymbol *> Symbols();
 
         // scanners
-        long SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t index);
-        long RegexScanner(SotaSymbol *symbol, const std::string &source, size_t index);
-        long LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t index);
-        long EosScanner(SotaSymbol *symbol, const std::string &source, size_t index);
-        long EoeScanner(SotaSymbol *symbol, const std::string &source, size_t index);
-        long DentingScanner(SotaSymbol *symbol, const std::string &source, size_t index);
+        SotaToken * SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        SotaToken * RegexScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        SotaToken * LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        SotaToken * EosScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        SotaToken * EoeScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        SotaToken * DentingScanner(SotaSymbol *symbol, const std::string &source, size_t position);
 
         // std parsing functions
         Ast * NotImplementedStd();
