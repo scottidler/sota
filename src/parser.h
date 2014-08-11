@@ -72,7 +72,7 @@ namespace sota {
         //NAME          PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
         #define SYMBOLS                                                                                                                             \
         T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
-        T(EndOfStatement,   "[\r\n]+|;",    BindPower::Separator,   EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
+        T(EndOfStatement,   "[\r\n]+|;",    BindPower::None,        EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(EndOfExpression,  "[\r\n]+|,",    BindPower::Separator,   EoeScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \

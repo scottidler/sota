@@ -8,10 +8,10 @@
 
 namespace sota {
     class SotaException: public std::exception {
-        const char *_file;
-        size_t _line;
-        const std::string _message;
-        std::string _what;
+        const char          *_file;
+        size_t              _line;
+        const std::string   _message;
+        std::string         _what;
     public:
         SotaException(const char *file, size_t line, const std::string message = "")
             : _file(file)
@@ -28,7 +28,7 @@ namespace sota {
 
     class SotaNotImplemented: SotaException {
     public:
-        SotaNotImplemented(const char *filename, size_t line, const std::string message = "")
+        SotaNotImplemented(const char *filename, size_t line, const std::string message = "not implemented")
             : SotaException(filename, line, message) {
         }
     };
