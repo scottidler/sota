@@ -34,6 +34,7 @@ namespace sota {
         std::stack<SotaToken *> nesting;
 
         // must be implemented in derived class (SotaParser)
+        std::exception Exception(const char *file, size_t line, const std::string &message = "");
         std::vector<SotaSymbol *> Symbols();
 
         // scanners

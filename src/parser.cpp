@@ -17,6 +17,7 @@ namespace sota {
     SotaToken * SotaParser::SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
        return RegexScanner(symbol, source, position);
     }
+
     SotaToken * SotaParser::RegexScanner(SotaSymbol *symbol, const std::string &source, size_t position) {
         SotaToken *token = nullptr;
         auto pattern = symbol->pattern;
@@ -135,6 +136,10 @@ namespace sota {
             SYMBOLS
         };
         #undef T
+    }
+
+    std::exception SotaParser::Exception(const char *file, size_t line, const std::string &message) {
+        return SotaException(file, line, message);
     }
 
     std::vector<SotaSymbol *> SotaParser::Symbols() {
