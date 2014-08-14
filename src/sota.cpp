@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     try {
         TCLAP::CmdLine cmdline("Sota Description", ' ', "0.1");
         TCLAP::SwitchArg tokenize("t", "tokenize", "Tokenize the code", cmdline, false);
-        TCLAP::ValueArg<std::string> code("c", "code", "Code to evaluate", true, "", "string");
+        TCLAP::ValueArg<std::string> code("c", "code", "Code to evaluate", true, "", "code");
         TCLAP::UnlabeledValueArg<std::string> file("file", "Sota file with main definined", true, "",  "file");
         cmdline.xorAdd(code, file);
 
