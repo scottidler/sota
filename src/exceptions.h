@@ -13,7 +13,8 @@ namespace sota {
         const std::string   _message;
         std::string         _what;
     public:
-        SotaException(const char *file, size_t line, const std::string message = "")
+        virtual ~SotaException() throw (){}
+        explicit SotaException(const char *file, size_t line, const std::string message = "")
             : _file(file)
             , _line(line)
             , _message(message) {
