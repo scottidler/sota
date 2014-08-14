@@ -47,11 +47,11 @@ int main(int argc, char **argv) {
         Ast *ast = nullptr;
         if (!filename.empty()) {
             ast = parser.ParseFile(filename);
-            std::cout << filename << ":" << std::endl;
+            std::cout << filename << std::endl;
         }
         else if (!source.empty()) {
             ast = parser.Parse(source);
-            std::cout << source << ":" << std::endl;
+            std::cout << source << std::endl;
         }
         std::cout << ast->Print() << std::endl;
     }
