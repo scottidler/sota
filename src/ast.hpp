@@ -10,8 +10,6 @@
 
 namespace sota {
 
-    class Token;
-
     struct NewlineAst : public z2h::Ast {
         ~NewlineAst() {}
         NewlineAst(z2h::Token *token)
@@ -72,22 +70,23 @@ namespace sota {
         }
     };
 
-    struct Pair {
-        z2h::Ast *predicate;
-        z2h::Ast *action;
-
-        Pair(z2h::Ast *predicate, z2h::Ast *action)
-            : predicate(predicate)
-            , action(action) {}
-
-    protected:
-        friend std::ostream & operator <<(std::ostream &os, const Pair &pair) {
-            os << "(pair " << *predicate << " " << *action << ")";
-            return os;
-        }
-    };
 
     struct ConditionalAst : public z2h::Ast {
+
+        struct Pair {
+            z2h::Ast *predicate;
+            z2h::Ast *action;
+
+            Pair(z2h::Ast *predicate, z2h::Ast *action)
+                : predicate(predicate)
+                , action(action) {}
+
+        protected:
+            friend std::ostream & operator <<(std::ostream &os, const Pair &pair) {
+                os << "(pair " << *pair.predicate << " " << *pair.action << ")";
+                return os;
+            }
+        };
 
         std::vector<Pair> pairs;
         z2h::Ast *action;

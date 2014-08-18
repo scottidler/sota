@@ -6,9 +6,9 @@
 #include <exception>
 
 #include "z2h/parser.hpp"
-#include "z2h/symbol.h"
+#include "z2h/symbol.hpp"
 
-#include "ast.h"
+#include "ast.hpp"
 #include "parser.h"
 #include "bindpower.h"
 

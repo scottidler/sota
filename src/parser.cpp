@@ -114,7 +114,7 @@ namespace sota {
     }
     z2h::Ast * SotaParser::TernaryLed(z2h::Ast *left, z2h::Token *token) {
         auto action = Expression();
-        auto pair = Pair(left, action);
+        auto pair = ConditionalAst::Pair(left, action);
         auto expected = symbolmap[SotaParser::SymbolType::Colon];
         Consume(expected, "colon : expected");
         auto defaultAction = Expression();
@@ -122,7 +122,7 @@ namespace sota {
     }
     z2h::Ast * SotaParser::IfThenElseLed(z2h::Ast *left, z2h::Token *token) {
         auto predicate = Expression();
-        auto pair = Pair(predicate, left);
+        auto pair = ConditionalAst::Pair(predicate, left);
         auto expected = symbolmap[SotaParser::SymbolType::Else];
         Consume(expected, "else expected");
         auto defaultAction = Expression();
