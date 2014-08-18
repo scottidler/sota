@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "z2h/parser.hpp"
-#include "z2h/symbol.hpp"
+#include "z2h/symbol.h"
 
 #include "ast.h"
 #include "parser.h"
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
         auto parser = SotaParser();
 
         if (tokenize.getValue()) {
-            std::vector<SotaToken *> tokens;
+            std::vector<z2h::Token *> tokens;
             if (!filename.empty()) {
                 tokens = parser.TokenizeFile(filename);
             }
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
             return 0;
         }
 
-        Ast *ast = nullptr;
+        z2h::Ast *ast = nullptr;
         if (!filename.empty()) {
             ast = parser.ParseFile(filename);
             std::cout << filename << std::endl;
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
             ast = parser.Parse(source);
             std::cout << source << std::endl;
         }
-        std::cout << ast->Print() << std::endl;
+        std::cout << *ast << std::endl;
     }
     catch (TCLAP::ArgException &e) {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

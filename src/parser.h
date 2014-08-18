@@ -12,61 +12,52 @@
 
 #include <boost/preprocessor.hpp>
 
-#include "z2h/token.hpp"
 #include "z2h/parser.hpp"
-#include "z2h/symbol.hpp"
-#include "z2h/binder.hpp"
 
 namespace sota {
 
     class Ast;
+    class Symbol;
+    class Token;
 
-    using SotaScan = z2h::ScanFunc<Ast *>;
-    using SotaStd = z2h::StdFunc<Ast *>;
-    using SotaNud = z2h::NudFunc<Ast *>;
-    using SotaLed = z2h::LedFunc<Ast *>;
+    struct SotaParser : public z2h::Parser<SotaParser> {
 
-    using SotaToken = z2h::Token<Ast *>;
-    using SotaSymbol = z2h::Symbol<Ast *>;
-
-    struct SotaParser : public z2h::Parser<Ast *, SotaParser> {
-
-        std::stack<SotaToken *> nesting;
+        std::stack<z2h::Token *> nesting;
 
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");
-        std::vector<SotaSymbol *> Symbols();
+        std::vector<z2h::Symbol *> Symbols();
 
         // scanners
-        SotaToken * SkippingScanner(SotaSymbol *symbol, const std::string &source, size_t position);
-        SotaToken * RegexScanner(SotaSymbol *symbol, const std::string &source, size_t position);
-        SotaToken * LiteralScanner(SotaSymbol *symbol, const std::string &source, size_t position);
-        SotaToken * EosScanner(SotaSymbol *symbol, const std::string &source, size_t position);
-        SotaToken * EoeScanner(SotaSymbol *symbol, const std::string &source, size_t position);
-        SotaToken * DentingScanner(SotaSymbol *symbol, const std::string &source, size_t position);
+        z2h::Token * SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
+        z2h::Token * RegexScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
+        z2h::Token * LiteralScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
+        z2h::Token * EosScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
+        z2h::Token * EoeScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
+        z2h::Token * DentingScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
 
         // std parsing functions
-        Ast * NotImplementedStd();
+        z2h::Ast * NotImplementedStd();
 
         // nud parsing functions
-        Ast * NotImplementedNud(SotaToken *token);
-        Ast * EndOfFileNud(SotaToken *token);
-        Ast * NewlineNud(SotaToken *token);
-        Ast * NumberNud(SotaToken *token);
-        Ast * IdentifierNud(SotaToken *token);
-        Ast * PrefixNud(SotaToken *token);
-        Ast * IfThenElifElseNud(SotaToken *token);
+        z2h::Ast * NotImplementedNud(z2h::Token *token);
+        z2h::Ast * EndOfFileNud(z2h::Token *token);
+        z2h::Ast * NewlineNud(z2h::Token *token);
+        z2h::Ast * NumberNud(z2h::Token *token);
+        z2h::Ast * IdentifierNud(z2h::Token *token);
+        z2h::Ast * PrefixNud(z2h::Token *token);
+        z2h::Ast * IfThenElifElseNud(z2h::Token *token);
 
         // led parsing functions
-        Ast * NotImplementedLed(Ast *left, SotaToken *token);
-        Ast * EndOfFileLed(Ast *left, SotaToken *token);
-        Ast * ComparisonLed(Ast *left, SotaToken *token);
-        Ast * InfixLed(Ast *left, SotaToken *token);
-        Ast * PostfixLed(Ast *left, SotaToken *token);
-        Ast * AssignLed(Ast *left, SotaToken *token);
-        Ast * RegexLed(Ast *left, SotaToken *token);
-        Ast * TernaryLed(Ast *left, SotaToken *token);
-        Ast * IfThenElseLed(Ast *left, SotaToken *token);
+        z2h::Ast * NotImplementedLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * EndOfFileLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * ComparisonLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * RegexLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
 
         //              4                   3                       6                   5                   5                   5
         //NAME          PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
@@ -104,7 +95,7 @@ namespace sota {
         };
         #undef T
 
-        std::map<SymbolType, SotaSymbol *> symbolmap;
+        std::map<SymbolType, z2h::Symbol *> symbolmap;
 
         SotaParser();
 
