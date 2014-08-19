@@ -19,7 +19,7 @@ main = ()
     { 1: 'a', 2: 'b' } == { 'a': 1, 'b': 2 }.inverse()
 
     # inverse on dict with repeated values requires an option otherwise an error
-    { 1: ['a', 'b'] } == { 'a': 1, 'b': 1 }.inverse(allow_duplicates=true)
+    { 1: ('a', 'b') } == { 'a': 1, 'b': 1 }.inverse(allow_duplicates=true)
 
     # the opposite is also possible with the same flag
-    { 'a': 1, 'b': 1 } == { 1: ['a', 'b'] }.inverse(allow_duplicates=true)
+    { 'a': 1, 'b': 1 } == { 1: ('a', 'b') }.inverse(allow_duplicates=true)
