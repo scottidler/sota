@@ -44,16 +44,18 @@ int main(int argc, char **argv) {
             return 0;
         }
 
-        z2h::Ast *ast = nullptr;
+        std::vector<z2h::Ast *> stmts;
         if (!filename.empty()) {
-            ast = parser.ParseFile(filename);
+            stmts = parser.ParseFile(filename);
             std::cout << filename << std::endl;
         }
         else if (!source.empty()) {
-            ast = parser.Parse(source);
+            stmts = parser.Parse(source);
             std::cout << source << std::endl;
         }
-        std::cout << *ast << std::endl;
+        for (auto stmt : stmts) {
+            std::cout << *stmt << std::endl;
+        }
     }
     catch (TCLAP::ArgException &e) {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
