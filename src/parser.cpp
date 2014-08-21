@@ -116,7 +116,8 @@ namespace sota {
         auto action = Expression();
         auto pair = ConditionalAst::Pair(left, action);
         auto expected = symbolmap[SotaParser::SymbolType::Colon];
-        Consume(expected, "colon : expected");
+        if (nullptr == Consume(expected))
+            throw SotaException(__FILE__, __LINE__, "colon : expected");
         auto defaultAction = Expression();
         return new ConditionalAst(token, {pair}, defaultAction);
     }
@@ -124,7 +125,8 @@ namespace sota {
         auto predicate = Expression();
         auto pair = ConditionalAst::Pair(predicate, left);
         auto expected = symbolmap[SotaParser::SymbolType::Else];
-        Consume(expected, "else expected");
+        if (nullptr == Consume(expected))
+            throw SotaException(__FILE__, __LINE__, "else expected");
         auto defaultAction = Expression();
         return new ConditionalAst(token, {pair}, defaultAction);
     }
