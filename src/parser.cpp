@@ -15,7 +15,10 @@ namespace sota {
 
     // scanners
     z2h::Token * SotaParser::SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
-       return RegexScanner(symbol, source, position);
+        auto *token = RegexScanner(symbol, source, position);
+        if (token)
+            token->skip = true;
+        return token;
     }
 
     z2h::Token * SotaParser::RegexScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
