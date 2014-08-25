@@ -20,7 +20,9 @@ namespace sota {
         while (end != la1->symbol) {
             auto *expression = this->Expression();
             expressions.push_back(expression);
-            this->Consume(eoe);
+            if (!this->Consume(eoe)) {
+                break;
+            }
             la1 = this->LookAhead1();
         }
         return expressions;
@@ -107,7 +109,9 @@ namespace sota {
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         auto rp = symbolmap[SymbolType::RightParen];
         auto expressions = this->Expressions(rp);
-        this->Consume(rp);
+        if (!this->Consume(rp)) {
+            std::cout << "RightParen not consumed" << std::endl;
+        }
         z2h::Ast *ast = new ExpressionsAst(expressions);
         return ast;
     }
