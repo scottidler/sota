@@ -14,25 +14,14 @@
 namespace sota {
 
     std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Symbol *end) {
-        std::cout << "Expressions:" << std::endl;
-        std::cout << "end=" << *end << std::endl;
         std::vector<z2h::Ast *> expressions;
         auto *eoe = symbolmap[SymbolType::EndOfExpression];
-        std::cout << "eoe=" << *eoe << std::endl;
         auto *la1 = this->LookAhead1();
-        std::cout << "la1=" << *la1 << std::endl;
         while (end != la1->symbol) {
             auto *expression = this->Expression();
             expressions.push_back(expression);
-            std::cout << "curr char=" << this->source[this->position] << std::endl;
-            std::cout << "tokens[index=" << index << "]=" << *tokens[index] << std::endl;
+            this->Consume(eoe);
             la1 = this->LookAhead1();
-            std::cout << "\nla1=" << *la1 << std::endl << std::endl;
-            auto *token = this->Consume(eoe);
-            std::cout << "Consumed: token=" << *token << std::endl;
-            la1 = this->LookAhead1();
-            std::cout << "la1=" << *la1 << std::endl;
-            exit(0);
         }
         return expressions;
     }
@@ -81,7 +70,7 @@ namespace sota {
     z2h::Token * SotaParser::EoeScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
         if (nesting.size()) {
         }
-        return nullptr;
+        return RegexScanner(symbol, source, position);
     }
 
 
@@ -116,13 +105,10 @@ namespace sota {
         return new PrefixAst(token, right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
-        std::cout << "ParensNud:" << std::endl;
         auto rp = symbolmap[SymbolType::RightParen];
-        std::cout << "rp=" << *rp << std::endl;
         auto expressions = this->Expressions(rp);
         this->Consume(rp);
         z2h::Ast *ast = new ExpressionsAst(expressions);
-        std::cout << "ast=" << *ast << std::endl;
         return ast;
     }
     z2h::Ast * SotaParser::IfThenElifElseNud(z2h::Token *token) {
