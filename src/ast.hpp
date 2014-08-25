@@ -40,6 +40,25 @@ namespace sota {
         }
     };
 
+    struct ExpressionsAst : public z2h::Ast {
+        std::vector<z2h::Ast *> expressions;
+
+        ~ExpressionsAst() {}
+        ExpressionsAst(std::vector<z2h::Ast *> expressions) {
+            for (auto expression : expressions)
+                this->expressions.push_back(expression);
+        }
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "(el ";
+            for (auto expression : expressions) {
+                os << *expression << ", ";
+            }
+            os << ")";
+        }
+    };
+
     struct InfixAst : public z2h::Ast {
         z2h::Ast *left;
         z2h::Ast *right;
@@ -70,6 +89,37 @@ namespace sota {
         }
     };
 
+    struct AssignAst : public z2h::Ast {
+        z2h::Ast *left;
+        z2h::Ast *right;
+
+        ~AssignAst() {}
+        AssignAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::Ast(token)
+            , left(left)
+            , right(right) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "(" + token->value + " " << *left << " " << *right << ")";
+        }
+    };
+
+    struct FuncAst : public z2h::Ast {
+        z2h::Ast *args;
+        z2h::Ast *body;
+
+        ~FuncAst() {}
+        FuncAst(z2h::Token *token, z2h::Ast *args, z2h::Ast *body)
+            : z2h::Ast(token)
+            , args(args)
+            , body(body) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "(func " << *args << " " << *body << ")";
+        }
+    };
 
     struct ConditionalAst : public z2h::Ast {
 
