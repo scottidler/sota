@@ -13,6 +13,35 @@
 
 namespace sota {
 
+    std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Symbol *end) {
+        std::cout << "Expressions:" << std::endl;
+        std::cout << "end=" << *end << std::endl;
+        std::vector<z2h::Ast *> expressions;
+        auto *eoe = symbolmap[SymbolType::EndOfExpression];
+        std::cout << "eoe=" << *eoe << std::endl;
+        auto *la1 = this->LookAhead1();
+        std::cout << "la1=" << *la1 << std::endl;
+        while (end != la1->symbol) {
+            auto *expression = this->Expression();
+            expressions.push_back(expression);
+            std::cout << "curr char=" << this->source[this->position] << std::endl;
+            std::cout << "tokens[index=" << index << "]=" << *tokens[index] << std::endl;
+            la1 = this->LookAhead1();
+            std::cout << "\nla1=" << *la1 << std::endl << std::endl;
+            auto *token = this->Consume(eoe);
+            std::cout << "Consumed: token=" << *token << std::endl;
+            la1 = this->LookAhead1();
+            std::cout << "la1=" << *la1 << std::endl;
+            exit(0);
+        }
+        return expressions;
+    }
+
+    std::vector<z2h::Ast *> SotaParser::Statements(z2h::Symbol *end) {
+        std::vector<z2h::Ast *> statements;
+        return statements;
+    }
+
     // scanners
     z2h::Token * SotaParser::SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
         auto *token = RegexScanner(symbol, source, position);
@@ -61,14 +90,13 @@ namespace sota {
     }
 
     // std parsing functions
-    z2h::Ast * SotaParser::NotImplementedStd() {
-        throw SotaNotImplemented(__FILE__, __LINE__, "std: NotImplemented; this shouldn't be called!");
+    z2h::Ast * SotaParser::NullptrStd() {
+        return nullptr;
     }
 
     // nud parsing functions
-    z2h::Ast * SotaParser::NotImplementedNud(z2h::Token *token) {
-        std::cout << "ni nud; token=" << *token << std::endl;
-        throw SotaNotImplemented(__FILE__, __LINE__, "nud: NotImplemented; this shouldn't be called!");
+    z2h::Ast * SotaParser::NullptrNud(z2h::Token *token) {
+        return nullptr;
     }
     z2h::Ast * SotaParser::EndOfFileNud(z2h::Token *token) {
         return nullptr;
@@ -87,14 +115,23 @@ namespace sota {
         z2h::Ast *right = Expression(BindPower::Unary);
         return new PrefixAst(token, right);
     }
+    z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
+        std::cout << "ParensNud:" << std::endl;
+        auto rp = symbolmap[SymbolType::RightParen];
+        std::cout << "rp=" << *rp << std::endl;
+        auto expressions = this->Expressions(rp);
+        this->Consume(rp);
+        z2h::Ast *ast = new ExpressionsAst(expressions);
+        std::cout << "ast=" << *ast << std::endl;
+        return ast;
+    }
     z2h::Ast * SotaParser::IfThenElifElseNud(z2h::Token *token) {
         return nullptr;
     }
 
     // led parsing functions
-    z2h::Ast * SotaParser::NotImplementedLed(z2h::Ast *left, z2h::Token *token) {
-        std::cout << "ni led; token=" << *token  << " left=" << *left << std::endl;
-        throw SotaNotImplemented(__FILE__, __LINE__, "led: NotImplemented; this shouldn't be called!");
+    z2h::Ast * SotaParser::NullptrLed(z2h::Ast *left, z2h::Token *token) {
+        return nullptr;
     }
     z2h::Ast * SotaParser::EndOfFileLed(z2h::Ast *left, z2h::Token *token) {
         return left;
@@ -110,9 +147,20 @@ namespace sota {
         return nullptr;
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
+        //size_t distance = 1;
+        //auto *la1 = this->LookAhead(distance);
+
+        z2h::Ast *right = this->Expression(token->symbol->lbp);
+        return new AssignAst(token, left, right);
+    }
+    z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
+        std::cout << "FuncLed: token=" << *token << std::endl;
         return nullptr;
     }
     z2h::Ast * SotaParser::RegexLed(z2h::Ast *left, z2h::Token *token) {
+        return nullptr;
+    }
+    z2h::Ast * SotaParser::CallLed(z2h::Ast *left, z2h::Token *token) {
         return nullptr;
     }
     z2h::Ast * SotaParser::TernaryLed(z2h::Ast *left, z2h::Token *token) {

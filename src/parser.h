@@ -24,6 +24,9 @@ namespace sota {
 
         std::stack<z2h::Token *> nesting;
 
+        std::vector<z2h::Ast *> Expressions(z2h::Symbol *end);
+        std::vector<z2h::Ast *> Statements(z2h::Symbol *end);
+
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");
         std::vector<z2h::Symbol *> Symbols();
@@ -37,25 +40,28 @@ namespace sota {
         z2h::Token * DentingScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
 
         // std parsing functions
-        z2h::Ast * NotImplementedStd();
+        z2h::Ast * NullptrStd();
 
         // nud parsing functions
-        z2h::Ast * NotImplementedNud(z2h::Token *token);
+        z2h::Ast * NullptrNud(z2h::Token *token);
         z2h::Ast * EndOfFileNud(z2h::Token *token);
         z2h::Ast * NewlineNud(z2h::Token *token);
         z2h::Ast * NumberNud(z2h::Token *token);
         z2h::Ast * IdentifierNud(z2h::Token *token);
         z2h::Ast * PrefixNud(z2h::Token *token);
+        z2h::Ast * ParensNud(z2h::Token *token);
         z2h::Ast * IfThenElifElseNud(z2h::Token *token);
 
         // led parsing functions
-        z2h::Ast * NotImplementedLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * NullptrLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * EndOfFileLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * ComparisonLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * FuncLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * RegexLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * CallLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
 
@@ -68,9 +74,12 @@ namespace sota {
         T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
+        T(Arrow,            "->",           BindPower::Func,        LiteralScanner,     Nullptr,            Nullptr,            FuncLed)            \
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
         T(Identifier,       "([0-9]+)?[a-zA-Z]+([a-zA-Z0-9]+)?",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftParen,        "(",            BindPower::Parens,      LiteralScanner,     Nullptr,            ParensNud,          Nullptr)            \
+        T(RightParen,       ")",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(Add,              "+",            BindPower::Sum,         LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
