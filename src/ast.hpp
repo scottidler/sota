@@ -10,6 +10,16 @@
 
 namespace sota {
 
+    inline void sepby(std::ostream &os, std::string sep, std::vector<z2h::Ast *> items) {
+        if (items.size()) {
+            size_t i = 0;
+            for (; i < items.size() - 1; ++i) {
+                os << *items[i] << sep;
+            }
+            os << *items[i];
+        }
+    }
+
     struct NewlineAst : public z2h::Ast {
         ~NewlineAst() {}
         NewlineAst(z2h::Token *token)
@@ -51,10 +61,8 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(el ";
-            for (auto expression : expressions) {
-                os << *expression << ", ";
-            }
+            os << "(exprs ";
+            sepby(os, ", ", expressions);
             os << ")";
         }
     };
