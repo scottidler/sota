@@ -14,8 +14,10 @@ namespace sota {
         Sum = 50,
         Product = 60,
         Unary = 70,
+        Parens = 75,
         Dereference = 80,
         Regex = 90,
+        Func = 100,
     };
 }
 
