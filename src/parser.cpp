@@ -144,8 +144,8 @@ namespace sota {
         return new AssignAst(token, left, right);
     }
     z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
-        std::cout << "FuncLed: token=" << *token << std::endl;
-        return nullptr;
+        z2h::Ast *right = this->Expression();
+        return new FuncAst(token, left, right);
     }
     z2h::Ast * SotaParser::RegexLed(z2h::Ast *left, z2h::Token *token) {
         return nullptr;
