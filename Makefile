@@ -7,7 +7,7 @@ include mk/common-defs.mk
 # project own sources
 MAKE_DIRS=src
 # if it is a git submodule that will be built
-GITSUBMODS:=llvm
+GITSUBMODS:=llvm z2h
 # if it's a configurable module
 MAKE_CONFIGS=llvm
 
