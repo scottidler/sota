@@ -61,9 +61,22 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(exprs ";
-            sepby(os, ", ", expressions);
-            os << ")";
+            os << "( ";
+            sepby(os, " ", expressions);
+            os << " )";
+        }
+    };
+
+    struct ParensAst : public ExpressionsAst {
+        ~ParensAst() {}
+        ParensAst(std::vector<z2h::Ast *> expressions)
+            : ExpressionsAst(expressions) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "(() ";
+            sepby(os, " ", expressions);
+            os << " )";
         }
     };
 

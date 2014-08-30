@@ -141,7 +141,7 @@ namespace sota {
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        z2h::Ast *ast = new ExpressionsAst(expressions);
+        z2h::Ast *ast = new ParensAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::IfThenElifElseNud(z2h::Token *token) {
