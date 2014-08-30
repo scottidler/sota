@@ -28,10 +28,39 @@ namespace sota {
         return expressions;
     }
 
+    std::vector<z2h::Token *> SotaParser::TokenizeFile(const std::string &filename) {
+        auto source = Open(filename);
+        return Tokenize(source);
+    }
+
+    std::vector<z2h::Token *> SotaParser::Tokenize(std::string source) {
+        this->index = 0;
+        this->source = source;
+        auto eof = EofSymbol();
+        auto token = Consume();
+        while (eof != token->symbol) {
+            token = Consume();
+        }
+        return tokens;
+    }
+
+    std::vector<z2h::Ast *> SotaParser::ParseFile(const std::string &filename) {
+        auto source = Open(filename);
+        return Parse(source);
+    }
+
+    std::vector<z2h::Ast *> SotaParser::Parse(std::string source) {
+        this->index = 0;
+        this->source = source;
+        return Statements();
+    }
+
+/*
     std::vector<z2h::Ast *> SotaParser::Statements(z2h::Symbol *end) {
         std::vector<z2h::Ast *> statements;
         return statements;
     }
+*/
 
     // scanners
     z2h::Token * SotaParser::SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {

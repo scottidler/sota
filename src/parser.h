@@ -24,8 +24,15 @@ namespace sota {
 
         std::stack<z2h::Token *> nesting;
 
+        SotaParser();
+
+        std::vector<z2h::Token *> TokenizeFile(const std::string &filename);
+        std::vector<z2h::Token *> Tokenize(std::string source);
+        std::vector<z2h::Ast *> ParseFile(const std::string &filename);
+        std::vector<z2h::Ast *> Parse(std::string source);
+
         std::vector<z2h::Ast *> Expressions(z2h::Symbol *end);
-        std::vector<z2h::Ast *> Statements(z2h::Symbol *end);
+        //std::vector<z2h::Ast *> Statements(z2h::Symbol *end);
 
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");
@@ -105,8 +112,6 @@ namespace sota {
         #undef T
 
         std::map<SymbolType, z2h::Symbol *> symbolmap;
-
-        SotaParser();
 
     };
 }
