@@ -125,7 +125,7 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(func " << *args << " " << *body << ")";
+            os << "(-> " << *args << " " << *body << ")";
         }
     };
 
