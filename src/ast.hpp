@@ -63,7 +63,7 @@ namespace sota {
         void Print(std::ostream &os) const {
             os << "( ";
             sepby(os, " ", expressions);
-            os << " )";
+            os << ")";
         }
     };
 
@@ -76,7 +76,33 @@ namespace sota {
         void Print(std::ostream &os) const {
             os << "(() ";
             sepby(os, " ", expressions);
-            os << " )";
+            os << ")";
+        }
+    };
+
+    struct BracesAst : public ExpressionsAst {
+        ~BracesAst() {}
+        BracesAst(std::vector<z2h::Ast *> expressions)
+            : ExpressionsAst(expressions) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "({} ";
+            sepby(os, " ", expressions);
+            os << ")";
+        }
+    };
+
+    struct BracketsAst : public ExpressionsAst {
+        ~BracketsAst() {}
+        BracketsAst(std::vector<z2h::Ast *> expressions)
+            : ExpressionsAst(expressions) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "([] ";
+            sepby(os, " ", expressions);
+            os << ")";
         }
     };
 
