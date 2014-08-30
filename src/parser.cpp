@@ -135,14 +135,32 @@ namespace sota {
         z2h::Ast *right = Expression(BindPower::Unary);
         return new PrefixAst(token, right);
     }
+    z2h::Ast * SotaParser::CommaNud(z2h::Token *token) {
+        return nullptr;
+    }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         auto rp = symbolmap[SymbolType::RightParen];
         auto expressions = this->Expressions(rp);
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        z2h::Ast *ast = new ParensAst(expressions);
-        return ast;
+        return new ParensAst(expressions);
+    }
+    z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
+        auto rb = symbolmap[SymbolType::RightBrace];
+        auto expressions = this->Expressions(rb);
+        if (!this->Consume(rb)) {
+            std::cout << "RightBrace not consumed" << std::endl;
+        }
+        return new BracesAst(expressions);
+    }
+    z2h::Ast * SotaParser::BracketsNud(z2h::Token *token) {
+        auto rb = symbolmap[SymbolType::RightBracket];
+        auto expressions = this->Expressions(rb);
+        if (!this->Consume(rb)) {
+            std::cout << "RightBracket not consumed" << std::endl;
+        }
+        return new BracketsAst(expressions);
     }
     z2h::Ast * SotaParser::IfThenElifElseNud(z2h::Token *token) {
         return nullptr;
@@ -165,10 +183,10 @@ namespace sota {
     z2h::Ast * SotaParser::PostfixLed(z2h::Ast *left, z2h::Token *token) {
         return nullptr;
     }
+    z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
+        return nullptr;
+    }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
-        //size_t distance = 1;
-        //auto *la1 = this->LookAhead(distance);
-
         z2h::Ast *right = this->Expression(token->symbol->lbp);
         return new AssignAst(token, left, right);
     }

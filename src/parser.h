@@ -56,7 +56,10 @@ namespace sota {
         z2h::Ast * NumberNud(z2h::Token *token);
         z2h::Ast * IdentifierNud(z2h::Token *token);
         z2h::Ast * PrefixNud(z2h::Token *token);
+        z2h::Ast * CommaNud(z2h::Token *token);
         z2h::Ast * ParensNud(z2h::Token *token);
+        z2h::Ast * BracesNud(z2h::Token *token);
+        z2h::Ast * BracketsNud(z2h::Token *token);
         z2h::Ast * IfThenElifElseNud(z2h::Token *token);
 
         // led parsing functions
@@ -65,6 +68,7 @@ namespace sota {
         z2h::Ast * ComparisonLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * CommaLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * FuncLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * RegexLed(z2h::Ast *left, z2h::Token *token);
@@ -77,7 +81,7 @@ namespace sota {
         #define SYMBOLS                                                                                                                             \
         T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
         T(EndOfStatement,   "[\r\n]+|;",    BindPower::None,        EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
-        T(EndOfExpression,  "[\r\n]+|,",    BindPower::Separator,   EoeScanner,         Nullptr,            Nullptr,            Nullptr)            \
+        T(EndOfExpression,  ",",            BindPower::Separator,   RegexScanner,       Nullptr,            CommaNud,           CommaLed)           \
         T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
@@ -85,8 +89,12 @@ namespace sota {
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
         T(Identifier,       "([0-9]+)?[a-zA-Z]+([a-zA-Z0-9]+)?",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftParen,        "(",            BindPower::Parens,      LiteralScanner,     Nullptr,            ParensNud,          Nullptr)            \
+        T(LeftParen,        "(",            BindPower::Group,       LiteralScanner,     Nullptr,            ParensNud,          Nullptr)            \
         T(RightParen,       ")",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftBrace,        "{",            BindPower::Group,       LiteralScanner,     Nullptr,            BracesNud,          Nullptr)            \
+        T(RightBrace,       "}",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftBracket,      "[",            BindPower::Group,       LiteralScanner,     Nullptr,            BracketsNud,        Nullptr)            \
+        T(RightBracket,     "]",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(Add,              "+",            BindPower::Sum,         LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
