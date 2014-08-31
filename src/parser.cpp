@@ -138,6 +138,7 @@ namespace sota {
     z2h::Ast * SotaParser::CommaNud(z2h::Token *token) {
         std::cout << "CommaNud: token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
+        std::cout << "\tright=" << *right << std::endl;
         return new CommaAst(token, nullptr, right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
@@ -188,6 +189,8 @@ namespace sota {
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
         std::cout << "CommaLed: left=" << *left << " token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
+        if (right)
+            std::cout << "\tright=" << *right << std::endl;
         return new CommaAst(token, left, right);
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
