@@ -150,18 +150,20 @@ namespace sota {
     }
     z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
         auto rb = symbolmap[SymbolType::RightBrace];
-        auto expressions = this->Expressions(rb);
+        auto ast = Expression();
         if (!this->Consume(rb)) {
             std::cout << "RightBrace not consumed" << std::endl;
         }
+        auto expressions = CommaAstToExpressions(ast);
         return new BracesAst(expressions);
     }
     z2h::Ast * SotaParser::BracketsNud(z2h::Token *token) {
         auto rb = symbolmap[SymbolType::RightBracket];
-        auto expressions = this->Expressions(rb);
+        auto ast = Expression();
         if (!this->Consume(rb)) {
             std::cout << "RightBracket not consumed" << std::endl;
         }
+        auto expressions = CommaAstToExpressions(ast);
         return new BracketsAst(expressions);
     }
     z2h::Ast * SotaParser::IfThenElifElseNud(z2h::Token *token) {
