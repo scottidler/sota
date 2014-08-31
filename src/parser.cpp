@@ -139,7 +139,7 @@ namespace sota {
         std::cout << "CommaNud: token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
         std::cout << "\tright=" << *right << std::endl;
-        return new CommaAst(token, nullptr, right);
+        return new CommaAst(token, new NullAst(), right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         auto rp = symbolmap[SymbolType::RightParen];
@@ -189,9 +189,7 @@ namespace sota {
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
         std::cout << "CommaLed: left=" << *left << " token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
-        if (right)
-            std::cout << "\tright=" << *right << std::endl;
-        return new CommaAst(token, left, right);
+        return new CommaAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
         z2h::Ast *right = this->Expression(token->symbol->lbp-1); //right associative?
