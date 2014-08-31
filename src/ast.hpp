@@ -97,7 +97,7 @@ namespace sota {
                 while (--count)
                     expressions.push_back(new NullAst());
 
-                comma = dynamic_cast<CommaAst>(comma->right);
+                comma = dynamic_cast<CommaAst*>(comma->right);
             }
 
             return expressions;
