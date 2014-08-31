@@ -79,7 +79,17 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(, " << *left << " " << *right << ")";
+            os << "(, ";
+            if (left)
+                os << *left;
+            else
+                os << "( )";
+            os << " ";
+            if (right)
+                os << *right;
+            else
+                os << "( )";
+            os << ")";
         }
     };
 
