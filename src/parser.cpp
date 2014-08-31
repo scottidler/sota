@@ -15,10 +15,10 @@ namespace sota {
 
     std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Symbol *end) {
         std::vector<z2h::Ast *> expressions;
-        auto *eoe = symbolmap[SymbolType::EndOfExpression];
-        auto *la1 = this->LookAhead1();
+        auto eoe = symbolmap[SymbolType::EndOfExpression];
+        auto la1 = this->LookAhead1();
         while (end != la1->symbol) {
-            auto *expression = this->Expression();
+            auto expression = this->Expression();
             expressions.push_back(expression);
             if (!this->Consume(eoe)) {
                 break;
@@ -64,7 +64,7 @@ namespace sota {
 
     // scanners
     z2h::Token * SotaParser::SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
-        auto *token = RegexScanner(symbol, source, position);
+        auto token = RegexScanner(symbol, source, position);
         if (token)
             token->skip = true;
         return token;
@@ -136,7 +136,9 @@ namespace sota {
         return new PrefixAst(token, right);
     }
     z2h::Ast * SotaParser::CommaNud(z2h::Token *token) {
-        return nullptr;
+        std::cout << "CommaNud: token=" << *token << std::endl;
+        auto right = Expression(token->symbol->lbp);
+        return new CommaAst(token, nullptr, right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         auto rp = symbolmap[SymbolType::RightParen];
@@ -184,10 +186,12 @@ namespace sota {
         return nullptr;
     }
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
-        return nullptr;
+        std::cout << "CommaLed: left=" << *left << " token=" << *token << std::endl;
+        auto right = Expression(token->symbol->lbp);
+        return new CommaAst(token, left, right);
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
-        z2h::Ast *right = this->Expression(token->symbol->lbp);
+        z2h::Ast *right = this->Expression(token->symbol->lbp-1); //right associative?
         return new AssignAst(token, left, right);
     }
     z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
