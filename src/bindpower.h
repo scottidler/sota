@@ -5,9 +5,9 @@ namespace sota {
 
     enum BindPower: long {
         None = 0,
-        Separator = 0,
         Denting = 10,
         Assignment = 10,
+        Separator = 15,
         Ternary = 20,
         Logical = 30,
         Comparison = 40,
