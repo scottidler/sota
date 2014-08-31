@@ -67,6 +67,22 @@ namespace sota {
         }
     };
 
+    struct CommaAst : public z2h::Ast {
+        z2h::Ast *left;
+        z2h::Ast *right;
+
+        ~CommaAst() {}
+        CommaAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::Ast(token)
+            , left(left)
+            , right(right) {}
+
+    protected:
+        void Print(std::ostream &os) const {
+            os << "(, " << *left << " " << *right << ")";
+        }
+    };
+
     struct ParensAst : public ExpressionsAst {
         ~ParensAst() {}
         ParensAst(std::vector<z2h::Ast *> expressions)
@@ -207,6 +223,20 @@ namespace sota {
             if  (nullptr != action)
                 os << " " << *action;
             os << ")";
+        }
+    };
+
+    struct BlockAst : public z2h::Ast {
+        std::vector<Ast *> statements;
+
+        ~BlockAst() {}
+        BlockAst(std::vector<Ast *> statements)
+            : statements(statements) {}
+    protected:
+        void Print(std::ostream &os) const {
+            os << "{ ";
+            sepby(os, "; ", statements);
+            os << "}";
         }
     };
 }
