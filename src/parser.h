@@ -121,6 +121,9 @@ namespace sota {
 
         std::map<SymbolType, z2h::Symbol *> symbolmap;
 
+    private:
+
+        std::vector<z2h::Ast *> CommaAstToExpressions(z2h::Ast *ast);
     };
 }
 

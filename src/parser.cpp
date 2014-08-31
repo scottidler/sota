@@ -136,17 +136,16 @@ namespace sota {
         return new PrefixAst(token, right);
     }
     z2h::Ast * SotaParser::CommaNud(z2h::Token *token) {
-        std::cout << "CommaNud: token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
-        std::cout << "\tright=" << *right << std::endl;
         return new CommaAst(token, new NullAst(), right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         auto rp = symbolmap[SymbolType::RightParen];
-        auto expressions = this->Expressions(rp);
+        auto ast = Expression();
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
+        auto expressions = CommaAstToExpressions(ast);
         return new ParensAst(expressions);
     }
     z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
@@ -187,12 +186,17 @@ namespace sota {
         return nullptr;
     }
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
-        std::cout << "CommaLed: left=" << *left << " token=" << *token << std::endl;
         auto right = Expression(token->symbol->lbp);
         return new CommaAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
         z2h::Ast *right = this->Expression(token->symbol->lbp-1); //right associative?
+        auto expressions = CommaAstToExpressions(left);
+        if (expressions.size() > 1) {
+            auto ast = new AssignAst(token, new ExpressionsAst(expressions), right);
+            delete left;
+            return ast;
+        }
         return new AssignAst(token, left, right);
     }
     z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
@@ -243,5 +247,21 @@ namespace sota {
             symbols.push_back(kvp.second);
         }
         return symbols;
+    }
+
+    std::vector<z2h::Ast *> SotaParser::CommaAstToExpressions(z2h::Ast *ast) {
+        std::vector<z2h::Ast *> expressions;
+        if (ast) {
+            if (CommaAst *comma = dynamic_cast<CommaAst *>(ast)) {
+                expressions = CommaAstToExpressions(comma->left);
+                auto count = std::count(comma->token->value.begin(), comma->token->value.end(), ',');
+                while (--count)
+                    expressions.push_back(new NullAst());
+                expressions.push_back(comma->right);
+            }
+            else
+                expressions.insert(expressions.end(), ast);
+        }
+        return expressions;
     }
 }
