@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "z2h/ast.hpp"
 #include "z2h/token.hpp"
@@ -19,6 +20,16 @@ namespace sota {
             os << *items[i];
         }
     }
+
+    struct NullAst : public z2h::Ast {
+        ~NullAst() {}
+        NullAst()
+            : z2h::Ast(nullptr) {}
+    protected:
+        void Print(std::ostream &os) const {
+            os << "( )";
+        }
+    };
 
     struct NewlineAst : public z2h::Ast {
         ~NewlineAst() {}
@@ -77,19 +88,24 @@ namespace sota {
             , left(left)
             , right(right) {}
 
+        std::vector<z2h::Ast *> Expressions() {
+            std::vector<z2h::Ast *> expressions;
+            CommaAst *comma = this;
+            while (comma) {
+                expressions.push_back(comma->left);
+                auto count = std::count(comma->token->value.begin(), comma->token->value.end(), ',');
+                while (--count)
+                    expressions.push_back(new NullAst());
+
+                comma = dynamic_cast<CommaAst>(comma->right);
+            }
+
+            return expressions;
+        }
+
     protected:
         void Print(std::ostream &os) const {
-            os << "(, ";
-            if (left)
-                os << *left;
-            else
-                os << "( )";
-            os << " ";
-            if (right)
-                os << *right;
-            else
-                os << "( )";
-            os << ")";
+            os << "(, " << *left << " " << *right << ")";
         }
     };
 
