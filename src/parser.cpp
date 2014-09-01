@@ -72,11 +72,10 @@ namespace sota {
 
     z2h::Token * SotaParser::RegexScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
         z2h::Token *token = nullptr;
-        auto pattern = symbol->pattern;
         boost::smatch matches;
-        boost::regex re("^(" + pattern + ")");
-        if (boost::regex_search(source, matches, re)) {
-            auto match = matches[0];
+        const boost::regex re("(" + symbol->pattern + ")(?:\n|.)*");
+        if (boost::regex_match(source, matches, re)) {
+            auto match = matches[1];
             token = new z2h::Token(symbol, match, position, match.length(), false);
         }
         return token;
@@ -192,7 +191,7 @@ namespace sota {
         return new CommaAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
-        z2h::Ast *right = this->Expression(token->symbol->lbp-1); //right associative?
+        z2h::Ast *right = this->Expression(token->symbol->lbp -1 ); //right associative?
         auto expressions = CommaAstToExpressions(left);
         if (expressions.size() > 1) {
             auto ast = new AssignAst(token, new ExpressionsAst(expressions), right);
