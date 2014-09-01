@@ -7,7 +7,6 @@ namespace sota {
         None = 0,
         Denting = 10,
         Assignment = 10,
-        Separator = 15,
         Ternary = 20,
         Logical = 30,
         Comparison = 40,
@@ -18,6 +17,7 @@ namespace sota {
         Dereference = 80,
         Regex = 90,
         Func = 100,
+        Separator = 105,
     };
 }
 
