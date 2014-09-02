@@ -31,16 +31,6 @@ namespace sota {
         }
     };
 
-    struct NewlineAst : public z2h::Ast {
-        ~NewlineAst() {}
-        NewlineAst(z2h::Token *token)
-            : z2h::Ast(token) {}
-    protected:
-        void Print(std::ostream &os) const {
-            os << "(nl " + token->value + ")"; 
-        }
-    };
-
     struct IdentifierAst : public z2h::Ast {
         ~IdentifierAst() {}
         IdentifierAst(z2h::Token *token)
@@ -60,7 +50,7 @@ namespace sota {
             os << "(num " + token->value + ")";
         }
     };
-
+/*
     struct ExpressionsAst : public z2h::Ast {
         std::vector<z2h::Ast *> expressions;
 
@@ -77,91 +67,36 @@ namespace sota {
             os << ")";
         }
     };
+*/
 
-    struct CommaAst : public z2h::Ast {
-        z2h::Ast *left;
-        z2h::Ast *right;
-
+    struct CommaAst : public z2h::BinaryAst {
         ~CommaAst() {}
         CommaAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
-            : z2h::Ast(token)
-            , left(left)
-            , right(right) {}
-
-        std::vector<z2h::Ast *> Expressions() {
-            std::vector<z2h::Ast *> expressions;
-            CommaAst *comma = this;
-            while (comma) {
-                expressions.push_back(comma->left);
-                auto count = std::count(comma->token->value.begin(), comma->token->value.end(), ',');
-                while (--count)
-                    expressions.push_back(new NullAst());
-
-                comma = dynamic_cast<CommaAst*>(comma->right);
-            }
-
-            return expressions;
-        }
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "(, " << *left << " " << *right << ")";
-        }
+            : z2h::BinaryAst(token, left, right) {}
     };
 
-    struct ParensAst : public ExpressionsAst {
+    struct ParensAst : public z2h::VectorAst {
         ~ParensAst() {}
-        ParensAst(std::vector<z2h::Ast *> expressions)
-            : ExpressionsAst(expressions) {}
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "(() ";
-            sepby(os, " ", expressions);
-            os << ")";
-        }
+        ParensAst(std::vector<z2h::Ast *> asts)
+            : z2h::VectorAst(asts, "()") {}
     };
 
-    struct BracesAst : public ExpressionsAst {
+    struct BracesAst : public z2h::VectorAst {
         ~BracesAst() {}
-        BracesAst(std::vector<z2h::Ast *> expressions)
-            : ExpressionsAst(expressions) {}
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "({} ";
-            sepby(os, " ", expressions);
-            os << ")";
-        }
+        BracesAst(std::vector<z2h::Ast *> asts)
+            : z2h::VectorAst(asts, "{}") {}
     };
 
-    struct BracketsAst : public ExpressionsAst {
+    struct BracketsAst : public z2h::VectorAst {
         ~BracketsAst() {}
-        BracketsAst(std::vector<z2h::Ast *> expressions)
-            : ExpressionsAst(expressions) {}
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "([] ";
-            sepby(os, " ", expressions);
-            os << ")";
-        }
+        BracketsAst(std::vector<z2h::Ast *> asts)
+            : z2h::VectorAst(asts, "[]") {}
     };
 
-    struct InfixAst : public z2h::Ast {
-        z2h::Ast *left;
-        z2h::Ast *right;
-
+    struct InfixAst : public z2h::BinaryAst {
         ~InfixAst() {}
         InfixAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
-            : z2h::Ast(token)
-            , left(left)
-            , right(right) {}
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "(" + token->value + " " << *left << " " << *right << ")";
-        }
+            : z2h::BinaryAst(token, left, right) {}
     };
 
     struct PrefixAst : public z2h::Ast {
@@ -178,35 +113,59 @@ namespace sota {
         }
     };
 
-    struct AssignAst : public z2h::Ast {
-        z2h::Ast *left;
-        z2h::Ast *right;
-
+    struct AssignAst : public z2h::BinaryAst {
         ~AssignAst() {}
         AssignAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::BinaryAst(token, left, right) {}
+    };
+
+    struct FuncAst : public z2h::BinaryAst {
+        ~FuncAst() {}
+        FuncAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::BinaryAst(token, left, right) {}
+    };
+
+    struct RegexMatchAst : public z2h::Ast {
+        z2h::Ast *string;
+        z2h::Ast *pattern;
+        z2h::Ast *options;
+
+        ~RegexMatchAst() {}
+        RegexMatchAst(z2h::Token *token, z2h::Ast *string, z2h::Ast *pattern, z2h::Ast *options = nullptr)
             : z2h::Ast(token)
-            , left(left)
-            , right(right) {}
+            , string(string)
+            , pattern(pattern)
+            , options(options) {}
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(" + token->value + " " << *left << " " << *right << ")";
+            os << "(" + token->value << " " << *string << " " << *pattern;
+            if (options)
+                os << " " << *options;
+            os << ")";
         }
     };
 
-    struct FuncAst : public z2h::Ast {
-        z2h::Ast *args;
-        z2h::Ast *body;
+    struct RegexReplaceAst : public z2h::Ast {
+        z2h::Ast *string;
+        z2h::Ast *pattern;
+        z2h::Ast *replace;
+        z2h::Ast *options;
 
-        ~FuncAst() {}
-        FuncAst(z2h::Token *token, z2h::Ast *args, z2h::Ast *body)
+        ~RegexReplaceAst() {}
+        RegexReplaceAst(z2h::Token *token, z2h::Ast *string, z2h::Ast *pattern, z2h::Ast *replace, z2h::Ast *options = nullptr)
             : z2h::Ast(token)
-            , args(args)
-            , body(body) {}
+            , string(string)
+            , pattern(pattern)
+            , replace(replace)
+            , options(options) {}
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(-> " << *args << " " << *body << ")";
+            os << "(" + token->value << " " << *string << " " << *pattern << " " << *replace;
+            if (options)
+                os << " " << *options;
+            os << ")";
         }
     };
 
