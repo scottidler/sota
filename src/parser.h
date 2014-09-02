@@ -60,6 +60,8 @@ namespace sota {
         z2h::Ast * ParensNud(z2h::Token *token);
         z2h::Ast * BracesNud(z2h::Token *token);
         z2h::Ast * BracketsNud(z2h::Token *token);
+        z2h::Ast * RegexMatchNud(z2h::Token *token);
+        z2h::Ast * RegexReplaceNud(z2h::Token *token);
         z2h::Ast * IfThenElifElseNud(z2h::Token *token);
 
         // led parsing functions
@@ -71,7 +73,6 @@ namespace sota {
         z2h::Ast * CommaLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * FuncLed(z2h::Ast *left, z2h::Token *token);
-        z2h::Ast * RegexLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * CallLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
@@ -107,8 +108,8 @@ namespace sota {
         T(SubAssign,        "-=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
         T(MulAssign,        "*=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
         T(DivAssign,        "/=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(RegexMatch,       "m/",           BindPower::Regex,       LiteralScanner,     Nullptr,            Nullptr,            RegexLed)           \
-        T(RegexReplace,     "s/",           BindPower::Regex,       LiteralScanner,     Nullptr,            Nullptr,            RegexLed)           \
+        T(RegexMatch,       "m/",           BindPower::Regex,       LiteralScanner,     Nullptr,            RegexMatchNud,      Nullptr)            \
+        T(RegexReplace,     "s/",           BindPower::Regex,       LiteralScanner,     Nullptr,            RegexReplaceNud,    Nullptr)            \
         T(Question,         "?",            BindPower::Ternary,     LiteralScanner,     Nullptr,            Nullptr,            TernaryLed)         \
         T(If,               "if",           BindPower::Ternary,     LiteralScanner,     Nullptr,            IfThenElifElseNud,  IfThenElseLed)      \
         T(Else,             "else",         BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
@@ -123,7 +124,8 @@ namespace sota {
 
     private:
 
-        std::vector<z2h::Ast *> CommaAstToExpressions(z2h::Ast *ast);
+        std::vector<z2h::Ast *> CommaAstToAsts(z2h::Ast *ast);
+        std::vector<z2h::Ast *> DivisionToAsts(z2h::Ast *ast);
     };
 }
 
