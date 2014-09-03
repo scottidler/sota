@@ -122,10 +122,6 @@ namespace sota {
 
         std::map<SymbolType, z2h::Symbol *> symbolmap;
 
-    private:
-
-        std::vector<z2h::Ast *> CommaAstToAsts(z2h::Ast *ast);
-        std::vector<z2h::Ast *> DivisionToAsts(z2h::Ast *ast);
     };
 }
 

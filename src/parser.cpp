@@ -141,7 +141,7 @@ namespace sota {
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        auto asts = CommaAstToAsts(ast);
+        auto asts = ast->Vectorize();
         return new ParensAst(asts);
     }
     z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
@@ -150,7 +150,7 @@ namespace sota {
         if (!this->Consume(rb)) {
             std::cout << "RightBrace not consumed" << std::endl;
         }
-        auto asts = CommaAstToAsts(ast);
+        auto asts = ast->Vectorize();
         return new BracesAst(asts);
     }
     z2h::Ast * SotaParser::BracketsNud(z2h::Token *token) {
@@ -159,13 +159,13 @@ namespace sota {
         if (!this->Consume(rb)) {
             std::cout << "RightBracket not consumed" << std::endl;
         }
-        auto asts = CommaAstToAsts(ast);
+        auto asts = ast->Vectorize();
         return new BracketsAst(asts);
     }
     z2h::Ast * SotaParser::RegexMatchNud(z2h::Token *token) {
         auto right = Expression();
         std::cout << "RegexMatchNud: token=" << *token << " right=" << *right << std::endl;
-        auto asts = DivisionToAsts(right);
+        auto asts = right->Vectorize();
         for (auto ast : asts) {
             std::cout << *ast << std::endl;
         }
@@ -175,7 +175,7 @@ namespace sota {
     z2h::Ast * SotaParser::RegexReplaceNud(z2h::Token *token) {
         auto right = Expression();
         std::cout << "RegexReplaceNud: token=" << *token << " right=" << *right << std::endl;
-        auto asts = DivisionToAsts(right);
+        auto asts = right->Vectorize();
         for (auto ast : asts) {
             std::cout << *ast << std::endl;
         }
@@ -210,7 +210,7 @@ namespace sota {
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
         z2h::Ast *right = this->Expression(token->symbol->lbp -1 ); //right associative?
-        auto asts = CommaAstToAsts(left);
+        auto asts = left->Vectorize();
         if (asts.size() > 1) {
             auto ast = new AssignAst(token, new z2h::VectorAst(asts), right);
             delete left;
@@ -265,24 +265,4 @@ namespace sota {
         return symbols;
     }
 
-    std::vector<z2h::Ast *> SotaParser::CommaAstToAsts(z2h::Ast *ast) {
-        std::vector<z2h::Ast *> asts;
-        if (ast) {
-            if (CommaAst *comma = dynamic_cast<CommaAst *>(ast)) {
-                asts = CommaAstToAsts(comma->left);
-                auto count = std::count(comma->token->value.begin(), comma->token->value.end(), ',');
-                while (--count)
-                    asts.push_back(new NullAst());
-                asts.push_back(comma->right);
-            }
-            else
-                asts.insert(asts.end(), ast);
-        }
-        return asts;
-    }
-
-    std::vector<z2h::Ast *> SotaParser::DivisionToAsts(z2h::Ast *ast) {
-        std::vector<z2h::Ast *> asts;
-        return asts;
-    }
 }
