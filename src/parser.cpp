@@ -205,7 +205,8 @@ namespace sota {
     }
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
         auto right = Expression(token->symbol->lbp);
-        return new CommaAst(token, left, (right ? right : new z2h::NullAst()));
+        return new CommaAst(token, left, right);
+        //return new CommaAst(token, left, (right ? right : new z2h::NullAst()));
         //return new z2h::BinaryAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
