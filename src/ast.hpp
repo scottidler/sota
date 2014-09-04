@@ -20,7 +20,7 @@ namespace sota {
             os << *items[i];
         }
     }
-
+/*
     struct NullAst : public z2h::Ast {
         ~NullAst() {}
         NullAst()
@@ -30,21 +30,22 @@ namespace sota {
             os << "( )";
         }
     };
+*/
 
-    struct IdentifierAst : public z2h::Ast {
+    struct IdentifierAst : public z2h::ValueAst {
         ~IdentifierAst() {}
         IdentifierAst(z2h::Token *token)
-            : z2h::Ast(token) {}
+            : z2h::ValueAst(token) {}
     protected:
         void Print(std::ostream &os) const {
             os << "(id " + token->value + ")";
         }
     };
 
-    struct NumberAst : public z2h::Ast {
+    struct NumberAst : public z2h::ValueAst {
         ~NumberAst() {}
         NumberAst(z2h::Token *token)
-            : z2h::Ast(token) {}
+            : z2h::ValueAst(token) {}
     protected:
         void Print(std::ostream &os) const {
             os << "(num " + token->value + ")";
@@ -78,19 +79,19 @@ namespace sota {
     struct ParensAst : public z2h::VectorAst {
         ~ParensAst() {}
         ParensAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "()") {}
+            : z2h::VectorAst("()", asts) {}
     };
 
     struct BracesAst : public z2h::VectorAst {
         ~BracesAst() {}
         BracesAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "{}") {}
+            : z2h::VectorAst("{}", asts) {}
     };
 
     struct BracketsAst : public z2h::VectorAst {
         ~BracketsAst() {}
         BracketsAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "[]") {}
+            : z2h::VectorAst("[]", asts) {}
     };
 
     struct InfixAst : public z2h::BinaryAst {
@@ -99,12 +100,12 @@ namespace sota {
             : z2h::BinaryAst(token, left, right) {}
     };
 
-    struct PrefixAst : public z2h::Ast {
+    struct PrefixAst : public z2h::ValueAst {
         z2h::Ast *right;
 
         ~PrefixAst() {}
         PrefixAst(z2h::Token *token, z2h::Ast *right)
-            : z2h::Ast(token)
+            : z2h::ValueAst(token)
             , right(right) {}
 
     protected:
@@ -125,14 +126,14 @@ namespace sota {
             : z2h::BinaryAst(token, left, right) {}
     };
 
-    struct RegexMatchAst : public z2h::Ast {
+    struct RegexMatchAst : public z2h::ValueAst {
         z2h::Ast *string;
         z2h::Ast *pattern;
         z2h::Ast *options;
 
         ~RegexMatchAst() {}
         RegexMatchAst(z2h::Token *token, z2h::Ast *string, z2h::Ast *pattern, z2h::Ast *options = nullptr)
-            : z2h::Ast(token)
+            : z2h::ValueAst(token)
             , string(string)
             , pattern(pattern)
             , options(options) {}
@@ -146,7 +147,7 @@ namespace sota {
         }
     };
 
-    struct RegexReplaceAst : public z2h::Ast {
+    struct RegexReplaceAst : public z2h::ValueAst {
         z2h::Ast *string;
         z2h::Ast *pattern;
         z2h::Ast *replace;
@@ -154,7 +155,7 @@ namespace sota {
 
         ~RegexReplaceAst() {}
         RegexReplaceAst(z2h::Token *token, z2h::Ast *string, z2h::Ast *pattern, z2h::Ast *replace, z2h::Ast *options = nullptr)
-            : z2h::Ast(token)
+            : z2h::ValueAst(token)
             , string(string)
             , pattern(pattern)
             , replace(replace)
@@ -169,7 +170,7 @@ namespace sota {
         }
     };
 
-    struct ConditionalAst : public z2h::Ast {
+    struct ConditionalAst : public z2h::ValueAst {
 
         struct Pair {
             z2h::Ast *predicate;
@@ -191,11 +192,11 @@ namespace sota {
 
         ~ConditionalAst() {}
         ConditionalAst(z2h::Token *token, std::initializer_list<Pair> pairs)
-            : z2h::Ast(token)
+            : z2h::ValueAst(token)
             , pairs(pairs)
             , action(nullptr) {}
         ConditionalAst(z2h::Token *token, std::initializer_list<Pair> pairs, z2h::Ast *action)
-            : z2h::Ast(token)
+            : z2h::ValueAst(token)
             , pairs(pairs)
             , action(action) {}
 
@@ -211,16 +212,14 @@ namespace sota {
         }
     };
 
-    struct BlockAst : public z2h::Ast {
-        std::vector<Ast *> statements;
-
+    struct BlockAst : public z2h::VectorAst {
         ~BlockAst() {}
-        BlockAst(std::vector<Ast *> statements)
-            : statements(statements) {}
+        BlockAst(std::vector<Ast *> asts)
+            : z2h::VectorAst(asts) {}
     protected:
         void Print(std::ostream &os) const {
             os << "{ ";
-            sepby(os, "; ", statements);
+            sepby(os, "; ", asts);
             os << "}";
         }
     };
