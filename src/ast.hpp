@@ -50,30 +50,6 @@ namespace sota {
             os << "(num " + token->value + ")";
         }
     };
-/*
-    struct ExpressionsAst : public z2h::Ast {
-        std::vector<z2h::Ast *> expressions;
-
-        ~ExpressionsAst() {}
-        ExpressionsAst(std::vector<z2h::Ast *> expressions) {
-            for (auto expression : expressions)
-                this->expressions.push_back(expression);
-        }
-
-    protected:
-        void Print(std::ostream &os) const {
-            os << "( ";
-            sepby(os, " ", expressions);
-            os << ")";
-        }
-    };
-*/
-
-    struct CommaAst : public z2h::BinaryAst {
-        ~CommaAst() {}
-        CommaAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
-            : z2h::BinaryAst(token, left, right) {}
-    };
 
     struct ParensAst : public z2h::VectorAst {
         ~ParensAst() {}
