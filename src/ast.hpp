@@ -187,18 +187,20 @@ namespace sota {
         }
     };
 
-    struct BlockAst : public z2h::Ast {
-        std::vector<Ast *> statements;
-
+    struct BlockAst : public z2h::VectorAst {
         ~BlockAst() {}
-        BlockAst(std::vector<Ast *> statements)
-            : statements(statements) {}
+        BlockAst(std::vector<z2h::Ast *> statements)
+            : z2h::VectorAst(statements) {}
+
     protected:
         void Print(std::ostream &os) const {
-            os << "{ ";
-            sepby(os, "; ", statements);
-            os << "}";
+            os << "{";
+            for (auto ast : asts) {
+                os << " " << *ast << ";";
+            }
+            os << " }";
         }
     };
+
 }
 #endif /*__SOTA_AST__*/
