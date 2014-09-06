@@ -28,11 +28,10 @@ namespace sota {
 
         std::vector<z2h::Token *> TokenizeFile(const std::string &filename);
         std::vector<z2h::Token *> Tokenize(std::string source);
-        std::vector<z2h::Ast *> ParseFile(const std::string &filename);
-        std::vector<z2h::Ast *> Parse(std::string source);
+        z2h::Ast * ParseFile(const std::string &filename);
+        z2h::Ast * Parse(const std::string &source);
 
         std::vector<z2h::Ast *> Expressions(z2h::Symbol *end);
-        //std::vector<z2h::Ast *> Statements(z2h::Symbol *end);
 
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");

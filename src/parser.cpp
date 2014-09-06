@@ -44,15 +44,16 @@ namespace sota {
         return tokens;
     }
 
-    std::vector<z2h::Ast *> SotaParser::ParseFile(const std::string &filename) {
+    z2h::Ast * SotaParser::ParseFile(const std::string &filename) {
         auto source = Open(filename);
         return Parse(source);
     }
 
-    std::vector<z2h::Ast *> SotaParser::Parse(std::string source) {
+    z2h::Ast * SotaParser::Parse(const std::string &source) {
         this->index = 0;
         this->source = source;
-        return Statements();
+        auto statements = Statements();
+        return new BlockAst(statements);
     }
 
 /*
