@@ -101,6 +101,12 @@ namespace sota {
             : z2h::BinaryAst(token, left, right) {}
     };
 
+    struct CallAst : public z2h::BinaryAst {
+        ~CallAst() {}
+        CallAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::BinaryAst(token, left, right) {}
+    };
+
     struct RegexMatchAst : public z2h::Ast {
         z2h::Ast *string;
         z2h::Ast *pattern;
@@ -194,10 +200,8 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "{";
-            for (auto ast : asts) {
-                os << " " << *ast << ";";
-            }
+            os << "{ ";
+            sepby(os, "; ", asts);
             os << " }";
         }
     };
