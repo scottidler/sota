@@ -70,6 +70,9 @@ namespace sota {
         z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * CommaLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * ParensLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * BracesLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * BracketsLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * FuncLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * CallLed(z2h::Ast *left, z2h::Token *token);
@@ -89,11 +92,11 @@ namespace sota {
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
         T(Identifier,       "([0-9]+)?[a-zA-Z]+([a-zA-Z0-9]+)?",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
         T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftParen,        "(",            BindPower::Group,       LiteralScanner,     Nullptr,            ParensNud,          Nullptr)            \
+        T(LeftParen,        "(",            BindPower::Group,       LiteralScanner,     Nullptr,            ParensNud,          ParensLed)          \
         T(RightParen,       ")",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftBrace,        "{",            BindPower::Group,       LiteralScanner,     Nullptr,            BracesNud,          Nullptr)            \
+        T(LeftBrace,        "{",            BindPower::Group,       LiteralScanner,     Nullptr,            BracesNud,          BracesLed)          \
         T(RightBrace,       "}",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftBracket,      "[",            BindPower::Group,       LiteralScanner,     Nullptr,            BracketsNud,        Nullptr)            \
+        T(LeftBracket,      "[",            BindPower::Group,       LiteralScanner,     Nullptr,            BracketsNud,        BracketsLed)        \
         T(RightBracket,     "]",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
         T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \

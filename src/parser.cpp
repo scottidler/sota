@@ -141,17 +141,24 @@ namespace sota {
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        auto asts = ast->Vectorize();
-        return new ParensAst(asts);
+        if (ast) {
+            if (ast->token->value == ",") {
+                auto asts = ast->Vectorize();
+                return new ParensAst(asts);
+            }
+        }
+        else
+            return new NullAst();
+        
+        return ast;
     }
     z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
         auto rb = symbolmap[SymbolType::RightBrace];
-        auto ast = Expression();
+        auto statements = this->Statements();
         if (!this->Consume(rb)) {
             std::cout << "RightBrace not consumed" << std::endl;
         }
-        auto asts = ast->Vectorize();
-        return new BracesAst(asts);
+        return new BlockAst(statements);
     }
     z2h::Ast * SotaParser::BracketsNud(z2h::Token *token) {
         auto rb = symbolmap[SymbolType::RightBracket];
@@ -206,6 +213,36 @@ namespace sota {
     z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
         auto right = Expression(token->symbol->lbp);
         return new z2h::BinaryAst(token, left, (right ? right : new NullAst()));
+    }
+    z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
+        auto rp = symbolmap[SymbolType::RightParen];
+        auto ast = Expression();
+        if (!this->Consume(rp)) {
+            std::cout << "RightParen not consumed" << std::endl;
+        }
+        if (ast) {
+            auto asts = ast->Vectorize();
+            return new CallAst(token, left, new ParensAst(asts));
+        }
+        return new CallAst(token, left, new NullAst());
+    }
+    z2h::Ast * SotaParser::BracesLed(z2h::Ast *left, z2h::Token *token) {
+        auto rb = symbolmap[SymbolType::RightBrace];
+        auto ast = Expression();
+        if (!this->Consume(rb)) {
+            std::cout << "RightBrace not consumed" << std::endl;
+        }
+        auto asts = ast->Vectorize();
+        return new CallAst(token, left, new ParensAst(asts));
+    }
+    z2h::Ast * SotaParser::BracketsLed(z2h::Ast *left, z2h::Token *token) {
+        auto rb = symbolmap[SymbolType::RightBracket];
+        auto ast = Expression();
+        if (!this->Consume(rb)) {
+            std::cout << "RightBracket not consumed" << std::endl;
+        }
+        auto asts = ast->Vectorize();
+        return new CallAst(token, left, new ParensAst(asts));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
         z2h::Ast *right = this->Expression(token->symbol->lbp -1 ); //right associative?
