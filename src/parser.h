@@ -22,7 +22,11 @@ namespace sota {
 
     struct SotaParser : public z2h::Parser<SotaParser> {
 
-        std::stack<z2h::Token *> nesting;
+        std::stack<z2h::Symbol *> nesting;
+        void Push(z2h::Symbol *symbol);
+        z2h::Symbol * Pop(z2h::Symbol *symbol = nullptr);
+        z2h::Symbol * Top() const;
+        bool Top(z2h::Symbol *symbol) const;
 
         SotaParser();
 

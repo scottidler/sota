@@ -13,6 +13,23 @@
 
 namespace sota {
 
+    void SotaParser::Push(z2h::Symbol *symbol) {
+        nesting.push(symbol);
+    }
+    z2h::Symbol * SotaParser::Pop(z2h::Symbol *symbol) {
+        z2h::Symbol *result = nesting.top();
+        if (symbol && symbol != result)
+            throw SotaException(__FILE__, __LINE__, "Pop: token expected");
+        nesting.pop();
+        return symbol;
+    }
+    z2h::Symbol * SotaParser::Top() const {
+        return nesting.empty() ? nullptr : nesting.top();
+    }
+    bool SotaParser::Top(z2h::Symbol *symbol) const {
+        return Top() == symbol;
+    }
+
     std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Symbol *end) {
         std::vector<z2h::Ast *> expressions;
         auto eoe = symbolmap[SymbolType::EndOfExpression];
@@ -136,11 +153,13 @@ namespace sota {
         return new z2h::BinaryAst(token, new NullAst(), right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
+        Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto ast = Expression();
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
+        Pop(token->symbol);
         if (ast) {
             if (ast->token->value == ",") {
                 auto asts = ast->Vectorize();
@@ -215,11 +234,13 @@ namespace sota {
         return new z2h::BinaryAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
+        Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto ast = Expression();
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
+        Pop(token->symbol);
         if (ast) {
             auto asts = ast->Vectorize();
             return new CallAst(token, left, new ParensAst(asts));
@@ -245,13 +266,22 @@ namespace sota {
         return new CallAst(token, left, new ParensAst(asts));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
-        z2h::Ast *right = this->Expression(token->symbol->lbp -1 ); //right associative?
+        auto lp = symbolmap[SymbolType::LeftParen];
+        z2h::Ast *right = this->Expression(token->symbol->lbp - 1);
+        if (Top(lp)) {
+            if (z2h::BinaryAst *comma = dynamic_cast<z2h::BinaryAst *>(left)) {
+                comma->right = new AssignAst(token, comma->right, right);
+                return comma;
+            }
+        }
+/*
         auto asts = left->Vectorize();
         if (asts.size() > 1) {
             auto ast = new AssignAst(token, new z2h::VectorAst(asts), right);
             delete left;
             return ast;
         }
+*/
         return new AssignAst(token, left, right);
     }
     z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
