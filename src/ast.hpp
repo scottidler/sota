@@ -69,6 +69,15 @@ namespace sota {
             : z2h::VectorAst(asts, "[]") {}
     };
 
+    struct CommaAst : public z2h::BinaryAst {
+        ~CommaAst() {}
+        CommaAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::BinaryAst(token, left, right) {}
+    protected:
+        void Print(std::ostream &os) {
+        }
+    };
+
     struct InfixAst : public z2h::BinaryAst {
         ~InfixAst() {}
         InfixAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
