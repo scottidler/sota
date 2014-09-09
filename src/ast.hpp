@@ -82,6 +82,15 @@ namespace sota {
         ~InfixAst() {}
         InfixAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
             : z2h::BinaryAst(token, left, right) {}
+        virtual std::vector<z2h::Ast *> Vectorize() {
+            return { this };
+        }
+    };
+
+    struct AssignAst : public InfixAst {
+        ~AssignAst() {}
+        AssignAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : InfixAst(token, left, right) {}
     };
 
     struct PrefixAst : public z2h::Ast {
@@ -96,12 +105,6 @@ namespace sota {
         void Print(std::ostream &os) const {
             os << "(" + token->value + " " << *right << ")";
         }
-    };
-
-    struct AssignAst : public z2h::BinaryAst {
-        ~AssignAst() {}
-        AssignAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
-            : z2h::BinaryAst(token, left, right) {}
     };
 
     struct FuncAst : public z2h::BinaryAst {
