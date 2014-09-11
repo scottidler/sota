@@ -89,8 +89,8 @@ namespace sota {
         T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
         T(EndOfStatement,   "[\r\n]+|;",    BindPower::None,        EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
         T(EndOfExpression,  ",([ \t]*,)*",  BindPower::Separator,   RegexScanner,       Nullptr,            CommaNud,           CommaLed)           \
-        T(Indent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(Dedent,           "[\r\n]+\\s+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(Indent,           "[\r\n]+[ \t]+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(Dedent,           "[\r\n]+[ \t]*",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
         T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
         T(Arrow,            "->",           BindPower::Func,        LiteralScanner,     Nullptr,            Nullptr,            FuncLed)            \
         T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \

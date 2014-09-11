@@ -123,7 +123,10 @@ namespace sota {
 
 
     z2h::Token * SotaParser::DentingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
-        return nullptr;
+        z2h::Token *token = RegexScanner(symbol, source, position);
+        if (token)
+            token->value = "INDENT";
+        return token;
     }
 
     // std parsing functions
@@ -156,12 +159,12 @@ namespace sota {
         Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto eq = symbolmap[SymbolType::Assign];
-        eq->lbp = BindPower::Assignment + 10;
+        eq->lbp += 10;
         auto ast = Expression();
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        eq->lbp = BindPower::Assignment;
+        eq->lbp -= 10;
         Pop(token->symbol);
         if (ast) {
             if (ast->token->value == ",") {
@@ -240,12 +243,12 @@ namespace sota {
         Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto eq = symbolmap[SymbolType::Assign];
-        eq->lbp = BindPower::Assignment + 10;
+        eq->lbp += 10;
         auto ast = Expression();
         if (!this->Consume(rp)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        eq->lbp = BindPower::Assignment;
+        eq->lbp -= 10;
         Pop(token->symbol);
         if (ast) {
             auto asts = ast->Vectorize();
