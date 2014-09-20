@@ -10,9 +10,11 @@
 #include <vector>
 #include <boost/regex.hpp>
 #include <iostream>
+#include <algorithm>
 
 namespace sota {
 
+/*
     void SotaParser::Push(z2h::Symbol *symbol) {
         nesting.push(symbol);
     }
@@ -29,6 +31,7 @@ namespace sota {
     bool SotaParser::Top(z2h::Symbol *symbol) const {
         return Top() == symbol;
     }
+*/
 
     std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Symbol *end) {
         std::vector<z2h::Ast *> expressions;
@@ -109,14 +112,14 @@ namespace sota {
     }
 
     z2h::Token * SotaParser::EosScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
-        if (!nesting.size()) {
+        if (!nesting.Size()) {
             return RegexScanner(symbol, source, position);
         }
         return nullptr;
     }
 
     z2h::Token * SotaParser::EoeScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
-        if (nesting.size()) {
+        if (nesting.Size()) {
         }
         return RegexScanner(symbol, source, position);
     }
@@ -124,8 +127,12 @@ namespace sota {
 
     z2h::Token * SotaParser::DentingScanner(z2h::Symbol *symbol, const std::string &source, size_t position) {
         z2h::Token *token = RegexScanner(symbol, source, position);
-        if (token)
+        if (token) {
+            size_t count = std::count(token->value.begin(), token->value.end(), ' ');
+            denting.Push(count);
+            std::cout << "type=" << token->symbol->type << " count=" << count << std::endl; 
             token->value = "INDENT";
+        }
         return token;
     }
 
@@ -156,7 +163,7 @@ namespace sota {
         return new z2h::BinaryAst(token, new NullAst(), right);
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
-        Push(token->symbol);
+        nesting.Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto eq = symbolmap[SymbolType::Assign];
         eq->lbp += 10;
@@ -165,7 +172,7 @@ namespace sota {
             std::cout << "RightParen not consumed" << std::endl;
         }
         eq->lbp -= 10;
-        Pop(token->symbol);
+        nesting.Pop(token->symbol);
         if (ast) {
             if (ast->token->value == ",") {
                 auto asts = ast->Vectorize();
@@ -240,7 +247,7 @@ namespace sota {
         return new z2h::BinaryAst(token, left, (right ? right : new NullAst()));
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
-        Push(token->symbol);
+        nesting.Push(token->symbol);
         auto rp = symbolmap[SymbolType::RightParen];
         auto eq = symbolmap[SymbolType::Assign];
         eq->lbp += 10;
@@ -249,7 +256,7 @@ namespace sota {
             std::cout << "RightParen not consumed" << std::endl;
         }
         eq->lbp -= 10;
-        Pop(token->symbol);
+        nesting.Pop(token->symbol);
         if (ast) {
             auto asts = ast->Vectorize();
             return new CallAst(token, left, new ParensAst(asts));

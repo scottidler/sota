@@ -13,6 +13,7 @@
 #include <boost/preprocessor.hpp>
 
 #include "z2h/parser.hpp"
+#include "stack.hpp"
 
 namespace sota {
 
@@ -22,12 +23,15 @@ namespace sota {
 
     struct SotaParser : public z2h::Parser<SotaParser> {
 
+        SotaStack<size_t> denting;
+        SotaStack<z2h::Symbol *> nesting;
+/*
         std::stack<z2h::Symbol *> nesting;
         void Push(z2h::Symbol *symbol);
         z2h::Symbol * Pop(z2h::Symbol *symbol = nullptr);
         z2h::Symbol * Top() const;
         bool Top(z2h::Symbol *symbol) const;
-
+*/
         SotaParser();
 
         std::vector<z2h::Token *> TokenizeFile(const std::string &filename);
@@ -83,42 +87,42 @@ namespace sota {
         z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
 
-        //              4                   3                       6                   5                   5                   5
-        //NAME          PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
+        //                  4                   3                       6                   5                   5                   5
+        //NAME              PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
         #define SYMBOLS                                                                                                                             \
-        T(EndOfFile,        "\0",           BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
-        T(EndOfStatement,   "[\r\n]+|;",    BindPower::None,        EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
-        T(EndOfExpression,  ",([ \t]*,)*",  BindPower::Separator,   RegexScanner,       Nullptr,            CommaNud,           CommaLed)           \
-        T(Indent,           "[\r\n]+[ \t]+",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(Dedent,           "[\r\n]+[ \t]*",  BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(WhiteSpace,       "[ \t]+",       BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
-        T(Arrow,            "->",           BindPower::Func,        LiteralScanner,     Nullptr,            Nullptr,            FuncLed)            \
-        T(Number,           "[0-9]+",       BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
+        T(EndOfFile,        "\0",               BindPower::None,        RegexScanner,       Nullptr,            EndOfFileNud,       EndOfFileLed)       \
+        T(EndOfStatement,   "[\r\n]+|;",        BindPower::None,        EosScanner,         Nullptr,            Nullptr,            Nullptr)            \
+        T(EndOfExpression,  ",([ \t]*,)*",      BindPower::Separator,   RegexScanner,       Nullptr,            CommaNud,           CommaLed)           \
+        T(Indent,           "[\r\n]+[ \t]+",    BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(Dedent,           "[\r\n]+[ \t]*",    BindPower::Denting,     DentingScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(WhiteSpace,       "[ \t]+",           BindPower::None,        SkippingScanner,    Nullptr,            Nullptr,            Nullptr)            \
+        T(Arrow,            "->",               BindPower::Func,        LiteralScanner,     Nullptr,            Nullptr,            FuncLed)            \
+        T(Number,           "[0-9]+",           BindPower::None,        RegexScanner,       Nullptr,            NumberNud,          Nullptr)            \
         T(Identifier,       "([0-9]+)?[a-zA-Z]+([a-zA-Z0-9]+)?",    BindPower::None,        RegexScanner,       Nullptr,            IdentifierNud,      Nullptr)            \
-        T(Colon,            ":",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftParen,        "(",            BindPower::Group,       LiteralScanner,     Nullptr,            ParensNud,          ParensLed)          \
-        T(RightParen,       ")",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftBrace,        "{",            BindPower::Group,       LiteralScanner,     Nullptr,            BracesNud,          BracesLed)          \
-        T(RightBrace,       "}",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(LeftBracket,      "[",            BindPower::Group,       LiteralScanner,     Nullptr,            BracketsNud,        BracketsLed)        \
-        T(RightBracket,     "]",            BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-        T(Equals,           "==",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
-        T(NotEquals,        "!=",           BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
-        T(Add,              "+",            BindPower::Sum,         LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
-        T(Sub,              "-",            BindPower::Sum,         LiteralScanner,     Nullptr,            PrefixNud,          InfixLed)           \
-        T(Mul,              "*",            BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
-        T(Div,              "/",            BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
-        T(Mod,              "%",            BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
-        T(Assign,           "=",            BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(AddAssign,        "+=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(SubAssign,        "-=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(MulAssign,        "*=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(DivAssign,        "/=",           BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
-        T(RegexMatch,       "m/",           BindPower::Regex,       LiteralScanner,     Nullptr,            RegexMatchNud,      Nullptr)            \
-        T(RegexReplace,     "s/",           BindPower::Regex,       LiteralScanner,     Nullptr,            RegexReplaceNud,    Nullptr)            \
-        T(Question,         "?",            BindPower::Ternary,     LiteralScanner,     Nullptr,            Nullptr,            TernaryLed)         \
-        T(If,               "if",           BindPower::Ternary,     LiteralScanner,     Nullptr,            IfThenElifElseNud,  IfThenElseLed)      \
-        T(Else,             "else",         BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(Colon,            ":",                BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftParen,        "(",                BindPower::Group,       LiteralScanner,     Nullptr,            ParensNud,          ParensLed)          \
+        T(RightParen,       ")",                BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftBrace,        "{",                BindPower::Group,       LiteralScanner,     Nullptr,            BracesNud,          BracesLed)          \
+        T(RightBrace,       "}",                BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(LeftBracket,      "[",                BindPower::Group,       LiteralScanner,     Nullptr,            BracketsNud,        BracketsLed)        \
+        T(RightBracket,     "]",                BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
+        T(Equals,           "==",               BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
+        T(NotEquals,        "!=",               BindPower::Comparison,  LiteralScanner,     Nullptr,            Nullptr,            ComparisonLed)      \
+        T(Add,              "+",                BindPower::Sum,         LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
+        T(Sub,              "-",                BindPower::Sum,         LiteralScanner,     Nullptr,            PrefixNud,          InfixLed)           \
+        T(Mul,              "*",                BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
+        T(Div,              "/",                BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
+        T(Mod,              "%",                BindPower::Product,     LiteralScanner,     Nullptr,            Nullptr,            InfixLed)           \
+        T(Assign,           "=",                BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
+        T(AddAssign,        "+=",               BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
+        T(SubAssign,        "-=",               BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
+        T(MulAssign,        "*=",               BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
+        T(DivAssign,        "/=",               BindPower::Assignment,  LiteralScanner,     Nullptr,            Nullptr,            AssignLed)          \
+        T(RegexMatch,       "m/",               BindPower::Regex,       LiteralScanner,     Nullptr,            RegexMatchNud,      Nullptr)            \
+        T(RegexReplace,     "s/",               BindPower::Regex,       LiteralScanner,     Nullptr,            RegexReplaceNud,    Nullptr)            \
+        T(Question,         "?",                BindPower::Ternary,     LiteralScanner,     Nullptr,            Nullptr,            TernaryLed)         \
+        T(If,               "if",               BindPower::Ternary,     LiteralScanner,     Nullptr,            IfThenElifElseNud,  IfThenElseLed)      \
+        T(Else,             "else",             BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
 
         #define T(k,p,b,s,t,n,l) k,
         enum SymbolType: size_t {
