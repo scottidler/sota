@@ -18,40 +18,24 @@
 namespace sota {
 
     class Ast;
-    class Symbol;
     class Token;
+    class SotaLexer;
 
     struct SotaParser : public z2h::Parser<SotaParser> {
 
         SotaStack<size_t> denting;
-        SotaStack<z2h::Symbol *> nesting;
-/*
-        std::stack<z2h::Symbol *> nesting;
-        void Push(z2h::Symbol *symbol);
-        z2h::Symbol * Pop(z2h::Symbol *symbol = nullptr);
-        z2h::Symbol * Top() const;
-        bool Top(z2h::Symbol *symbol) const;
-*/
-        SotaParser();
+        SotaStack<z2h::Token *> nesting;
 
-        std::vector<z2h::Token *> TokenizeFile(const std::string &filename);
-        std::vector<z2h::Token *> Tokenize(std::string source);
-        z2h::Ast * ParseFile(const std::string &filename);
-        z2h::Ast * Parse(const std::string &source);
+        SotaParser(SotaLexer *lexer);
 
-        std::vector<z2h::Ast *> Expressions(z2h::Symbol *end);
+        z2h::Ast * Parse();
+        std::vector<z2h::Symbol *> Symbols();
+        std::vector<z2h::Token *> Tokenize();
+
+        std::vector<z2h::Ast *> Expressions(z2h::Token *end);
 
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");
-        std::vector<z2h::Symbol *> Symbols();
-
-        // scanners
-        z2h::Token * SkippingScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
-        z2h::Token * RegexScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
-        z2h::Token * LiteralScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
-        z2h::Token * EosScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
-        z2h::Token * EoeScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
-        z2h::Token * DentingScanner(z2h::Symbol *symbol, const std::string &source, size_t position);
 
         // std parsing functions
         z2h::Ast * NullptrStd();
@@ -86,7 +70,7 @@ namespace sota {
         z2h::Ast * CallLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
-
+/*
         //                  4                   3                       6                   5                   5                   5
         //NAME              PATTERN             BINDPOWER               SCANNER             STD                 NUD                 LED
         #define SYMBOLS                                                                                                                             \
@@ -123,15 +107,52 @@ namespace sota {
         T(Question,         "?",                BindPower::Ternary,     LiteralScanner,     Nullptr,            Nullptr,            TernaryLed)         \
         T(If,               "if",               BindPower::Ternary,     LiteralScanner,     Nullptr,            IfThenElifElseNud,  IfThenElseLed)      \
         T(Else,             "else",             BindPower::None,        LiteralScanner,     Nullptr,            Nullptr,            Nullptr)            \
-
-        #define T(k,p,b,s,t,n,l) k,
-        enum SymbolType: size_t {
+*/
+        //                  4                   3                                           5                   5                   5
+        //NAME              PATTERN             BINDPOWER                                   STD                 NUD                 LED
+        #define SYMBOLS                                                                                                                                 \
+        T(TokenType::EndOfFile,         BindPower::None,            Nullptr,            EndOfFileNud,       EndOfFileLed)       \
+        T(TokenType::EndOfStatement,    BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::EndOfExpression,   BindPower::Separator,       Nullptr,            CommaNud,           CommaLed)           \
+        T(TokenType::Indent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::Dedent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::WhiteSpace,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::Arrow,             BindPower::Func,            Nullptr,            Nullptr,            FuncLed)            \
+        T(TokenType::Number,            BindPower::None,            Nullptr,            NumberNud,          Nullptr)            \
+        T(TokenType::Identifier,        BindPower::None,            Nullptr,            IdentifierNud,      Nullptr)            \
+        T(TokenType::Colon,             BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::LeftParen,         BindPower::Group,           Nullptr,            ParensNud,          ParensLed)          \
+        T(TokenType::RightParen,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::LeftBrace,         BindPower::Group,           Nullptr,            BracesNud,          BracesLed)          \
+        T(TokenType::RightBrace,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::LeftBracket,       BindPower::Group,           Nullptr,            BracketsNud,        BracketsLed)        \
+        T(TokenType::RightBracket,      BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::Equals,            BindPower::Comparison,      Nullptr,            Nullptr,            ComparisonLed)      \
+        T(TokenType::NotEquals,         BindPower::Comparison,      Nullptr,            Nullptr,            ComparisonLed)      \
+        T(TokenType::Add,               BindPower::Sum,             Nullptr,            Nullptr,            InfixLed)           \
+        T(TokenType::Sub,               BindPower::Sum,             Nullptr,            PrefixNud,          InfixLed)           \
+        T(TokenType::Mul,               BindPower::Product,         Nullptr,            Nullptr,            InfixLed)           \
+        T(TokenType::Div,               BindPower::Product,         Nullptr,            Nullptr,            InfixLed)           \
+        T(TokenType::Mod,               BindPower::Product,         Nullptr,            Nullptr,            InfixLed)           \
+        T(TokenType::Assign,            BindPower::Assignment,      Nullptr,            Nullptr,            AssignLed)          \
+        T(TokenType::AddAssign,         BindPower::Assignment,      Nullptr,            Nullptr,            AssignLed)          \
+        T(TokenType::SubAssign,         BindPower::Assignment,      Nullptr,            Nullptr,            AssignLed)          \
+        T(TokenType::MulAssign,         BindPower::Assignment,      Nullptr,            Nullptr,            AssignLed)          \
+        T(TokenType::DivAssign,         BindPower::Assignment,      Nullptr,            Nullptr,            AssignLed)          \
+        T(TokenType::RegexMatch,        BindPower::Regex,           Nullptr,            RegexMatchNud,      Nullptr)            \
+        T(TokenType::RegexReplace,      BindPower::Regex,           Nullptr,            RegexReplaceNud,    Nullptr)            \
+        T(TokenType::Question,          BindPower::Ternary,         Nullptr,            Nullptr,            TernaryLed)         \
+        T(TokenType::If,                BindPower::Ternary,         Nullptr,            IfThenElifElseNud,  IfThenElseLed)      \
+        T(TokenType::Else,              BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+/*
+        #define T(k,b,t,n,l) k,
+        enum TokenType: size_t {
             SYMBOLS
         };
         #undef T
-
-        std::map<SymbolType, z2h::Symbol *> symbolmap;
-
+        std::vector<SotaSymbol *> symbols;
+        //std::map<TokenType, z2h::Symbol *> symbolmap;
+*/
     };
 }
 
