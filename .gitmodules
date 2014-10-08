@@ -4,3 +4,9 @@
 [submodule "z2h"]
 	path = z2h
 	url = https://github.com/scottidler/zero2hero
+[submodule "ragel"]
+	path = ragel
+	url = https://github.com/ehdtee/ragel
+[submodule "colm"]
+	path = colm
+	url = https://github.com/ehdtee/colm
