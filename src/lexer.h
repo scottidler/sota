@@ -52,7 +52,6 @@ namespace sota {
 
     struct SotaLexer : public z2h::Lexer {
 
-        //std::map<std::string, TokenType> tokenmap;
         std::map<TokenType, std::string> tokenmap;
 
         SotaLexer(std::string source);
@@ -63,10 +62,6 @@ namespace sota {
 
         z2h::Token * Scan();
         std::vector<z2h::Token *> Tokenize();
-/*
-        std::vector<z2h::Token *> TokenizeFile(const std::string &source);
-        std::vector<z2h::Token *> Tokenize(std::string source);
-*/
     };
 
 }
