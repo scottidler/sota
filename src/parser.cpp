@@ -76,13 +76,13 @@ namespace sota {
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         nesting.Push(token);
-        auto eq = GetSymbol(TokenType::Assign);
-        eq->lbp += 10;
+        auto assign = GetSymbol(TokenType::Assign);
+        assign->lbp += 10;
         auto ast = Expression();
         if (!Consume(TokenType::RightParen)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        eq->lbp -= 10;
+        assign->lbp -= 10;
         nesting.Pop(token);
         if (ast) {
             if (ast->token->value == ",") {
@@ -155,13 +155,13 @@ namespace sota {
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
         nesting.Push(token);
-        auto eq = GetSymbol(TokenType::Assign);
-        eq->lbp += 10;
+        auto assign = GetSymbol(TokenType::Assign);
+        assign->lbp += 10;
         auto ast = Expression();
         if (!Consume(TokenType::RightParen)) {
             std::cout << "RightParen not consumed" << std::endl;
         }
-        eq->lbp -= 10;
+        assign->lbp -= 10;
         nesting.Pop(token);
         if (ast) {
             auto asts = ast->Vectorize();
