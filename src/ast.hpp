@@ -37,7 +37,7 @@ namespace sota {
             : z2h::Ast(token) {}
     protected:
         void Print(std::ostream &os) const {
-            os << "(id " + token->value + ")";
+            os << "(id " + value + ")";
         }
     };
 
@@ -47,26 +47,26 @@ namespace sota {
             : z2h::Ast(token) {}
     protected:
         void Print(std::ostream &os) const {
-            os << "(num " + token->value + ")";
+            os << "(num " + value + ")";
         }
     };
 
     struct ParensAst : public z2h::VectorAst {
         ~ParensAst() {}
         ParensAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "()") {}
+            : z2h::VectorAst("()", asts) {}
     };
 
     struct BracesAst : public z2h::VectorAst {
         ~BracesAst() {}
         BracesAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "{}") {}
+            : z2h::VectorAst("{}", asts) {}
     };
 
     struct BracketsAst : public z2h::VectorAst {
         ~BracketsAst() {}
         BracketsAst(std::vector<z2h::Ast *> asts)
-            : z2h::VectorAst(asts, "[]") {}
+            : z2h::VectorAst("[]", asts) {}
     };
 
     struct CommaAst : public z2h::BinaryAst {
@@ -103,7 +103,7 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(" + token->value + " " << *right << ")";
+            os << "(" + value + " " << *right << ")";
         }
     };
 
@@ -133,7 +133,7 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(" + token->value << " " << *string << " " << *pattern;
+            os << "(" + value << " " << *string << " " << *pattern;
             if (options)
                 os << " " << *options;
             os << ")";
@@ -156,7 +156,7 @@ namespace sota {
 
     protected:
         void Print(std::ostream &os) const {
-            os << "(" + token->value << " " << *string << " " << *pattern << " " << *replace;
+            os << "(" + value << " " << *string << " " << *pattern << " " << *replace;
             if (options)
                 os << " " << *options;
             os << ")";
@@ -208,7 +208,7 @@ namespace sota {
     struct BlockAst : public z2h::VectorAst {
         ~BlockAst() {}
         BlockAst(std::vector<z2h::Ast *> statements)
-            : z2h::VectorAst(statements) {}
+            : z2h::VectorAst("", statements) {}
 
     protected:
         void Print(std::ostream &os) const {

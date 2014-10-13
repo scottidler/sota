@@ -10,9 +10,9 @@
 namespace sota {
 
     #define TOKENS                                              \
-    T(EndOfFile,        "\0")                                   \
-    T(EndOfStatement,   "re:[\r\n]+|;")                         \
-    T(EndOfExpression,  "re:([ \t]*,)*")                        \
+    T(Eof,              "\0")                                   \
+    T(Eos,              "re:[\r\n]+|;")                         \
+    T(Eoe,              "re:([ \t]*,)*")                        \
     T(Indent,           "re:[\r\n]+[ \t]+")                     \
     T(Dedent,           "re:[\r\n]+[ \t]*")                     \
     T(WhiteSpace,       "re:[ \t]+")                            \

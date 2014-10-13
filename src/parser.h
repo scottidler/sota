@@ -32,7 +32,9 @@ namespace sota {
         std::vector<z2h::Symbol *> Symbols();
         std::vector<z2h::Token *> Tokenize();
 
-        std::vector<z2h::Ast *> Expressions(z2h::Token *end);
+        std::vector<z2h::Ast *> Expressions(TokenType end);
+
+        size_t Update(TokenType type, size_t next) { auto symbol = GetSymbol(type); auto curr = symbol->lbp; symbol->lbp = next; return curr; }
 
         // must be implemented in derived class (SotaParser)
         std::exception Exception(const char *file, size_t line, const std::string &message = "");
@@ -47,7 +49,7 @@ namespace sota {
         z2h::Ast * NumberNud(z2h::Token *token);
         z2h::Ast * IdentifierNud(z2h::Token *token);
         z2h::Ast * PrefixNud(z2h::Token *token);
-        z2h::Ast * CommaNud(z2h::Token *token);
+        z2h::Ast * EndOfExpressionNud(z2h::Token *token);
         z2h::Ast * ParensNud(z2h::Token *token);
         z2h::Ast * BracesNud(z2h::Token *token);
         z2h::Ast * BracketsNud(z2h::Token *token);
@@ -61,7 +63,7 @@ namespace sota {
         z2h::Ast * ComparisonLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
-        z2h::Ast * CommaLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * EndOfExpressionLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * ParensLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * BracesLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * BracketsLed(z2h::Ast *left, z2h::Token *token);
@@ -73,9 +75,9 @@ namespace sota {
 
         //NAME                          BINDPOWER                   STD                 NUD                 LED
         #define SYMBOLS                                                                                                         \
-        T(TokenType::EndOfFile,         BindPower::None,            Nullptr,            EndOfFileNud,       EndOfFileLed)       \
-        T(TokenType::EndOfStatement,    BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
-        T(TokenType::EndOfExpression,   BindPower::Separator,       Nullptr,            CommaNud,           CommaLed)           \
+        T(TokenType::Eof,               BindPower::None,            Nullptr,            EndOfFileNud,       EndOfFileLed)       \
+        T(TokenType::Eos,               BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::Eoe,               BindPower::Separator,       Nullptr,            EndOfExpressionNud, EndOfExpressionLed) \
         T(TokenType::Indent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::Dedent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::WhiteSpace,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \

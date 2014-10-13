@@ -17,6 +17,14 @@
 
 namespace sota {
 
+    inline bool operator ==(const TokenType &type, const z2h::Token &token) {
+        return type == token.type;
+    }
+
+    inline bool operator !=(const TokenType &type, const z2h::Token &token) {
+        return type != token.type;
+    }
+
     z2h::Ast * SotaParser::Parse() {
         auto statements = Statements();
         return new BlockAst(statements);
@@ -25,26 +33,32 @@ namespace sota {
     std::vector<z2h::Symbol *> SotaParser::Symbols() {
         return symbols;
     }
+
     std::vector<z2h::Token *> SotaParser::Tokenize() {
         index = 0;
         z2h::Token *token = nullptr;
         do {
             token = Consume();
-        } while (TokenType::EndOfFile != token->type);
+        } while (TokenType::Eof != token->type);
         return tokens;
     }
 
-    std::vector<z2h::Ast *> SotaParser::Expressions(z2h::Token *end) {
+    std::vector<z2h::Ast *> SotaParser::Expressions(TokenType end) {
+
+        auto eoe = Update(TokenType::Eoe, BindPower::None);
+        auto assign = Update(TokenType::Assign, BindPower::None);
         std::vector<z2h::Ast *> expressions;
         auto la1 = LookAhead1();
-        while (end != la1) {
+        while (end != *la1) {
             auto expression = Expression();
             expressions.push_back(expression);
-            if (!Consume(TokenType::EndOfExpression)) {
+            if (!Consume(TokenType::Eoe)) {
                 break;
             }
             la1 = LookAhead1();
         }
+        Update(TokenType::Eoe, eoe);
+        Update(TokenType::Assign, assign);
         return expressions;
     }
 
@@ -70,29 +84,24 @@ namespace sota {
         z2h::Ast *right = Expression(BindPower::Unary);
         return new PrefixAst(token, right);
     }
-    z2h::Ast * SotaParser::CommaNud(z2h::Token *token) {
-        auto right = Expression(GetSymbol(*token)->lbp);
-        return new z2h::BinaryAst(token, new NullAst(), right);
+    z2h::Ast * SotaParser::EndOfExpressionNud(z2h::Token *token) {
+        auto left = new NullAst();
+        std::cout << "EndOfExpressionNud:" << std::endl;
+        Consume(TokenType::Eoe);
+        auto expressions = Expressions(TokenType::Assign);
+        expressions.insert(expressions.begin(), left);
+        auto ast = new ParensAst(expressions);
+        return ast;
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
-        nesting.Push(token);
-        auto assign = GetSymbol(TokenType::Assign);
-        assign->lbp += 10;
-        auto ast = Expression();
-        if (!Consume(TokenType::RightParen)) {
-            std::cout << "RightParen not consumed" << std::endl;
-        }
-        assign->lbp -= 10;
-        nesting.Pop(token);
-        if (ast) {
-            if (ast->token->value == ",") {
-                auto asts = ast->Vectorize();
-                return new ParensAst(asts);
-            }
-        }
-        else
-            return new NullAst();
-        
+        std::cout << "ParensNud:" << std::endl;
+        auto la1 = LookAhead1();
+        auto expressions = Expressions(TokenType::RightParen);
+        if (!Consume(TokenType::RightParen) )
+            throw SotaException(__FILE__, __LINE__, "RightParen : expected");
+        if (expressions.size() == 1 && expressions[0]->value == "()" && la1->type != TokenType::LeftParen)
+            return expressions[0]; //FIXME: this seems hacky and fragile; better way?
+        auto ast = new ParensAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::BracesNud(z2h::Token *token) {
@@ -149,25 +158,22 @@ namespace sota {
     z2h::Ast * SotaParser::PostfixLed(z2h::Ast *left, z2h::Token *token) {
         return nullptr;
     }
-    z2h::Ast * SotaParser::CommaLed(z2h::Ast *left, z2h::Token *token) {
-        auto right = Expression(GetSymbol(*token)->lbp);
-        return new z2h::BinaryAst(token, left, (right ? right : new NullAst()));
+    z2h::Ast * SotaParser::EndOfExpressionLed(z2h::Ast *left, z2h::Token *token) {
+        std::cout << "EndOfExpressionLed:" << std::endl;
+        Consume(TokenType::Eoe);
+        auto expressions = Expressions(TokenType::Assign);
+        expressions.insert(expressions.begin(), left);
+        auto ast = new ParensAst(expressions);
+        return ast;
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
-        nesting.Push(token);
-        auto assign = GetSymbol(TokenType::Assign);
-        assign->lbp += 10;
-        auto ast = Expression();
-        if (!Consume(TokenType::RightParen)) {
-            std::cout << "RightParen not consumed" << std::endl;
-        }
-        assign->lbp -= 10;
-        nesting.Pop(token);
-        if (ast) {
-            auto asts = ast->Vectorize();
-            return new CallAst(token, left, new ParensAst(asts));
-        }
-        return new CallAst(token, left, new NullAst());
+        std::cout << "ParensLed:" << std::endl;
+        auto expressions = Expressions(TokenType::RightParen);
+        if (!Consume(TokenType::RightParen) )
+            throw SotaException(__FILE__, __LINE__, "RightParen : expected");
+        auto right = new ParensAst(expressions);
+        std::cout << "ParensAst=" << *right << std::endl;
+        return new CallAst(token, left, right);
     }
     z2h::Ast * SotaParser::BracesLed(z2h::Ast *left, z2h::Token *token) {
         auto ast = Expression();
@@ -186,13 +192,7 @@ namespace sota {
         return new CallAst(token, left, new ParensAst(asts));
     }
     z2h::Ast * SotaParser::AssignLed(z2h::Ast *left, z2h::Token *token) {
-        z2h::Ast *right = Expression(GetSymbol(*token)->lbp -1 ); //right associative?
-        auto asts = left->Vectorize();
-        if (asts.size() > 1) {
-            auto ast = new AssignAst(token, new z2h::VectorAst(asts), right);
-            delete left;
-            return ast;
-        }
+        z2h::Ast *right = Expression(GetSymbol(*token)->lbp - 1); //right associative?
         return new AssignAst(token, left, right);
     }
     z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {

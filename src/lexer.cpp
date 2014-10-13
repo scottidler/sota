@@ -69,7 +69,7 @@ namespace sota {
                 match->skip = true;
             return match;
         }
-        return new z2h::Token(TokenType::EndOfFile, "EOF", position, 0);
+        return new z2h::Token(TokenType::Eof, "EOF", position, 0);
     }
 
     std::vector<z2h::Token *> SotaLexer::Tokenize() {
