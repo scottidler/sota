@@ -44,21 +44,23 @@ namespace sota {
     }
 
     std::vector<z2h::Ast *> SotaParser::Expressions(TokenType end) {
-        auto assign = Update(TokenType::Assign, BindPower::None);
+        auto lbp = Update(end, BindPower::None);
         GetSymbol(TokenType::Eoe)->enabled = false;
         std::vector<z2h::Ast *> expressions;
         auto la1 = LookAhead1();
+        std::cout << "la1=" << *la1 << std::endl;
         while (end != *la1) {
             auto expression = Expression();
             if (!expression)
                 expression = new NullAst();
+            std::cout << "expression=" << *expression << std::endl;
             expressions.push_back(expression);
             if (!Consume(TokenType::Eoe)) {
                 break;
             }
             la1 = LookAhead1();
         }
-        Update(TokenType::Assign, assign);
+        Update(end, lbp);
         GetSymbol(TokenType::Eoe)->enabled = true;
         return expressions;
     }
@@ -95,12 +97,10 @@ namespace sota {
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
         std::cout << "ParensNud:" << std::endl;
-        auto la1 = LookAhead1();
+        std::cout << "*token=" << *token << std::endl;
         auto expressions = Expressions(TokenType::RightParen);
         if (!Consume(TokenType::RightParen) )
             throw SotaException(__FILE__, __LINE__, "RightParen : expected");
-        if (expressions.size() == 1 && expressions[0]->value == "()" && la1->type != TokenType::LeftParen)
-            return expressions[0]; //FIXME: this seems hacky and fragile; better way?
         auto ast = new ParensAst(expressions);
         return ast;
     }
