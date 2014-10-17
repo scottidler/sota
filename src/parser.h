@@ -32,7 +32,7 @@ namespace sota {
         std::vector<z2h::Symbol *> Symbols();
         std::vector<z2h::Token *> Tokenize();
 
-        std::vector<z2h::Ast *> Expressions(TokenType end);
+        std::vector<z2h::Ast *> Expressions(TokenType end, bool leading);
 
         size_t Update(TokenType type, size_t next) { auto symbol = GetSymbol(type); auto curr = symbol->lbp; symbol->lbp = next; return curr; }
 

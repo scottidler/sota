@@ -43,23 +43,31 @@ namespace sota {
         return tokens;
     }
 
-    std::vector<z2h::Ast *> SotaParser::Expressions(TokenType end) {
+    std::vector<z2h::Ast *> SotaParser::Expressions(TokenType end, bool leading) {
         auto lbp = Update(end, BindPower::None);
         GetSymbol(TokenType::Eoe)->enabled = false;
         std::vector<z2h::Ast *> expressions;
-        auto la1 = LookAhead1();
-        std::cout << "la1=" << *la1 << std::endl;
-        while (end != *la1) {
+
+        if (leading) {
+            while (!LookAhead1(end) ) {
+                if (Consume(TokenType::Eoe) )
+                    expressions.push_back(new NullAst() );
+                else
+                    break;
+            }
+        }
+
+        while (!LookAhead1(end) ) {
             auto expression = Expression();
             if (!expression)
                 expression = new NullAst();
-            std::cout << "expression=" << *expression << std::endl;
             expressions.push_back(expression);
-            if (!Consume(TokenType::Eoe)) {
+            if (!Consume(TokenType::Eoe) )
                 break;
-            }
-            la1 = LookAhead1();
+            if (LookAhead1(end) )
+                expressions.push_back(new NullAst() );
         }
+
         Update(end, lbp);
         GetSymbol(TokenType::Eoe)->enabled = true;
         return expressions;
@@ -89,16 +97,13 @@ namespace sota {
     }
     z2h::Ast * SotaParser::EndOfExpressionNud(z2h::Token *token) {
         auto left = new NullAst();
-        std::cout << "EndOfExpressionNud:" << std::endl;
-        auto expressions = Expressions(TokenType::Assign);
+        auto expressions = Expressions(TokenType::Assign, false);
         expressions.insert(expressions.begin(), left);
         auto ast = new ParensAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
-        std::cout << "ParensNud:" << std::endl;
-        std::cout << "*token=" << *token << std::endl;
-        auto expressions = Expressions(TokenType::RightParen);
+        auto expressions = Expressions(TokenType::RightParen, true);
         if (!Consume(TokenType::RightParen) )
             throw SotaException(__FILE__, __LINE__, "RightParen : expected");
         auto ast = new ParensAst(expressions);
@@ -121,7 +126,6 @@ namespace sota {
     }
     z2h::Ast * SotaParser::RegexMatchNud(z2h::Token *token) {
         auto right = Expression();
-        std::cout << "RegexMatchNud: token=" << *token << " right=" << *right << std::endl;
         auto asts = right->Vectorize();
         for (auto ast : asts) {
             std::cout << *ast << std::endl;
@@ -130,7 +134,6 @@ namespace sota {
     }
     z2h::Ast * SotaParser::RegexReplaceNud(z2h::Token *token) {
         auto right = Expression();
-        std::cout << "RegexReplaceNud: token=" << *token << " right=" << *right << std::endl;
         auto asts = right->Vectorize();
         for (auto ast : asts) {
             std::cout << *ast << std::endl;
@@ -159,26 +162,23 @@ namespace sota {
         return nullptr;
     }
     z2h::Ast * SotaParser::EndOfExpressionLed(z2h::Ast *left, z2h::Token *token) {
-        std::cout << "EndOfExpressionLed:" << std::endl;
-        auto expressions = Expressions(TokenType::Assign);
-        if (!expressions.size())
+        auto expressions = Expressions(TokenType::Assign, false);
+        if (!expressions.size() )
             expressions.push_back(new NullAst());
         expressions.insert(expressions.begin(), left);
         auto ast = new ParensAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
-        std::cout << "ParensLed:" << std::endl;
-        auto expressions = Expressions(TokenType::RightParen);
+        auto expressions = Expressions(TokenType::RightParen, true);
         if (!Consume(TokenType::RightParen) )
             throw SotaException(__FILE__, __LINE__, "RightParen : expected");
         auto right = new ParensAst(expressions);
-        std::cout << "ParensAst=" << *right << std::endl;
         return new CallAst(token, left, right);
     }
     z2h::Ast * SotaParser::BracesLed(z2h::Ast *left, z2h::Token *token) {
         auto ast = Expression();
-        if (!Consume(TokenType::RightBrace)) {
+        if (!Consume(TokenType::RightBrace) ) {
             std::cout << "RightBrace not consumed" << std::endl;
         }
         auto asts = ast->Vectorize();
