@@ -44,21 +44,22 @@ namespace sota {
     }
 
     std::vector<z2h::Ast *> SotaParser::Expressions(TokenType end) {
-
-        auto eoe = Update(TokenType::Eoe, BindPower::None);
         auto assign = Update(TokenType::Assign, BindPower::None);
+        GetSymbol(TokenType::Eoe)->enabled = false;
         std::vector<z2h::Ast *> expressions;
         auto la1 = LookAhead1();
         while (end != *la1) {
             auto expression = Expression();
+            if (!expression)
+                expression = new NullAst();
             expressions.push_back(expression);
             if (!Consume(TokenType::Eoe)) {
                 break;
             }
             la1 = LookAhead1();
         }
-        Update(TokenType::Eoe, eoe);
         Update(TokenType::Assign, assign);
+        GetSymbol(TokenType::Eoe)->enabled = true;
         return expressions;
     }
 
@@ -87,7 +88,6 @@ namespace sota {
     z2h::Ast * SotaParser::EndOfExpressionNud(z2h::Token *token) {
         auto left = new NullAst();
         std::cout << "EndOfExpressionNud:" << std::endl;
-        Consume(TokenType::Eoe);
         auto expressions = Expressions(TokenType::Assign);
         expressions.insert(expressions.begin(), left);
         auto ast = new ParensAst(expressions);
@@ -160,8 +160,9 @@ namespace sota {
     }
     z2h::Ast * SotaParser::EndOfExpressionLed(z2h::Ast *left, z2h::Token *token) {
         std::cout << "EndOfExpressionLed:" << std::endl;
-        Consume(TokenType::Eoe);
         auto expressions = Expressions(TokenType::Assign);
+        if (!expressions.size())
+            expressions.push_back(new NullAst());
         expressions.insert(expressions.begin(), left);
         auto ast = new ParensAst(expressions);
         return ast;
@@ -225,7 +226,7 @@ namespace sota {
 
     SotaParser::SotaParser(SotaLexer *lexer)
         : z2h::Parser<SotaParser>(lexer) {
-        #define T(k,b,t,n,l) new z2h::Symbol(b, STD(t), NUD(n), LED(l) ),
+        #define T(k,b,t,n,l) new z2h::Symbol(k, b, STD(t), NUD(n), LED(l) ),
         symbols = {
             SYMBOLS
         };

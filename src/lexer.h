@@ -12,7 +12,7 @@ namespace sota {
     #define TOKENS                                              \
     T(Eof,              "\0")                                   \
     T(Eos,              "re:[\r\n]+|;")                         \
-    T(Eoe,              "re:([ \t]*,)*")                        \
+    T(Eoe,              ",")                                    \
     T(Indent,           "re:[\r\n]+[ \t]+")                     \
     T(Dedent,           "re:[\r\n]+[ \t]*")                     \
     T(WhiteSpace,       "re:[ \t]+")                            \
