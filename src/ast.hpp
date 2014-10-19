@@ -51,6 +51,12 @@ namespace sota {
         }
     };
 
+    struct EoesAst : public z2h::VectorAst {
+        ~EoesAst() {}
+        EoesAst(std::vector<z2h::Ast *> asts)
+            : z2h::VectorAst(",", asts) {}
+    };
+
     struct ParensAst : public z2h::VectorAst {
         ~ParensAst() {}
         ParensAst(std::vector<z2h::Ast *> asts)

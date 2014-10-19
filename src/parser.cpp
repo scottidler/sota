@@ -99,7 +99,7 @@ namespace sota {
         auto left = new NullAst();
         auto expressions = Expressions(TokenType::Assign, false);
         expressions.insert(expressions.begin(), left);
-        auto ast = new ParensAst(expressions);
+        auto ast = new EoesAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::ParensNud(z2h::Token *token) {
@@ -166,7 +166,7 @@ namespace sota {
         if (!expressions.size() )
             expressions.push_back(new NullAst());
         expressions.insert(expressions.begin(), left);
-        auto ast = new ParensAst(expressions);
+        auto ast = new EoesAst(expressions);
         return ast;
     }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
