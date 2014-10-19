@@ -20,10 +20,10 @@ which(fruit)
 
 # enums can also be discriminating unions, even recursive
 Expr =
-    Num as int
-    Add as (Expr, Expr)
-    Mul as (Expr, Expr)
-    Val as string
+    | Num as int
+    | Add as (Expr, Expr)
+    | Mul as (Expr, Expr)
+    | Val as string
 
 evaluate(expr, env)
     match expr
