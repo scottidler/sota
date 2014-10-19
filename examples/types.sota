@@ -26,7 +26,7 @@ Color = (object)
     .Green = (property) -> { .get = () -> .value; .set = (value) -> .value = value }
 
     # shorthand, implicit definitions
-    .Blue = (property) ->{ .get; .set }
+    .Blue = (property) -> { .get; .set }
     .Alpha = (property) -> { .get; .set }
 
 # user-defined types must be capitalized
