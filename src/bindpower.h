@@ -17,7 +17,8 @@ namespace sota {
         Group = 75,
         Dereference = 80,
         Regex = 90,
-        Def = 100, //hate this name; something better?
+        Define = 100,
+        Kvp = 110,
     };
 }
 

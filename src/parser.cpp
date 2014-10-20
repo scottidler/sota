@@ -169,6 +169,10 @@ namespace sota {
         auto ast = new EoesAst(expressions);
         return ast;
     }
+    z2h::Ast * SotaParser::KeyValuePairLed(z2h::Ast *left, z2h::Token *token) {
+        auto right = Expression();
+        return new KvpAst(token, left, right);
+    }
     z2h::Ast * SotaParser::ParensLed(z2h::Ast *left, z2h::Token *token) {
         auto expressions = Expressions(TokenType::RightParen, true);
         if (!Consume(TokenType::RightParen) )

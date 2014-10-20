@@ -93,6 +93,12 @@ namespace sota {
         }
     };
 
+    struct KvpAst : public z2h::BinaryAst {
+        ~KvpAst() {}
+        KvpAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+            : z2h::BinaryAst(token, left, right) {}
+    };
+
     struct AssignAst : public InfixAst {
         ~AssignAst() {}
         AssignAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)

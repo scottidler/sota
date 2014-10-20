@@ -64,6 +64,7 @@ namespace sota {
         z2h::Ast * InfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * PostfixLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * EndOfExpressionLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * KeyValuePairLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * ParensLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * BracesLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * BracketsLed(z2h::Ast *left, z2h::Token *token);
@@ -81,10 +82,10 @@ namespace sota {
         T(TokenType::Indent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::Dedent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::WhiteSpace,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
-        T(TokenType::Arrow,             BindPower::Def,             Nullptr,            Nullptr,            ArrowLed)           \
+        T(TokenType::Arrow,             BindPower::Define,          Nullptr,            Nullptr,            ArrowLed)           \
         T(TokenType::Number,            BindPower::None,            Nullptr,            NumberNud,          Nullptr)            \
         T(TokenType::Identifier,        BindPower::None,            Nullptr,            IdentifierNud,      Nullptr)            \
-        T(TokenType::Colon,             BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
+        T(TokenType::Colon,             BindPower::Kvp,             Nullptr,            Nullptr,            KeyValuePairLed)    \
         T(TokenType::LeftParen,         BindPower::Group,           Nullptr,            ParensNud,          ParensLed)          \
         T(TokenType::RightParen,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::LeftBrace,         BindPower::Group,           Nullptr,            BracesNud,          BracesLed)          \
