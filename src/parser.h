@@ -68,7 +68,7 @@ namespace sota {
         z2h::Ast * BracesLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * BracketsLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * AssignLed(z2h::Ast *left, z2h::Token *token);
-        z2h::Ast * FuncLed(z2h::Ast *left, z2h::Token *token);
+        z2h::Ast * ArrowLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * CallLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * TernaryLed(z2h::Ast *left, z2h::Token *token);
         z2h::Ast * IfThenElseLed(z2h::Ast *left, z2h::Token *token);
@@ -81,7 +81,7 @@ namespace sota {
         T(TokenType::Indent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::Dedent,            BindPower::Denting,         Nullptr,            Nullptr,            Nullptr)            \
         T(TokenType::WhiteSpace,        BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \
-        T(TokenType::Arrow,             BindPower::Func,            Nullptr,            Nullptr,            FuncLed)            \
+        T(TokenType::Arrow,             BindPower::Def,             Nullptr,            Nullptr,            ArrowLed)           \
         T(TokenType::Number,            BindPower::None,            Nullptr,            NumberNud,          Nullptr)            \
         T(TokenType::Identifier,        BindPower::None,            Nullptr,            IdentifierNud,      Nullptr)            \
         T(TokenType::Colon,             BindPower::None,            Nullptr,            Nullptr,            Nullptr)            \

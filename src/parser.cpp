@@ -196,9 +196,9 @@ namespace sota {
         z2h::Ast *right = Expression(GetSymbol(*token)->lbp - 1); //right associative?
         return new AssignAst(token, left, right);
     }
-    z2h::Ast * SotaParser::FuncLed(z2h::Ast *left, z2h::Token *token) {
+    z2h::Ast * SotaParser::ArrowLed(z2h::Ast *left, z2h::Token *token) {
         z2h::Ast *right = Expression();
-        return new FuncAst(token, left, right);
+        return new ArrowAst(token, left, right);
     }
     z2h::Ast * SotaParser::CallLed(z2h::Ast *left, z2h::Token *token) {
         return nullptr;

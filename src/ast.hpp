@@ -113,9 +113,9 @@ namespace sota {
         }
     };
 
-    struct FuncAst : public z2h::BinaryAst {
-        ~FuncAst() {}
-        FuncAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
+    struct ArrowAst : public z2h::BinaryAst {
+        ~ArrowAst() {}
+        ArrowAst(z2h::Token *token, z2h::Ast *left, z2h::Ast *right)
             : z2h::BinaryAst(token, left, right) {}
     };
 
