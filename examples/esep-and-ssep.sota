@@ -1,0 +1,18 @@
+func_inline = () -> { x = 1; print x }
+                         # ^esep
+func_flow = ()
+	x = 1
+	   # ^ssep
+	print x
+
+list_inline = [1, 2, 3]
+	      # ^esep
+list_flow = [
+	1
+       # ^esep
+	2
+	3
+]
+
+# The examples above show ssep(statement separator) and esep (expression separator) as it pertains to inline and flow examples.
+# Note that esep examples must be nested inside of () <>, or [] whereas ssep occurs within blocks: inline or flow.
