@@ -29,7 +29,7 @@ Color = (object)
     .Blue = (property) -> { .get; .set }
     .Alpha = (property) -> { .get; .set }
 
-# user-defined types must be capitalized
+# user-defined types should be capitalized
 Point = (object)
     .new = (x, y, z)
         .x = x
@@ -42,13 +42,6 @@ Point = (object)
 
     .- = (rhs)
         Point(.x - rhs.x, .y - rhs.y, .z - rhs.z)
-
-    # c# style operator overloading, static with right and left side args
-    Point.+ = (lhs, rhs)
-        Point(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z)
-
-    Point.- = (lhs, rhs)
-        Point(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z)
 
     # methods
     .MagnitudeSqrd = ()
