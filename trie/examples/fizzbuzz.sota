@@ -1,0 +1,31 @@
+fizzbuzz1 = ()
+    foreach num in 1..101
+        msg = ''
+        if num % 3 == 0:
+            msg += 'Fizz'
+        if num % 5 == 0:
+            msg += 'Buzz'
+        print msg or num
+
+fizzbuzz2 = ()
+    foreach num in 1..101
+        msg = match num
+            | % 15 -> 'FizzBuzz'
+            | % 3 -> 'Fizz'
+            | % 5 -> 'Buzz'
+            | _ -> num
+        print msg
+        
+fizzbuzz3 = ()
+    foreach num in 1..101
+        msg = match num
+            | n % 15 -> 'FizzBuzz'
+            | n % 3 -> 'Fizz'
+            | n % 5 -> 'Buzz'
+            | _ -> num
+        print mgs
+
+main = ()
+    fizzbuzz1()
+    fizzbuzz2()
+    fixxbuzz3()

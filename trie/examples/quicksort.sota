@@ -1,0 +1,23 @@
+quicksort = (list)
+    if list.Length > 1
+        less = []
+        pivots = []
+        more = []
+        if list.Length <= 1
+            list
+        else
+            pivot = list[0]
+            foreach i in list
+                if i < pivot
+                    less += i
+                elif i > pivot
+                    more += i
+                else
+                    pivots += i
+            less = quicksort(less)
+            more = quicksort(more)
+            less + pivots + more
+
+main = (args)
+    list = [4, 1, 7, 3, 2, 0 ,8]
+    sorted = quicksort(list)

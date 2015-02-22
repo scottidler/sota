@@ -1,0 +1,14 @@
+CFLAGS += -Wall
+CFLAGS += -Werror
+CFLAGS += -O0
+CFLAGS += -std=c11
+CFLAGS += -g
+
+CXXFLAGS += -Wall
+CXXFLAGS += -Werror
+CXXFLAGS += -O2
+CXXFLAGS += -std=c++11
+
+!cc = |> gcc $(CFLAGS) -I../ -c %f -o %o |> %B.o
+!++ = |> g++ $(CXXFLAGS) -I../ -c %f -o %o |> %B.o
+!ar = |> ar crs %o %f |>

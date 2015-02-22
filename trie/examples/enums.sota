@@ -1,0 +1,39 @@
+# literals, by default (if not specified) incrementing integers
+Fruit =
+    | Apple             # = 0
+    | Banana            # = 1
+    | Cherry = 4        # = 4
+    | Unknown = 'uk'    # = 'uk', can mix numerical and string literals
+
+# matching uses a similar | block structure
+which = (fruit)
+    match fruit
+        | Apple -> print 'oh, an apple!'
+        | 1 -> print 'yup , bananas!' # can match by the Tagname or the literal value
+        | Cherry -> print 'ugh, imma be sick!
+        | Unknown -> print 'no idea what you have there'
+
+fruit = Fruit.Cherry
+which(fruit)
+
+# prints 'ugh, imma be sick!
+
+# enums can also be discriminating unions, even recursive
+Expr =
+    | Num as int
+    | Add as (Expr, Expr)
+    | Mul as (Expr, Expr)
+    | Val as string
+
+evaluate(expr, env)
+    match expr
+        | Num as num -> num
+        | Add as (e1, e2) -> evaluate(e1, env) + evaluate(e2, env)
+        | Mul as (e1, e2) -> evaluate(e1, env) * evaluate(e2, env)
+        | Val as id -> env[id]
+
+# 6 + 2 * 3
+expr = Expr.Add(Expr.Num(6), Expr.Mul(Expr.Num(2), Expr.Num(3) ) )
+
+# result = 12
+result = evaluate(expr)

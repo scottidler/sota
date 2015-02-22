@@ -1,0 +1,8 @@
+main = ()
+
+    list1 = [1, 3, 4, 5, 7]
+    list2 = [1, 3..5, 7]
+
+    if list1 == list2
+        print 'yep they are the same'
+        print 'two dots (..) create range expressions between integers values'

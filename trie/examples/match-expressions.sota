@@ -1,0 +1,27 @@
+func1 = (arg)
+    match arg1
+        | 1..10 -> print 'is {arg1} your favorite number?'
+        | 'hello' -> print 'hello back at ya!'
+        | 'shut up' -> print 'oh that was not nice!'
+        | _ -> error('bad input')
+
+func2 = (name)
+    match name
+        | 'ann' | 'sue' -> 'female'
+        | 'bob' | 'dan' -> 'male'
+        | _ -> error('bad input')
+        
+func3 = (name)
+    | 'ann' | 'sue' -> 'female'
+    | 'bob' | 'dan' -> 'male'
+    | _ -> error('bad input')
+
+main = (args)
+
+    func1(args[0])
+
+    name = 'bob'
+    sex = func2(name)
+
+    print '{name} is {sex}'
+

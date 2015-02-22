@@ -1,0 +1,46 @@
+Type1 = Type(object) -> { .new = (name) -> .name = name }
+
+main = ()
+
+    # scalars
+    scalar1 = 1
+    scalar2 = 'bob'
+    scalar3 = Type1('bob')
+
+    # arrays (lists)
+    list1 = [1, 2, 3]
+    list2 = ['bob', 'sue', 'ann']
+
+    bob = Type1('bob')
+    sue = Type1('sue')
+    ann = Type1('ann')
+    list3 = [bob, sue, ann]
+
+    # hashes (dicts)
+    dict1 = { 'a': 1, 'b': 2, 'c' 3 }
+
+    # the $ operator coerces list objects into by taking only the first one, dicts become a single tuple of the first key, value pair
+
+    if $list1 == 1
+        print 'yep 1 is the first element in the list1 item'
+
+    if $list2 == 'bob'
+        print 'yep "bob" is the first element as well'
+
+    if $list3 == bob
+        print 'yep same as before'
+
+    # the @ operator coerces non-list items into a single element list
+
+    if @scalar1 == [1]
+        print 'yep a single item list with the value of scalar1 in it'
+
+    if @dict1 == [('a': 1)]
+        print 'yep the first key-value pair is placed into a single element list
+
+    # the % operator coerces non-hash items into a single element hash
+
+    if %scalar2 == { 'scalar2': 'bob' }
+        print 'yep the name of the variable is used as the key for its key-value pair'
+
+    

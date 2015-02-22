@@ -1,0 +1,15 @@
+shellsort = (list)
+    gap = list.Length /= 2
+    while gap > 0
+        foreach i in gap..list.Length
+            value = list[i]
+            j = i
+            while j >= gap && list[j - gap] > value
+                list[j] = list[j - gap]
+                j -= gap
+            list[j] = value
+        gap /= 2
+
+main = (args)
+    list = [4, 1, 7, 3, 2, 0 ,8]
+    sorted = shellsort(list)

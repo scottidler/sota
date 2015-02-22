@@ -1,0 +1,67 @@
+# flow-style type decl
+Type1 = (object)
+    .new = (arg1, arg2)
+        .arg1 = arg1
+        .arg2 = arg2
+
+# inline-style type decl
+Type2 = (object) -> { .new = (arg1, arg2) -> { .arg1 = arg1; .arg2 = arg2 } }
+
+Color = (object)
+    # constructor, assigning to properties
+    .new = (red, green, blue, alpha)
+        .Red = red
+        .Green = green
+        .Blue = blue
+        .Alpha = alpha
+
+    # flow-style explicit property definition
+    .Red = (property)
+        .get = ()
+            .value
+        .set = (value)
+            .value = value
+
+    # inline-style explicit property definition
+    .Green = (property) -> { .get = () -> .value; .set = (value) -> .value = value }
+
+    # shorthand, implicit definitions
+    .Blue = (property) -> { .get; .set }
+    .Alpha = (property) -> { .get; .set }
+
+# user-defined types should be capitalized
+Point = (object)
+    .new = (x, y, z)
+        .x = x
+        .y = y
+        .z = z
+
+    # c++ style operator overloading
+    .+ = (rhs)
+        Point(.x + rhs.x, .y + rhs.y, .z + rhs.z)
+
+    .- = (rhs)
+        Point(.x - rhs.x, .y - rhs.y, .z - rhs.z)
+
+    # methods
+    .MagnitudeSqrd = ()
+        .x ^ 2 + .y ^ 2 + .z ^ 2
+
+    .Magnitude = ()
+        sqrt(.MagnitudeSqrd() ) # sqrt should come from some math library
+
+main = ()
+
+    type1 = Type1('sue', 37)
+    type2 = Type2('sam', 42)
+
+    red = Color(255, 0, 0, 0)
+    green = Color(0, 255, 0, 0)
+    blue = Color(0, 0, 255, 0)
+
+    pt1 = Point(1, 2, 3)
+    pt2 = Point(3, 5, 7)
+    pt3 = pt1 + pt2
+    mag = pt3.Magnitude()
+
+    

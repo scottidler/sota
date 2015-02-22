@@ -1,0 +1,84 @@
+Sex =
+    | Male
+    | Female
+
+Person1 = Type(object)
+
+    .set_name = (name)
+        .name = name
+
+    .set_age = (age)
+        .age = age
+
+    .set_sex = (sex)
+        .set = sex
+
+Person2 = Type(object)
+
+    props = ['name', 'age', 'sex']
+
+    # through metaprogramming we define three methods
+    # set_name, set_age and set_sex
+    foreach prop in props
+        .set_#{prop} = (#{prop})
+            .#{prop} = #{prop}
+
+Person3 = Type(object)
+
+    props = ['name', 'age', 'sex']
+
+    # we can do the same thing using some of the inline
+    # abilities of sota. brackets aren't needed because
+    # these are single expressions
+    props | (prop) -> .set_#{prop} = (#{prop}) -> .#{prop} = #{prop}
+
+    # note: both examples Person2 and Person3 are closures
+    # how|why? the leading . in .set_ is the this operator
+    # means define this function and assign to the instance
+    # of this type via the this operator(shortened to period)
+    
+Person4 = Type(object)
+
+    # note: Person3 can be further simplified and use a flow-style
+    ['name', 'age', 'sex'] | (prop)
+        .set_#{prop} = (#{prop})
+            .#{prop} = #{prop}
+
+main = ()
+
+    person1 = Person1()
+    person2 = Person2()
+    person3 = Person2()
+    person4 = Person4()
+
+    # all four types are identical
+    person1.set_name('bob')
+    person2.set_name('bob')
+    person3.set_name('bob')
+    person4.set_name('bob')
+
+    # they have the same three set methods
+    person1.set_age(47)
+    person2.set_age(47)
+    person3.set_age(47)
+    person4.set_age(47)
+
+    # lets take it up a notch here:
+    [ person1, person2, person3, person4 ] | (person)
+        person.set_sex(Sex.Male)
+
+    # it is also possible to use #ifdef style conditionals
+    
+    # the following is a string literal in block format
+    # similar to Python's ''' syntax but again, less verbose
+    code =
+        print 'hello world'
+
+    # here is where the print hello world code is inserted
+    # if the condition is met; ie the function detects linux
+    #{code if if_on_linux()}
+    
+    # the point is some logic is allowed inside of the meta
+    # tag #{}. if null nothing is placed otherwise string
+    # substitution occurs
+    

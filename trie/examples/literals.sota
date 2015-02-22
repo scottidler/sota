@@ -1,0 +1,45 @@
+
+main = ()
+    
+    #null-type literal
+    x = null
+
+    # boolean literals
+    b1 = true
+    b2 = false
+
+    # string literal
+    str1 = 'this is a string literal'
+
+    # block string literal
+    str2 =
+        formatted text
+        however the user wishes to see it
+            tabs are allowed
+        block will continue until the indention
+        drops back to the level the variable decl
+        string interpolation works {here} as well
+
+    # integer literal
+    int1 = 5
+
+    # float literal
+    float1 = 3.14f
+
+    # double literal
+    double1 = 5.0
+
+    # tuple literal
+    tup1 = (1, 2, 3)
+    tup2 = ('apple', 'orange', 'banana')
+
+    # sequence literal
+    seq1 = <1, 2, 3>
+    seq2 = <'apple', 'orange', 'banana'>
+
+    # list literal
+    list1 = [1, 2, 2, 3]
+    list2 = ['apple', 'orange', 'orange', 'banana']
+   
+    # dict literal
+    dict1 = { 'a': 1, 'b': 2, 'c': 3 }

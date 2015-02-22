@@ -1,0 +1,25 @@
+# dicts and types can be handled in similar ways
+
+dict1 = { 'name': 'scott', 'age': 40, 'pets': ['bill', 'penny'] }
+
+# of course the keys can be accessed in the normal fashion
+# however you can access it like a data member
+
+'scott'             == dict1['name']    == dict1.name   # true
+40                  == dict1['age']     == dict1.age    # true
+['bill', 'penny']   == dict1['pets']    == dict1.pets   # true
+
+# you can do the same for types; consider:
+
+person = Type(object)
+    .new = (name, age, pets)
+        .name = name
+        .age = age
+        .pets = pets
+
+type1 = person('scott', 40, ['bill', 'penny'])
+
+'scott'             == type1['name']    == type1.name   # true
+40                  == type1['age']     == type1.age    # true
+['bill', 'penny']   == type1['pets']    == type1.pets   # true
+

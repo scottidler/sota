@@ -1,0 +1,38 @@
+#!/usr/bin/sota
+
+fib1 = (n)
+    if 0 <= n <= 1
+        return n
+    return fib1(n - 1) + fib1(n - 2)
+
+fib2 = (n)
+    return match n
+        | 0 | 1 -> n
+        | _ -> fib2(n - 1) + fib2(n - 2)
+        
+# without return keyword; return keyword may be removed
+fib3 = (n)
+    if 0 <= n <= 1
+        n
+    else
+        fib3(n - 1) + fib3(n - 2)
+        
+fib4 = (n)
+    n if 0 <= n <= 1 else fib4(n - 1) + fib4(n - 2)
+        
+fib5 = (n)
+    match n
+        | 0 | 1 -> n
+        | _ -> fib5(n - 1) + fib5(n - 2)
+        
+fib6 = (n)
+    | 0 | 1 -> n
+    | _ -> fib6(n -1) + fib6(n - 2)
+
+main = (args)
+    print fib1(args[0])
+    print fib2(args[0])
+    print fib3(args[0])
+    print fib4(args[0])
+    print fib5(args[0])
+    print fib6(args[0])

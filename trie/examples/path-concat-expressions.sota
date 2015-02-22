@@ -1,0 +1,16 @@
+main = ()
+
+    # concatenation operators
+    # /     slash concatenates two strings and inserts a / between them
+    # .     dot concatenates a period between two strings, often for filename extensions
+    # ~     tilde prepends or concatenates placing a ~
+    # ../   uplevel concatenates ../ in the path
+
+    home = '/home/user'
+    appname = 'some-cool-app'
+
+    # slashes act as path concatenators when applied to strings instead of division with numbers
+    config = home / appname / 'conf.txt'
+
+    if exists(config) # exists comes from some library
+        print 'yep we found it here "/home/user/some-cool-app/conf.txt"'

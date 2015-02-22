@@ -1,0 +1,35 @@
+# flow-style function decl with one statement body
+func1 = (x, y)
+    x + y
+
+# inline-style function decl with one statement body
+func2 = (x, y) -> x * y
+
+# flow-style function decl with multiple statement body
+func3 = (x, y)
+    print 'func3: x={x} y={y}'
+    x - y
+
+# inline-style function decl with multiple statement body, separated by ;
+func4 = (x, y) -> { print 'func4: x={x} y={y}'; x / y }
+
+# pass function as a parameter
+func5 = (x, y, func = null)
+    result = 7
+    if func
+        result = func(x, y)
+    result
+
+main = ()
+
+    r1 = func1(1, 2)
+    r2 = func2(1, 2)
+    r3 = func3(1, 2)
+    r4 = func4(1, 2)
+
+    # pass inline-style, lambda-like function as an argument to another function
+    r5 = func5(1, 2, (x, y) -> x * y)
+
+    # pass inline-style, lambda-like function with multiple statement body as an argument to another function
+    r6 = func5(1, 2, (x, y) -> { print 'hello'; (x + 2) * y })
+    
