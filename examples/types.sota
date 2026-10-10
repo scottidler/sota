@@ -64,4 +64,4 @@ main = ()
     pt3 = pt1 + pt2
     mag = pt3.Magnitude()
 
-    
+

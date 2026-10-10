@@ -83,7 +83,7 @@ namespace sota {
                 return this->value = value;
             }
             return NULL;
-        } 
+        }
     };
 
     template<typename Key, typename Value>

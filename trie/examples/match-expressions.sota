@@ -10,7 +10,7 @@ func2 = (name)
         | 'ann' | 'sue' -> 'female'
         | 'bob' | 'dan' -> 'male'
         | _ -> error('bad input')
-        
+
 func3 = (name)
     | 'ann' | 'sue' -> 'female'
     | 'bob' | 'dan' -> 'male'

@@ -32,4 +32,4 @@ main = ()
 
     # pass inline-style, lambda-like function with multiple statement body as an argument to another function
     r6 = func5(1, 2, (x, y) -> { print 'hello'; (x + 2) * y })
-    
+

@@ -1,6 +1,6 @@
 
 main = ()
-    
+
     #null-type literal
     x = null
 
@@ -40,6 +40,6 @@ main = ()
     # list literal
     list1 = [1, 2, 2, 3]
     list2 = ['apple', 'orange', 'orange', 'banana']
-   
+
     # dict literal
     dict1 = { 'a': 1, 'b': 2, 'c': 3 }

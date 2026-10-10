@@ -1,5 +1,5 @@
 
-# namespaces single identifier expressions with indented blocks 
+# namespaces single identifier expressions with indented blocks
 namespace1
 
     func1 = ()
@@ -17,5 +17,5 @@ namespace1
 
             func2 = ()
                 print 'HOWDY WORLD'
-        
-    
+
+

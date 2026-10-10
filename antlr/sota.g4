@@ -26,7 +26,7 @@ prog
     :   global
     ;
 
-global  
+global
     :   BOF statements EOF
     ;
 

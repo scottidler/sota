@@ -5,7 +5,7 @@ main = ()
     dict1 = { 'a': 1, 'b': 2, 'c': 3 }
 
     # normal accessor; one match on key results in one value
-    3 == dict1['c'] # <-- is true 
+    3 == dict1['c'] # <-- is true
 
     # list of accessors in brackets; creates a subset tuple of values based upon the keys found
     (1, 2) == dict1['a', 'b'] # <-- is true

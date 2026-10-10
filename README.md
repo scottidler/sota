@@ -63,7 +63,7 @@ invented =
     | inverting dicts: I have wanted this forever!
     | accessing dicts via expressions other than keys: just makes sense
     | this keyword simplified to a single, leading dot: all keywords must die!
-    
+
 ````
 Capitalization
 ==============
@@ -136,7 +136,7 @@ print_name = (name) -> print name
 Fruit =
     | Apple
     | Banana
-    
+
 # the same goes for types
 Person = Type(object)
     .new = (name, age, sex)

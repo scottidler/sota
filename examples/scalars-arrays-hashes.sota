@@ -43,4 +43,4 @@ main = ()
     if %scalar2 == { 'scalar2': 'bob' }
         print 'yep the name of the variable is used as the key for its key-value pair'
 
-    
+

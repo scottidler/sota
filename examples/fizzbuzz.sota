@@ -15,7 +15,7 @@ fizzbuzz2 = ()
             | % 5 -> 'Buzz'
             | _ -> num
         print msg
-        
+
 fizzbuzz3 = ()
     foreach num in 1..101
         msg = match num
